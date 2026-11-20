@@ -1,0 +1,13 @@
+# Non Praevalebunt - trigger localization (tooltip text for custom_description)
+
+np_adaptive_pluralism_trigger = {
+	first = NP_ADAPTIVE_PLURALISM
+	first_not = NP_ADAPTIVE_PLURALISM
+	third_not = NP_ADAPTIVE_PLURALISM
+}
+
+np_righteous_adaptive_trigger = {
+	first = NP_RIGHTEOUS_ADAPTIVE
+	first_not = NP_RIGHTEOUS_ADAPTIVE
+	third_not = NP_RIGHTEOUS_ADAPTIVE
+}

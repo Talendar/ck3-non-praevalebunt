@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --t1:#a67c25; --t1-soft:#f6ecd2;
+  --t2:#2f5d8a; --t2-soft:#e2ecf6;
+  --t3:#8b2f2f; --t3-soft:#f6e1df;
+  --ok:#2f7a4a; --no:#9a2a2a;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --t1:#d6ae5c; --t1-soft:#352b17;
+    --t2:#7fb0e0; --t2-soft:#1c2a38;
+    --t3:#e07a72; --t3-soft:#3a1f1d;
+    --ok:#6fc08e; --no:#e07a72;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --t1:#d6ae5c; --t1-soft:#352b17;
+  --t2:#7fb0e0; --t2-soft:#1c2a38;
+  --t3:#e07a72; --t3-soft:#3a1f1d;
+  --ok:#6fc08e; --no:#e07a72;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.35rem;color:var(--crimson);margin:44px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+
+/* Hero */
+.hero{text-align:center;padding:48px 16px 28px;border-bottom:1px solid var(--line);background:
+  radial-gradient(1200px 300px at 50% -80px, var(--gold-soft), transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted);font-size:1.05rem}
+.quote{margin:18px auto 0;max-width:560px;font-family:Georgia,serif;font-style:italic;color:var(--ink)}
+.quote cite{display:block;font-style:normal;font-size:.85rem;color:var(--muted);margin-top:2px}
+
+/* Principle */
+.principle{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--gold);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.principle svg{width:54px;height:54px;color:var(--gold)}
+.principle .big{font-family:Cinzel,Georgia,serif;font-size:clamp(1.05rem,2.6vw,1.35rem);font-weight:700}
+.principle p.muted{margin-top:6px}
+
+/* Tiers */
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative}
+.tier{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.tier .head{padding:14px 16px;display:flex;align-items:center;gap:12px}
+.tier .head svg{width:38px;height:38px;flex:none}
+.tier .label{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.tier h3{font-size:1.08rem}
+.tier .body{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.who{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.82rem;padding:3px 9px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
+.facts{display:grid;gap:6px;margin-top:auto}
+.fact{display:flex;gap:8px;align-items:flex-start;font-size:.9rem}
+.fact b{font-weight:700}
+.ic{flex:none;width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;font-size:.72rem;font-weight:700;color:#fff;margin-top:2px}
+.ic.ok{background:var(--ok)} .ic.no{background:var(--no)} .ic.info{background:var(--muted)}
+.t1 .head{background:var(--t1-soft);color:var(--t1)} .t1{border-top:4px solid var(--t1)}
+.t2 .head{background:var(--t2-soft);color:var(--t2)} .t2{border-top:4px solid var(--t2)}
+.t3 .head{background:var(--t3-soft);color:var(--t3)} .t3{border-top:4px solid var(--t3)}
+.t1 h3,.t2 h3,.t3 h3{color:var(--ink)}
+
+.rules{margin-top:14px;display:grid;grid-template-columns:auto 1fr 1fr;gap:10px;align-items:stretch}
+.rules .tag{background:var(--crimson);color:var(--surface);border-radius:12px;padding:12px 14px;font-weight:700;display:grid;place-items:center;text-align:center;font-size:.9rem}
+.rule{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.rule .n{font-family:Cinzel,Georgia,serif;font-weight:700;font-size:1.5rem;color:var(--crimson);line-height:1}
+
+/* Flow */
+.flow{display:grid;gap:12px}
+.trigger{justify-self:center;background:var(--crimson);color:var(--surface);border-radius:12px;padding:10px 18px;font-weight:700;text-align:center;box-shadow:var(--shadow)}
+.trigger span{display:block;font-weight:400;font-size:.85rem;opacity:.9}
+.down{justify-self:center;color:var(--muted);font-size:1.3rem;line-height:1}
+.kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.kind{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.kind .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.kind h3{font-size:1rem}
+.odds{font-weight:700;font-size:.82rem;color:var(--muted);white-space:nowrap}
+.bar{height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--gold)}
+.outcome{border-radius:10px;padding:9px 11px;font-size:.9rem;display:flex;gap:8px;align-items:flex-start}
+.outcome.to1{background:var(--t1-soft)} .outcome.to3{background:var(--t3-soft)}
+.pill{font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px;color:#fff;white-space:nowrap;margin-top:1px}
+.pill.p1{background:var(--t1)} .pill.p2{background:var(--t2)} .pill.p3{background:var(--t3)}
+.end{justify-self:center;background:var(--t3-soft);border:1px dashed var(--t3);color:var(--ink);border-radius:12px;padding:10px 16px;text-align:center;font-size:.95rem}
+.why{margin-top:6px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--surface);font-size:.88rem}
+.opt b{display:block;font-size:.92rem}
+.opt.pick{border:2px solid var(--ok);background:color-mix(in srgb,var(--ok) 8%,var(--surface))}
+.opt .v{font-weight:700}
+.opt .v.bad{color:var(--no)} .opt .v.good{color:var(--ok)}
+
+/* Paths table */
+.tbl{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{padding:10px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+th{background:var(--surface-2);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+td.p{font-weight:700;white-space:nowrap}
+td.today{color:var(--muted)}
+td.fix{color:var(--ink)}
+td.fix::before{content:"✓ ";color:var(--ok);font-weight:700}
+
+/* Timeline */
+.timeline{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 16px 14px;box-shadow:var(--shadow)}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:10px}
+.tl::before{content:"";position:absolute;left:4%;right:4%;top:15px;height:3px;background:linear-gradient(90deg,var(--t1),var(--t1) 60%,var(--t2));border-radius:3px}
+.step{position:relative;padding-top:38px}
+.dot{position:absolute;top:6px;left:0;width:21px;height:21px;border-radius:50%;background:var(--surface);border:4px solid var(--t1)}
+.step.alt .dot{border-color:var(--t2);border-style:dashed}
+.step h3{font-size:.95rem;margin-bottom:4px}
+.step p{font-size:.88rem;color:var(--muted)}
+.note{margin-top:14px;font-size:.88rem;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line)}
+
+/* Layers */
+.layers{display:grid;gap:10px}
+.layer{display:grid;grid-template-columns:150px 1fr auto;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.layer .name{font-family:Cinzel,Georgia,serif;font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px}
+.layer .name svg{width:28px;height:28px;color:var(--crimson);flex:none}
+.layer .what{font-size:.92rem}
+.layer .what .muted{display:block;font-size:.85rem}
+.badge{font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;border:1px solid var(--line)}
+.badge.warn{background:var(--gold-soft);color:var(--ink)}
+.badge.good{background:color-mix(in srgb,var(--ok) 14%,var(--surface));color:var(--ink)}
+
+/* Open items */
+.todo{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:10px}
+.item .k{font-family:Cinzel,Georgia,serif;font-weight:700;color:var(--crimson);font-size:1.1rem;line-height:1.2}
+.item.next{border:2px solid var(--crimson)}
+.item small{display:block;color:var(--muted)}
+
+footer{margin-top:40px;font-size:.82rem;color:var(--muted);text-align:center}
+
+@media (max-width:820px){
+  .tiers,.kinds,.why{grid-template-columns:1fr}
+  .rules{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr 1fr;row-gap:18px}
+  .tl::before{display:none}
+  .layer{grid-template-columns:1fr}
+  td.p{white-space:normal}
+}
+@media (max-width:520px){
+  .principle{grid-template-columns:1fr;text-align:center}
+  .principle svg{margin:0 auto}
+  .tl{grid-template-columns:1fr}
+  th,td{padding:9px 10px}
+  table{font-size:.88rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Design recommendation · CK3 1.21 + By God Alone</div>
+  <h1>Non Praevalebunt</h1>
+  <p class="sub">Catholic Doctrine Guard</p>
+  <p class="quote">“…et portae inferi non praevalebunt adversum eam.”<cite>Matthew 16:18</cite></p>
+</header>
+
+<div class="wrap">
+
+  <!-- Principle -->
+  <section class="principle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3v6c0 5.5-3.5 9.5-8 11-4.5-1.5-8-5.5-8-11V5z"/><path d="M12 7v9M8.5 10.5h7"/></svg>
+    <div>
+      <div class="big">The Church never changes. Parts of the flock can fall away.</div>
+      <p class="muted">The Roman rite stands for Peter’s see, so its doctrine can never change. Other rites can fall into heresy, but only in ways history allows.</p>
+    </div>
+  </section>
+
+  <!-- Tiers -->
+  <h2><span class="num">1</span>Three tiers of rites</h2>
+  <div class="tiers">
+    <article class="tier t1">
+      <div class="head">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l8 3v6c0 5.5-3.5 9.5-8 11-4.5-1.5-8-5.5-8-11V5z" opacity=".25"/><path d="M12 2l8 3v6c0 5.5-3.5 9.5-8 11-4.5-1.5-8-5.5-8-11V5z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7v9M8.5 10.5h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div><div class="label">Tier 1</div><h3>Never falls</h3></div>
+      </div>
+      <div class="body">
+        <div class="who"><span class="chip">Roman (main rite)</span><span class="chip">Historic starting rites</span><span class="chip">Any rite while a player leads it</span></div>
+        <div class="facts">
+          <div class="fact"><span class="ic ok">✓</span><span><b>Guarded</b> against drift, councils and edits</span></div>
+          <div class="fact"><span class="ic ok">✓</span><span><b>Outbreaks can’t</b> make it fall</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="tier t2">
+      <div class="head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2l8 3v6c0 5.5-3.5 9.5-8 11-4.5-1.5-8-5.5-8-11V5z"/></svg>
+        <div><div class="label">Tier 2</div><h3>Guarded, can fall</h3></div>
+      </div>
+      <div class="body">
+        <div class="who"><span class="chip">Rites founded during play</span><span class="chip">by normal growth or by a ruler</span></div>
+        <div class="facts">
+          <div class="fact"><span class="ic ok">✓</span><span><b>Guarded</b> against drift, councils and edits</span></div>
+          <div class="fact"><span class="ic no">!</span><span>A <b>kind 1 outbreak</b> can make it fall to Tier 3. Kind 1 now aims at Tier 2 first.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="tier t3">
+      <div class="head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3v6c0 5.5-3.5 9.5-8 11-4.5-1.5-8-5.5-8-11V5z"/><path d="M12.5 3.5L10 9l3.2 3-2.4 5.5"/></svg>
+        <div><div class="label">Tier 3</div><h3>Heretic</h3></div>
+      </div>
+      <div class="body">
+        <div class="who"><span class="chip">Rites born from kind 2 and 3 outbreaks</span><span class="chip">Rites that fell</span></div>
+        <div class="facts">
+          <div class="fact"><span class="ic info">–</span><span><b>Not guarded:</b> may believe anything</span></div>
+          <div class="fact"><span class="ic info">↑</span><span>A fallen rite gets <b>one heretical tenet</b>, which carries it past the heresy line</span></div>
+          <div class="fact"><span class="ic no">✕</span><span><b>Never</b> becomes the main rite</span></div>
+          <div class="fact"><span class="ic info">→</span><span>The Pope can cut it off into its own faith</span></div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="rules">
+    <div class="tag">Guard rules<br>for Tiers 1 and 2</div>
+    <div class="rule"><span class="n">1</span><span><b>No heretical beliefs.</b> Faith and morals stay Catholic. Discipline and customs may vary.</span></div>
+    <div class="rule"><span class="n">2</span><span><b>Never past 65 divergence points</b> (the heresy line), even through allowed differences.</span></div>
+  </div>
+
+  <!-- Heresy flow -->
+  <h2><span class="num">2</span>How heresies appear (Option “B, strict”)</h2>
+  <div class="flow">
+    <div class="trigger">Heresy outbreak<span>only when Catholic fervor is 40 or lower · then a 5-year pause · the mod makes outbreaks about twice as frequent</span></div>
+    <div class="down" aria-hidden="true">▼</div>
+    <div class="kinds">
+      <div class="kind">
+        <div class="top"><h3>Kind 1 · Push</h3><span class="odds">≈ 6 in 10</span></div>
+        <div class="bar"><i style="width:62%"></i></div>
+        <p class="small muted">Pushes a side rite further from Rome. Always aims at a Tier 2 rite when one exists.</p>
+        <div class="outcome to3"><span class="pill p2">Tier 2 hit</span><span>The rite falls and becomes <b>Tier 3</b>.</span></div>
+        <div class="outcome to1"><span class="pill p1">No Tier 2 exists</span><span>Hits a Tier 1 rite instead, which changes customs only.</span></div>
+      </div>
+      <div class="kind">
+        <div class="top"><h3>Kind 2 · New rite</h3><span class="odds">≈ 2.5 in 10</span></div>
+        <div class="bar"><i style="width:25%"></i></div>
+        <p class="small muted">A new rite appears, led by a heresiarch.</p>
+        <div class="outcome to3"><span class="pill p3">Born</span><span>Born <b>Tier 3</b>, then drifts into heresy.</span></div>
+      </div>
+      <div class="kind">
+        <div class="top"><h3>Kind 3 · Historical</h3><span class="odds">≈ 1 in 10</span></div>
+        <div class="bar"><i style="width:13%"></i></div>
+        <p class="small muted">Cathars, Waldensians, Bogomils, Lollards, Hussites… each after its date.</p>
+        <div class="outcome to3"><span class="pill p3">Born</span><span>A full heresy from day one: <b>Tier 3</b>.</span></div>
+      </div>
+    </div>
+    <div class="down" aria-hidden="true">▼</div>
+    <div class="end">Tier 3 rite → one heretical tenet carries it past the heresy line → the Pope declares it heretical → it becomes <b>its own faith</b><br><a href="heresy-plan.html" style="color:var(--crimson);font-weight:600">See the heresy plan for details →</a></div>
+
+    <div class="why">
+      <div class="opt"><b>Option A</b>Only kind 3 makes heresies.<br><span class="v bad">Probably too few heresies.</span></div>
+      <div class="opt"><b>Plain B</b>Any side rite can fall.<br><span class="v bad">Old approved rites could fall, which never happened.</span></div>
+      <div class="opt pick"><b>B, strict ✓ recommended</b>Only rites founded during play can fall.<br><span class="v good">Heresies stay alive. Historic rites stay safe.</span></div>
+    </div>
+  </div>
+
+  <!-- Paths -->
+  <h2><span class="num">3</span>Every drift path, closed</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Path</th><th>Today</th><th>With the mod</th></tr></thead>
+      <tbody>
+        <tr><td class="p">Yearly drift</td><td class="today">Side-rite leaders swap doctrines at random</td><td class="fix">Allowed changes only</td></tr>
+        <tr><td class="p">New rites</td><td class="today">Copy the parent, plus random changes</td><td class="fix">Born in good standing (Tier 2)</td></tr>
+        <tr><td class="p">Ecumenical councils</td><td class="today">Can change any doctrine for the whole faith</td><td class="fix">Forbidden options are never offered</td></tr>
+        <tr><td class="p">Rite editing</td><td class="today">A rite leader, the Pope included, can pick anything for piety</td><td class="fix">Forbidden options are hidden</td></tr>
+        <tr><td class="p">New Pope</td><td class="today">His rite becomes the main rite</td><td class="fix">The Pope always takes the Roman rite</td></tr>
+        <tr><td class="p">Bulls and tenet popularity</td><td class="today">Can permit odd tenets</td><td class="fix">The guard undoes forbidden changes</td></tr>
+        <tr><td class="p">Starting errors</td><td class="today">The Mozarabic rite starts with same-sex relations accepted</td><td class="fix">Cleaned at game start</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Timeline -->
+  <h2><span class="num">4</span>An 867 start, over time</h2>
+  <div class="timeline">
+    <div class="tl">
+      <div class="step"><span class="dot"></span><h3>867 · One Church</h3><p>The whole undivided Church is guarded: Roman (main), Insular, Mozarabic, Ambrosian, Beneventan, Carolingian, Byzantine, and almost surely Georgian.</p></div>
+      <div class="step"><span class="dot"></span><h3>885 · Slavic rite</h3><p>The Slavic rite joins and is guarded.</p></div>
+      <div class="step"><span class="dot"></span><h3>Great Schism</h3><p>The date depends on play. The Byzantine side leaves for Orthodoxy and is no longer guarded. Catholicism stays guarded.</p></div>
+      <div class="step alt"><span class="dot"></span><h3>If it’s mended</h3><p>Any reunion is with Rome: Orthodox rites rejoin Catholicism, guarded again and cleaned. Only Catholics and Orthodox can mend it. <a href="great-schism.html" style="color:var(--crimson)">Details →</a></p></div>
+    </div>
+    <p class="note"><b>1066 and 1178 starts:</b> Catholicism begins with Roman (main), Insular, Mozarabic and Ambrosian. Guarding the Byzantine rite doesn’t block the schism, because the schism is driven by quarrels between the two sides, not by beliefs.</p>
+  </div>
+
+  <!-- Layers -->
+  <h2><span class="num">5</span>How it’s built</h2>
+  <div class="layers">
+    <div class="layer">
+      <div class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Lock</div>
+      <div class="what">Adds the rule “Catholic rites can’t pick this” to every forbidden doctrine and tenet.<span class="muted">Blocks drift, new rites, councils, synods and the rite editor at the source.</span></div>
+      <span class="badge warn">Needs a small SOTC patch</span>
+    </div>
+    <div class="layer">
+      <div class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Guard</div>
+      <div class="what">Watches every rite change, plus a yearly check. Undoes forbidden picks and crossings of the heresy line. Skips Tier 3.<span class="muted">Catches anything that slips past the lock, including other mods.</span></div>
+      <span class="badge good">Works with most mods</span>
+    </div>
+    <div class="layer">
+      <div class="name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/></svg>Rules</div>
+      <div class="what">Cleans the starting rites. Makes each Pope take the Roman rite. Marks fallen rites using the game’s own outbreak traces and gives each one a signature heretical tenet. Marks every heretical tenet Prohibited in the Catholic faith. Points kind 1 at Tier 2 and makes outbreaks more frequent. Keeps the Tier 1 list.<span class="muted">No rewriting of the game’s outbreak events.</span></div>
+      <span class="badge good">Works with most mods</span>
+    </div>
+  </div>
+
+  <!-- Open items -->
+  <h2><span class="num">6</span>Still to decide</h2>
+  <div class="todo">
+    <div class="item"><span class="k">1</span><div><b>The allowed list</b><small>✓ Done: <a href="allowed-list.html" style="color:var(--crimson)">allowed list</a>, all 15 calls decided.</small></div></div>
+    <div class="item"><span class="k">2</span><div><b>Great Schism details</b><small>✓ Done: <a href="great-schism.html" style="color:var(--crimson)">Great Schism</a> plan approved. Every reunion is with Rome.</small></div></div>
+    <div class="item"><span class="k">3</span><div><b>Protect true tenets</b><small>✓ Done: the allowed list names 8 protected tenets that can never be prohibited.</small></div></div>
+    <div class="item"><span class="k">4</span><div><b>Georgian rite check</b><small>Mozarabic: confirmed in 867. Georgian: almost surely, still to check in the game.</small></div></div>
+    <div class="item"><span class="k">5</span><div><b>Heresy numbers</b><small>Tune the outbreak settings from the <a href="heresy-plan.html" style="color:var(--crimson)">heresy plan</a> after play-testing.</small></div></div>
+    <div class="item"><span class="k">6</span><div><b>“Seek Communion”</b><small>✓ Done: <a href="seek-communion.html" style="color:var(--crimson)">Seek Communion</a> becomes a true return. A heresy must give up its errors to come back.</small></div></div>
+    <div class="item"><span class="k">7</span><div><b>Pope as head before the schism</b><small>✓ Done in v0.1: the game rule “Pope as Head Before the Schism” (on by default) keeps the Roman rite as the main rite in 867 games.</small></div></div>
+    <div class="item next"><span class="k">8</span><div><b>Build status</b><small>v0.1 is built: the guard, the Pope rule and the start-of-game cleanup. GPT-6.2-Astra reviewed it twice, and the confirmed issues are fixed. Not tested in the game yet. Deferred items A–F are fixed. Works with or without Shadows of the Cross; no patch needed. <a href="deferred.html" style="color:var(--crimson)">What was deferred →</a> Up next: launcher entry and an 867 test.</small></div></div>
+  </div>
+
+  <footer>Based on the game files of CK3 1.21.0.3, By God Alone, and Shadows of the Cross 1.2.0. The odds are rough base-game values and haven’t been tested in play yet.</footer>
+</div>
+</body>
+</html>

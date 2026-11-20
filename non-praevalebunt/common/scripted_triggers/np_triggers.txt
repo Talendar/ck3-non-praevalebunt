@@ -1,0 +1,190 @@
+﻿# Non Praevalebunt - scripted triggers
+# "The Church" = whichever faith holds the Roman rite. Before the Great Schism that is the undivided
+# Christian faith; after it, Catholicism. So the guard follows the schism on its own.
+
+##############################################
+# Which rites are guarded
+##############################################
+
+# Rite scope. The rite belongs to the Church.
+np_rite_in_church_trigger = {
+	exists = rite:roman_rite
+	faith = rite:roman_rite.faith
+}
+
+# Rite scope. Tier 1: the main rite, the historic starting rites, and any rite while a player leads it.
+# They can never fall.
+np_rite_is_tier1_trigger = {
+	OR = {
+		head_of_rite ?= { is_ai = no }
+		this = faith.main_rite
+		this = rite:roman_rite
+		this = rite:insular_celtic
+		this = rite:mozarabic_church
+		this = rite:ambrosian_rite
+		this = rite:beneventan_rite
+		this = rite:carolingian_christianity
+		this = rite:byzantine_rite
+		this = rite:georgian_rite
+		this = rite:slavic_rite
+	}
+}
+
+# Rite scope. Tier 3: a heresy inside the Church. The guard leaves these alone.
+# A rite counts as heretic if it carries the fallen mark, or if it was ALREADY past the heresy line
+# the first time the guard saw it (for example a historical heresy born inside the Church).
+# A rite the guard has seen in good standing (np_good_standing) can't escape by being pushed past the
+# line: the guard keeps treating it as guarded and undoes the forbidden change.
+np_rite_is_heretic_trigger = {
+	OR = {
+		has_variable = np_fallen
+		AND = {
+			np_rite_is_tier1_trigger = no
+			NOT = { has_variable = np_good_standing }
+			"divergence(faith.main_rite)" > faith.heresy_threshold
+		}
+	}
+}
+
+# Rite scope. Rites in good standing (Tier 1 and Tier 2): the guard protects these.
+np_rite_is_guarded_trigger = {
+	np_rite_in_church_trigger = yes
+	np_rite_is_heretic_trigger = no
+}
+
+##############################################
+# Forbidden doctrines (see docs/allowed-list.html)
+##############################################
+
+# Rite scope.
+np_rite_has_forbidden_doctrine_trigger = {
+	OR = {
+		# Faith and Church
+		rite_has_doctrine = doctrine_polytheist
+		AND = {
+			this = faith.main_rite
+			OR = {
+				rite_has_doctrine = doctrine_no_head
+				rite_has_doctrine = doctrine_temporal_head
+			}
+		}
+		rite_has_doctrine = doctrine_pluralism_pluralistic
+		rite_has_doctrine = doctrine_theocracy_lay_clergy
+		rite_has_doctrine = doctrine_sacraments_absent
+		rite_has_doctrine = doctrine_clerical_gender_either
+		rite_has_doctrine = doctrine_clerical_gender_female_only
+		# Marriage and family
+		rite_has_doctrine = doctrine_polygamy
+		rite_has_doctrine = doctrine_concubines
+		rite_has_doctrine = doctrine_divorce_allowed
+		# Be Fruitful and Multiply lets a ruler divorce a spouse of low fertility even under "Disallowed",
+		# bypassing the Church. With that tenet, a Church rite must use "Must be Approved", so every divorce
+		# goes through the Pope (the Church's judgement of nullity).
+		AND = {
+			rite_has_doctrine = doctrine_divorce_disallowed
+			rite_has_tenet = tenet_be_fruitful_and_multiply
+		}
+		rite_has_doctrine = doctrine_bastardry_none
+		rite_has_doctrine = doctrine_consanguinity_aunt_nephew_and_uncle_niece
+		rite_has_doctrine = doctrine_consanguinity_unrestricted
+		# Sins and crimes
+		rite_has_doctrine = doctrine_homosexuality_accepted
+		rite_has_doctrine = doctrine_deviancy_accepted
+		rite_has_doctrine = doctrine_deviancy_virtuous
+		rite_has_doctrine = doctrine_adultery_men_accepted
+		rite_has_doctrine = doctrine_adultery_women_accepted
+		rite_has_doctrine = doctrine_kinslaying_accepted
+		rite_has_doctrine = doctrine_witchcraft_accepted
+		rite_has_doctrine = doctrine_witchcraft_virtuous
+		rite_has_doctrine = doctrine_usury_discouraged
+		rite_has_doctrine = doctrine_usury_outsiders_only
+		rite_has_doctrine = doctrine_usury_accepted
+		# Clergy and practice
+		rite_has_doctrine = doctrine_monasticism_absent
+		rite_has_doctrine = doctrine_monasticism_forbidden
+		rite_has_doctrine = doctrine_pilgrimage_forbidden
+		# Customs
+		rite_has_doctrine = doctrine_family_rites
+		rite_has_doctrine = doctrine_funeral_cremation
+		rite_has_doctrine = doctrine_funeral_sky_burial
+		rite_has_doctrine = doctrine_funeral_mummification
+		rite_has_doctrine = special_doctrine_meat_only
+		rite_has_doctrine = special_doctrine_meat_forbidden_fish
+		rite_has_doctrine = special_doctrine_meat_forbidden
+		rite_has_doctrine = special_doctrine_nothing_of_the_slain
+		rite_has_doctrine = special_doctrine_alcohol_forbidden
+		rite_has_doctrine = doctrine_gender_female_dominated
+	}
+}
+
+##############################################
+# Forbidden tenets (see docs/allowed-list.html)
+##############################################
+
+# Tenet scope. A tenet is forbidden for a Church rite if it is NOT on the approved list
+# (docs/allowed-list.html). The approved list is the single authority, so heretical tenets added by any
+# other mod (e.g. Shadows of the Cross's Gospels of Mary and Judas, Eastern Dyophysitism, Homoian Creed,
+# Faultless Clergy, Free Will) are caught without naming them, and the mod works with or without them.
+np_tenet_is_forbidden_trigger = {
+	np_tenet_is_allowed_trigger = no
+}
+
+# Tenet scope. Tenets on the approved list (docs/allowed-list.html): protected and allowed ones.
+# Used so that a tenet the Church has wrongly Prohibited is never stripped from a rite.
+# The Pentarchy is approved only before the schism, while the Church is still undivided.
+np_tenet_is_allowed_trigger = {
+	OR = {
+		AND = {
+			this = tenet:tenet_pentarchy
+			exists = rite:roman_rite
+			rite:roman_rite.faith = faith:christian_faith
+		}
+		# Protected: true Catholic teaching
+		this = tenet:tenet_communion
+		this = tenet:tenet_transubstantiation
+		this = tenet:tenet_purgatory
+		this = tenet:tenet_confession
+		this = tenet:tenet_original_sin
+		this = tenet:tenet_apostolic_succession
+		this = tenet:tenet_dulia
+		this = tenet:tenet_hyperdulia
+		# Allowed: orthodox practices
+		this = tenet:tenet_peace_of_god
+		this = tenet:tenet_ora_et_labora
+		this = tenet:tenet_celestial_hierarchy
+		this = tenet:tenet_miles_christi
+		this = tenet:tenet_philanthropia
+		this = tenet:tenet_scholasticism
+		this = tenet:tenet_love_thy_neighbour
+		this = tenet:tenet_divine_liturgy
+		this = tenet:tenet_acts_of_apostles
+		this = tenet:tenet_anachoresis
+		this = tenet:tenet_mortification_of_the_flesh
+		this = tenet:tenet_hesychasm
+		this = tenet:tenet_holy_myron
+		this = tenet:tenet_khachkar
+		this = tenet:tenet_armed_pilgrimages
+		this = tenet:tenet_vows_of_poverty
+		this = tenet:tenet_mendicant_preachers
+		this = tenet:tenet_asceticism
+		this = tenet:tenet_communal_identity
+		this = tenet:tenet_unrelenting_faith
+		this = tenet:tenet_legalism
+		this = tenet:tenet_religious_legal_pronouncements
+		this = tenet:tenet_ritual_celebrations
+		this = tenet:tenet_sacred_childbirth
+		this = tenet:tenet_sanctity_of_nature
+		this = tenet:tenet_adaptive
+		# Your calls, decided as allowed
+		this = tenet:tenet_be_fruitful_and_multiply
+		this = tenet:tenet_communal_possessions
+		this = tenet:tenet_alexandrian_catechism
+	}
+}
+
+# Rite scope. Note: rite_tenet iterators already walk the rite's OWN core tenets. Their optional
+# "status" filter means the tenet's status in the PARENT FAITH (engine docstring: "Can filter by
+# core/permitted status for its parent faith"), so it must not be used to mean "core of this rite".
+np_rite_has_forbidden_tenet_trigger = {
+	any_rite_tenet = { np_tenet_is_forbidden_trigger = yes }
+}

@@ -1,0 +1,475 @@
+﻿# Non Praevalebunt - scripted effects
+
+##############################################
+# The guard
+##############################################
+
+# Rite scope. If this rite is in good standing and holds anything forbidden, set it right.
+# No message of our own: the game already sends its "Rite updated" message for every change, listing
+# exactly what changed. A one-time notice at game start explains why such changes happen.
+np_guard_rite_effect = {
+	# A "dangerous rite" heresy outbreak (kind 2) creates a rite 35-50 points from Rome, below the heresy
+	# line. It is born fallen (Tier 3), so mark it before it could be mistaken for a rite in good standing.
+	# Traces left by the game: the spread budget on the rite, or a heresiarch founder leading it.
+	if = {
+		limit = {
+			np_rite_in_church_trigger = yes
+			np_rite_is_tier1_trigger = no
+			NOT = { has_variable = np_good_standing }
+			NOT = { has_variable = np_fallen }
+			OR = {
+				has_variable = c2_spread_remaining_converts
+				head_of_rite ?= { has_trait = heresiarch }
+				rite_founder ?= { has_trait = heresiarch }
+			}
+		}
+		set_variable = np_fallen
+		debug_log = "Non Praevalebunt: a heresy outbreak rite was marked as fallen (Tier 3)"
+		debug_log_scopes = yes
+	}
+	# Remember that this rite was seen in good standing (see np_rite_is_heretic_trigger).
+	if = {
+		limit = {
+			np_rite_is_guarded_trigger = yes
+			NOT = { has_variable = np_good_standing }
+		}
+		set_variable = np_good_standing
+	}
+	if = {
+		limit = {
+			np_rite_is_guarded_trigger = yes
+			OR = {
+				np_rite_has_forbidden_doctrine_trigger = yes
+				np_rite_has_forbidden_tenet_trigger = yes
+			}
+		}
+		save_scope_as = np_fix_rite
+		np_fix_doctrines_effect = yes
+		np_fix_tenets_effect = yes
+		# Again: a replacement tenet (e.g. Be Fruitful) can make a doctrine forbidden in combination.
+		np_fix_doctrines_effect = yes
+		debug_log = "Non Praevalebunt: guard corrected a rite"
+		debug_log_scopes = yes
+	}
+}
+
+# Rite scope. Swap each forbidden doctrine for the nearest allowed one in its group.
+np_fix_doctrines_effect = {
+	# Faith and Church
+	if = { limit = { rite_has_doctrine = doctrine_polytheist } change_rite_doctrine = doctrine_monotheist }
+	if = {
+		limit = {
+			this = faith.main_rite
+			OR = {
+				rite_has_doctrine = doctrine_no_head
+				rite_has_doctrine = doctrine_temporal_head
+			}
+		}
+		change_rite_doctrine = doctrine_spiritual_head
+	}
+	if = { limit = { rite_has_doctrine = doctrine_pluralism_pluralistic } change_rite_doctrine = doctrine_pluralism_righteous }
+	if = { limit = { rite_has_doctrine = doctrine_theocracy_lay_clergy } change_rite_doctrine = doctrine_theocracy_temporal }
+	if = { limit = { rite_has_doctrine = doctrine_sacraments_absent } change_rite_doctrine = doctrine_sacraments_central }
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_clerical_gender_either
+				rite_has_doctrine = doctrine_clerical_gender_female_only
+			}
+		}
+		change_rite_doctrine = doctrine_clerical_gender_male_only
+	}
+	# Marriage and family
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_polygamy
+				rite_has_doctrine = doctrine_concubines
+			}
+		}
+		change_rite_doctrine = doctrine_monogamy
+	}
+	if = { limit = { rite_has_doctrine = doctrine_divorce_allowed } change_rite_doctrine = doctrine_divorce_approval }
+	if = {
+		limit = {
+			rite_has_doctrine = doctrine_divorce_disallowed
+			rite_has_tenet = tenet_be_fruitful_and_multiply
+		}
+		change_rite_doctrine = doctrine_divorce_approval
+	}
+	if = { limit = { rite_has_doctrine = doctrine_bastardry_none } change_rite_doctrine = doctrine_bastardry_legitimization }
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_consanguinity_aunt_nephew_and_uncle_niece
+				rite_has_doctrine = doctrine_consanguinity_unrestricted
+			}
+		}
+		change_rite_doctrine = doctrine_consanguinity_cousins
+	}
+	# Sins and crimes
+	if = { limit = { rite_has_doctrine = doctrine_homosexuality_accepted } change_rite_doctrine = doctrine_homosexuality_shunned }
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_deviancy_accepted
+				rite_has_doctrine = doctrine_deviancy_virtuous
+			}
+		}
+		change_rite_doctrine = doctrine_deviancy_shunned
+	}
+	if = { limit = { rite_has_doctrine = doctrine_adultery_men_accepted } change_rite_doctrine = doctrine_adultery_men_shunned }
+	if = { limit = { rite_has_doctrine = doctrine_adultery_women_accepted } change_rite_doctrine = doctrine_adultery_women_shunned }
+	if = { limit = { rite_has_doctrine = doctrine_kinslaying_accepted } change_rite_doctrine = doctrine_kinslaying_shunned }
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_witchcraft_accepted
+				rite_has_doctrine = doctrine_witchcraft_virtuous
+			}
+		}
+		change_rite_doctrine = doctrine_witchcraft_shunned
+	}
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_usury_discouraged
+				rite_has_doctrine = doctrine_usury_outsiders_only
+				rite_has_doctrine = doctrine_usury_accepted
+			}
+		}
+		change_rite_doctrine = doctrine_usury_forbidden
+	}
+	# Clergy and practice
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_monasticism_absent
+				rite_has_doctrine = doctrine_monasticism_forbidden
+			}
+		}
+		change_rite_doctrine = doctrine_monasticism_accepted
+	}
+	if = { limit = { rite_has_doctrine = doctrine_pilgrimage_forbidden } change_rite_doctrine = doctrine_pilgrimage_encouraged }
+	# Customs
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = doctrine_family_rites
+				rite_has_doctrine = doctrine_funeral_cremation
+				rite_has_doctrine = doctrine_funeral_sky_burial
+				rite_has_doctrine = doctrine_funeral_mummification
+			}
+		}
+		change_rite_doctrine = doctrine_funeral_stoic
+	}
+	if = {
+		limit = {
+			OR = {
+				rite_has_doctrine = special_doctrine_meat_only
+				rite_has_doctrine = special_doctrine_meat_forbidden_fish
+				rite_has_doctrine = special_doctrine_meat_forbidden
+				rite_has_doctrine = special_doctrine_nothing_of_the_slain
+			}
+		}
+		change_rite_doctrine = doctrine_diet_unrestricted
+	}
+	if = { limit = { rite_has_doctrine = special_doctrine_alcohol_forbidden } change_rite_doctrine = doctrine_alcohol_permitted }
+	if = { limit = { rite_has_doctrine = doctrine_gender_female_dominated } change_rite_doctrine = doctrine_gender_equal }
+}
+
+# Rite scope, saved as scope:np_fix_rite. Remove each forbidden core tenet and put an allowed one in its place.
+# Vanilla caps core tenets at 3, Shadows of the Cross at 5, so five passes always cover them all.
+# Extra passes do nothing. (No list is used, so nothing leaks from one rite to the next during a sweep.)
+np_fix_tenets_effect = {
+	np_fix_one_tenet_effect = yes
+	np_fix_one_tenet_effect = yes
+	np_fix_one_tenet_effect = yes
+	np_fix_one_tenet_effect = yes
+	np_fix_one_tenet_effect = yes
+}
+
+# Rite scope, saved as scope:np_fix_rite.
+# No "status" filter on the first iterator: it must look at the rite's own core tenets (see np_triggers.txt).
+np_fix_one_tenet_effect = {
+	if = {
+		limit = { np_rite_has_forbidden_tenet_trigger = yes }
+		clear_saved_scope = np_bad_tenet
+		random_rite_tenet = {
+			limit = { np_tenet_is_forbidden_trigger = yes }
+			save_scope_as = np_bad_tenet
+		}
+		if = {
+			limit = { exists = scope:np_bad_tenet }
+			remove_rite_tenet = scope:np_bad_tenet
+			np_add_replacement_tenet_effect = yes
+			np_after_tenet_swap_effect = yes
+		}
+	}
+}
+
+# Rite scope (scope:np_fix_rite). scope:np_bad_tenet was just removed and scope:np_new_tenet (if it
+# exists) was added.
+# Shadows of the Cross compatibility, automatic: SOTC records each rite's two "canon" tenets in the rite
+# variables ac_foundation_1 / ac_foundation_2 and puts a removed canon tenet back. Point the record at the
+# replacement so SOTC keeps the swap; with no replacement, clear it so SOTC refills it from the rite's
+# current (allowed) tenets. Without SOTC these variables never exist, so this does nothing and names no
+# SOTC key. Each slot is checked with has_variable first: reading an unset variable logs an error.
+np_after_tenet_swap_effect = {
+	if = {
+		limit = {
+			has_variable = ac_foundation_1
+			var:ac_foundation_1 = scope:np_bad_tenet
+		}
+		if = {
+			limit = { exists = scope:np_new_tenet }
+			set_variable = { name = ac_foundation_1 value = scope:np_new_tenet }
+		}
+		else = {
+			remove_variable = ac_foundation_1
+		}
+	}
+	if = {
+		limit = {
+			has_variable = ac_foundation_2
+			var:ac_foundation_2 = scope:np_bad_tenet
+		}
+		if = {
+			limit = { exists = scope:np_new_tenet }
+			set_variable = { name = ac_foundation_2 value = scope:np_new_tenet }
+		}
+		else = {
+			remove_variable = ac_foundation_2
+		}
+	}
+}
+
+# Rite scope, saved as scope:np_fix_rite. Add one allowed core tenet, if a valid one exists.
+# First choice: a core tenet of the main rite that this rite lacks and can take.
+# Fallback: a short fixed list. Every candidate must pass rite_can_choose_tenet (the game's own
+# is_shown + can_pick check), so we never create an invalid tenet combination.
+np_add_replacement_tenet_effect = {
+	clear_saved_scope = np_new_tenet
+	if = {
+		limit = { this != faith.main_rite }
+		faith.main_rite = {
+			random_rite_tenet = {
+				limit = {
+					np_tenet_is_forbidden_trigger = no
+					save_temporary_scope_as = np_cand_tenet
+					scope:np_fix_rite = {
+						NOT = { rite_has_tenet = scope:np_cand_tenet }
+						rite_can_choose_tenet = scope:np_cand_tenet
+					}
+				}
+				save_scope_as = np_new_tenet
+			}
+		}
+	}
+	# Second choice: any approved tenet the rite lacks and can take.
+	if = {
+		limit = { NOT = { exists = scope:np_new_tenet } }
+		np_build_approved_tenet_list_effect = yes
+		random_in_list = {
+			list = np_approved_tenets
+			limit = {
+				save_temporary_scope_as = np_cand_tenet
+				scope:np_fix_rite = {
+					NOT = { rite_has_tenet = scope:np_cand_tenet }
+					rite_can_choose_tenet = scope:np_cand_tenet
+				}
+			}
+			save_scope_as = np_new_tenet
+		}
+	}
+	if = {
+		limit = { exists = scope:np_new_tenet }
+		add_rite_tenet = scope:np_new_tenet
+	}
+	else = {
+		debug_log = "Non Praevalebunt: no valid replacement tenet; the rite keeps one fewer core tenet"
+		debug_log_scopes = yes
+	}
+}
+
+# Builds the temporary list np_approved_tenets from docs/allowed-list.html (protected + allowed).
+# Every rite gets the same entries, so it is harmless if the list is reused within one sweep.
+np_build_approved_tenet_list_effect = {
+	tenet:tenet_communion = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_transubstantiation = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_purgatory = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_confession = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_original_sin = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_apostolic_succession = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_dulia = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_hyperdulia = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_peace_of_god = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_ora_et_labora = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_celestial_hierarchy = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_miles_christi = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_philanthropia = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_scholasticism = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_love_thy_neighbour = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_divine_liturgy = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_acts_of_apostles = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_anachoresis = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_mortification_of_the_flesh = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_hesychasm = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_armed_pilgrimages = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_vows_of_poverty = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_mendicant_preachers = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_asceticism = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_communal_identity = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_unrelenting_faith = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_legalism = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_religious_legal_pronouncements = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_ritual_celebrations = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_sacred_childbirth = { add_to_temporary_list = np_approved_tenets }
+	tenet:tenet_sanctity_of_nature = { add_to_temporary_list = np_approved_tenets }
+}
+
+# One-time notice at game start, so players know why "Rite updated" messages may appear.
+np_startup_notice_effect = {
+	every_player = {
+		send_interface_message = {
+			type = event_generic_neutral
+			title = np_msg_mod_active
+			desc = np_msg_mod_active_desc
+		}
+	}
+}
+
+##############################################
+# Pope as head of faith before the schism (game rule np_pope_head_before_schism)
+##############################################
+
+# Any scope. Before the schism the undivided Church has no head of faith in By God Alone. With the game
+# rule on, make the Papacy its head, so the main rite always follows the Pope (who is always Roman).
+# Rome keeps the primacy in every case: if the schism is prevented and the peacemaker seats another see
+# (e.g. Constantinople), or anything else gives the undivided Church another head, the Papacy is restored.
+# (A peacemaker's "leave the seat vacant" changes nothing in the game, so the Pope simply stays head.)
+np_pope_head_setup_effect = {
+	if = {
+		limit = {
+			has_game_rule = np_pope_head_before_schism_on
+			exists = rite:roman_rite
+			rite:roman_rite.faith = faith:christian_faith
+			NOT = { faith:christian_faith.religious_head_title ?= title:k_papal_state }
+		}
+		# Tell the undivided Church's players when another seat is being replaced.
+		if = {
+			limit = { exists = faith:christian_faith.religious_head_title }
+			every_player = {
+				limit = { faith = faith:christian_faith }
+				send_interface_message = {
+					type = event_generic_neutral
+					title = np_msg_rome_keeps_primacy
+					desc = np_msg_rome_keeps_primacy_desc
+				}
+			}
+		}
+		# Same order as By God Alone's own seating (pam_schism_seat_head_of_faith_effect): the faith must
+		# have the Spiritual Head doctrine before it can be given a head-of-faith title.
+		faith:christian_faith = {
+			if = {
+				limit = { NOT = { has_doctrine = doctrine_spiritual_head } }
+				change_doctrine = doctrine_spiritual_head
+			}
+			set_religious_head_title = title:k_papal_state
+			# Head-of-faith doctrines belong to the main rite only. Side rites keep theirs (a heresy
+			# such as the Cathars may hold "No Head"); every rite just refreshes its head.
+			main_rite = {
+				if = {
+					limit = { rite_has_doctrine = doctrine_no_head }
+					change_rite_doctrine = doctrine_spiritual_head
+				}
+			}
+			every_faith_rite = {
+				force_refresh_head_of_rite = yes
+			}
+		}
+		debug_log = "Non Praevalebunt: the Pope is now head of the undivided Church"
+	}
+}
+
+# Any scope. After the schism the game makes the Papacy head of Catholicism. Make sure the empty old
+# undivided faith no longer claims the same title.
+np_schism_head_cleanup_effect = {
+	if = {
+		limit = {
+			exists = rite:roman_rite
+			NOT = { rite:roman_rite.faith = faith:christian_faith }
+			faith:christian_faith.religious_head_title ?= title:k_papal_state
+		}
+		faith:christian_faith = { remove_religious_head_title = yes }
+		debug_log = "Non Praevalebunt: removed the Papacy as head of the old undivided faith after the schism"
+	}
+}
+
+##############################################
+# Be Fruitful and Multiply: blessed children
+##############################################
+
+# Root = the newborn (on_birth_child). If the child was born of a marriage, each parent whose own rite
+# is in the Church and holds the np_blessed_children_piety parameter (Be Fruitful and Multiply, see
+# np_tenet_overrides.txt) gains piety.
+# "Born of a marriage": the mother and the family father are (or were, until death) married, so a
+# posthumous child counts. Children of concubines are legitimate in the game but don't count.
+np_blessed_children_effect = {
+	if = {
+		limit = {
+			scope:is_bastard = no
+			exists = scope:mother
+			exists = scope:father
+			scope:father = { is_spouse_of_even_if_dead = scope:mother }
+		}
+		scope:mother = { np_blessed_children_parent_effect = yes }
+		scope:father = { np_blessed_children_parent_effect = yes }
+	}
+}
+
+# Character scope (a parent).
+np_blessed_children_parent_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			rite ?= {
+				np_rite_in_church_trigger = yes
+				rite_has_parameter = np_blessed_children_piety
+			}
+		}
+		add_piety = minor_piety_gain
+	}
+}
+
+##############################################
+# Pope rule
+##############################################
+
+# Root = the holder of title:k_papal_state (never the Shadows of the Cross steward; callers exclude him).
+np_pope_take_roman_rite_effect = {
+	# Every Pope belongs to the Church. Vanilla's Great Schism effect makes the same correction.
+	if = {
+		limit = { NOT = { faith = rite:roman_rite.faith } }
+		set_character_faith = rite:roman_rite.faith
+		debug_log = "Non Praevalebunt: the Pope was brought into the Church's faith"
+		debug_log_scopes = yes
+	}
+	if = {
+		limit = { NOT = { rite = rite:roman_rite } }
+		set_character_rite = rite:roman_rite
+		debug_log = "Non Praevalebunt: the Pope took the Roman rite"
+		debug_log_scopes = yes
+	}
+	# When the Pope heads the faith (always after the schism; before it with the game rule on), the main
+	# rite must be his Roman rite. Only when he really is the head: if a prevented schism seated another
+	# head, that head's rite rules and we don't fight it.
+	if = {
+		limit = {
+			faith.religious_head ?= this
+			NOT = { faith.main_rite = rite:roman_rite }
+		}
+		rite:roman_rite = { set_main_rite = yes }
+		debug_log = "Non Praevalebunt: the Roman rite is the main rite again"
+	}
+}

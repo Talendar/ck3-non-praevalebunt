@@ -1,0 +1,22 @@
+﻿l_english:
+ # One-time notice at game start
+ np_msg_mod_active: "Upon This Rock"
+ np_msg_mod_active_desc: "“Thou art Peter; and upon this rock I will build my church, and the gates of hell shall not prevail against it.” (Matthew 16:18)\n\nChrist promised that His Church would never teach error in faith or morals. Her rites may differ in custom and discipline, but never in what she believes. When a rite strays, the Church calls it back, and you will see it in your rite updates."
+
+ # Game rule: Pope as head of faith before the Great Schism
+ rule_np_pope_head_before_schism: "Pope as Head Before the Schism"
+ setting_np_pope_head_before_schism_on: "On"
+ setting_np_pope_head_before_schism_on_desc: "Before the Great Schism, the Pope is [head_of_faith|E] of the undivided Church, so its main [rite|E] follows him and stays Roman. Rome keeps this primacy even if the schism is prevented. (Non Praevalebunt)"
+ setting_np_pope_head_before_schism_off: "Off"
+ setting_np_pope_head_before_schism_off_desc: "As in the base game: the undivided Church has no [head_of_faith|E] until the Great Schism. Its main [rite|E] goes to a rite with more counties and at least as many holy sites."
+
+ # Be Fruitful and Multiply: what changes within the Church
+ doctrine_parameter_np_blessed_children_piety: "Within the Catholic Church: parents gain [piety|E] for each child born of their marriage, and divorce for low [fertility|E] still needs the Church's approval"
+
+ # Adaptability: pluralism requirement within the Church
+ NP_ADAPTIVE_PLURALISM: "Requires the [doctrine|E] Pluralistic, or Righteous within the Catholic Church"
+ NP_RIGHTEOUS_ADAPTIVE: "Incompatible with the [core_tenet|E] Adaptability, except within the Catholic Church"
+
+ # Rome keeps the primacy before the schism (game rule on)
+ np_msg_rome_keeps_primacy: "The Keys of Peter"
+ np_msg_rome_keeps_primacy_desc: "Some would set another see over the whole Church. Yet Christ gave the keys of the kingdom to Peter (Matthew 16:19), and they pass to his successor, the Bishop of Rome. The Pope remains [head_of_faith|E] of the undivided Church."

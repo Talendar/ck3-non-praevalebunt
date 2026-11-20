@@ -1,0 +1,17 @@
+﻿# Non Praevalebunt - game rules
+
+# Before the Great Schism, make the Papacy head of the undivided Church (By God Alone leaves it headless).
+# Used by np_pope_head_setup_effect (common/scripted_effects/np_effects.txt).
+np_pope_head_before_schism = {
+	categories = {
+		historicity faith
+	}
+
+	default = np_pope_head_before_schism_on
+
+	np_pope_head_before_schism_on = {
+	}
+
+	np_pope_head_before_schism_off = {
+	}
+}

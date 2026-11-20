@@ -1,0 +1,45 @@
+﻿# Non Praevalebunt - doctrine overrides (works with or without Shadows of the Cross)
+# A full copy of the vanilla definition (a definition can only be replaced whole), with the Non Praevalebunt
+# change marked by a comment. This file must sort after 20_doctrines.txt (and SOTC's ac_doctrines.txt).
+
+doctrine_pluralism_righteous = {
+	doctrine_group_type = doctrine_pluralism
+	index = 1
+	divergence = 5
+
+	icon = "doctrine_pluralism_righteous"
+
+	piety_cost = {
+		value = faith_doctrine_cost_mid
+		if = {
+			limit = { rite_has_doctrine = doctrine_pluralism_righteous }
+			multiply = faith_unchanged_doctrine_cost_mult
+		}
+	}
+	can_pick = {
+		# Non Praevalebunt: within the Church, Righteous may stand with Adaptability. This mirrors the exception
+		# in tenet_adaptive (np_tenet_overrides.txt), so the rite editor accepts e.g. the Mozarabic rite.
+		custom_description = {
+			text = np_righteous_adaptive_trigger
+			OR = {
+				NOT = { tenet:tenet_adaptive = { is_in_list = selected_doctrines } }
+				AND = {
+					exists = rite:roman_rite
+					this = rite:roman_rite.faith
+				}
+			}
+		}
+	}
+
+	parameters = {
+		pluralism_righteous_revocation_tyranny_reduced
+	}
+
+	special_parameters = {
+		hostility_towards_us_mult = 1
+	}
+
+	character_modifier = {
+		minority_different_faith_opinion = -10
+	}
+}

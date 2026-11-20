@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – Allowed List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --no:#9a2a2a; --no-soft:#f7e2e0; --ask:#a0670f; --ask-soft:#fbecd2; --pro:#2f5d8a; --pro-soft:#e2ecf6;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --ask:#e2a94f; --ask-soft:#3a2c14; --pro:#7fb0e0; --pro-soft:#1c2a38;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --ask:#e2a94f; --ask-soft:#3a2c14; --pro:#7fb0e0; --pro-soft:#1c2a38;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1060px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Legend */
+.legend{margin-top:24px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.lg{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.86rem;display:flex;flex-direction:column;gap:6px}
+.lg .muted{font-size:.82rem}
+
+/* Chips */
+.c{display:inline-flex;align-items:center;gap:5px;font-size:.84rem;font-weight:600;border-radius:999px;padding:3px 10px;border:1px solid transparent;white-space:nowrap}
+.c::before{font-weight:800}
+.c.ok{background:var(--ok-soft);color:var(--ink);border-color:color-mix(in srgb,var(--ok) 45%,transparent)} .c.ok::before{content:"✓";color:var(--ok)}
+.c.no{background:var(--no-soft);color:var(--ink);border-color:color-mix(in srgb,var(--no) 45%,transparent)} .c.no::before{content:"✕";color:var(--no)}
+.c.ask{background:var(--ask-soft);color:var(--ink);border-color:color-mix(in srgb,var(--ask) 55%,transparent)} .c.ask::before{content:"?";color:var(--ask)}
+.c.pro{background:var(--pro-soft);color:var(--ink);border-color:color-mix(in srgb,var(--pro) 45%,transparent)} .c.pro::before{content:"⛨";color:var(--pro)}
+.c .def{color:var(--gold);font-size:.9em}
+.c .sig{color:var(--no);font-size:.9em}
+
+/* Your calls */
+.calls{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.calls-scroll{overflow-x:auto}
+.calls table{width:100%;border-collapse:collapse;font-size:.92rem;min-width:640px}
+.calls th,.calls td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.calls th{background:var(--surface-2);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.calls tr:last-child td{border-bottom:none}
+.calls td.n{font-family:Cinzel,Georgia,serif;font-weight:700;color:var(--ask);width:34px}
+.calls td.item{font-weight:700;white-space:nowrap}
+.lean{font-weight:700;border-radius:6px;padding:2px 8px;font-size:.82rem;white-space:nowrap}
+.dec{display:inline-block;margin-left:6px;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ok)}
+.dec.open{color:var(--ask)}
+.lean.f{background:var(--no-soft);color:var(--no)} .lean.a{background:var(--ok-soft);color:var(--ok)} .lean.m{background:var(--ask-soft);color:var(--ask)}
+
+/* Start changes */
+.starts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+.st{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.st .rite{font-family:Cinzel,Georgia,serif;font-weight:700}
+.st .chg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.86rem}
+.st .arr{color:var(--muted)}
+.st .note{font-size:.82rem;color:var(--muted)}
+
+/* Doctrine groups */
+.area{margin-top:18px}
+.area-h{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.area-h h3{font-size:1.05rem}
+.area-h span{font-size:.85rem;color:var(--muted)}
+.groups{display:grid;gap:8px}
+.g{display:grid;grid-template-columns:190px 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.g .gn{font-weight:700}
+.g .gn small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.g .opts{display:flex;flex-wrap:wrap;gap:6px}
+.g .why{grid-column:2;font-size:.84rem;color:var(--muted)}
+
+/* Tenets */
+.tenets{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.tb{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.tb.pro{border-top:4px solid var(--pro)} .tb.ok{border-top:4px solid var(--ok)} .tb.ask{border-top:4px solid var(--ask)} .tb.no{border-top:4px solid var(--no)}
+.tb .chips{display:flex;flex-wrap:wrap;gap:6px}
+.tb p{font-size:.86rem;color:var(--muted)}
+.sub-h{font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+
+@media (max-width:900px){.legend{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:760px){
+  .tenets{grid-template-columns:1fr}
+  .g{grid-template-columns:1fr;gap:6px}
+  .g .why{grid-column:1}
+}
+@media (max-width:420px){.legend{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · Approved</div>
+  <h1>The Allowed List</h1>
+  <p class="sub">What rites in good standing may hold, and what they may not</p>
+  <a class="back" href="design-recommendation.html">← Back to the main recommendation</a>
+</header>
+
+<div class="wrap">
+
+  <section class="legend" aria-label="Legend">
+    <div class="lg"><span class="c ok">Allowed</span><span class="muted">Faith and morals are fine. Rites may hold it.</span></div>
+    <div class="lg"><span class="c no">Forbidden</span><span class="muted">Against faith or morals. Blocked, or makes a rite fall.</span></div>
+    <div class="lg"><span class="c ask">Your call</span><span class="muted">Not strictly doctrine. All 15 are now decided (section 1).</span></div>
+    <div class="lg"><span class="c pro">Protected</span><span class="muted">True Catholic teaching. Can never be Prohibited.</span></div>
+    <div class="lg"><span class="c ok">Example <span class="def">★</span></span><span class="muted">★ = the game’s default for Catholics.</span></div>
+  </section>
+
+  <!-- Your calls -->
+  <h2><span class="num">1</span>Your calls: all 15 decided</h2>
+  <div class="calls"><div class="calls-scroll">
+    <table>
+      <thead><tr><th>#</th><th>Item</th><th>My lean</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td class="n">1</td><td class="item">Uncle–niece marriage ★</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Canon law banned it. Dispensations were very rare, and most came centuries later. It’s the game’s default, so forbidding it makes Catholic marriage stricter from day one.</td></tr>
+        <tr><td class="n">2</td><td class="item">Cousin marriage</td><td><span class="lean a">Allow</span><span class="dec">✓ Decided</span></td><td>Formally banned, but papal dispensations for royal cousins were common.</td></tr>
+        <tr><td class="n">3</td><td class="item">Usury “Discouraged”</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Its text says lending at interest is “no crime”. The Council of Vienne (1311) called it heresy to deny that usury is a sin.</td></tr>
+        <tr><td class="n">4</td><td class="item">Alcohol Forbidden</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Wine is needed for Mass. Banning it outright was a mark of the Manichaeans.</td></tr>
+        <tr><td class="n">5</td><td class="item">Diet: Fish Allowed</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>No meat ever, but fish allowed. That’s very close to what the Cathar elite ate.</td></tr>
+        <tr><td class="n">6</td><td class="item">Funeral: Family Rites</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Its text describes ancestor veneration by rank, not Christian prayer for the dead.</td></tr>
+        <tr><td class="n">7</td><td class="item">Gender view</td><td><span class="lean f">Forbid Female-dominated</span><br><span class="lean a" style="display:inline-block;margin-top:4px">Allow Equal</span><span class="dec">✓ Decided</span></td><td>Female-dominated bars men from holding any title, which no Christian society ever did. Equal only changes politics. Clergy, bishops and the Pope stay male under a separate, locked doctrine.</td></tr>
+        <tr><td class="n">8</td><td class="item">Be Fruitful and Multiply</td><td><span class="lean m">Allow, edited</span><span class="dec">✓ Decided</span></td><td>The teaching is Catholic, but the game lets you divorce an infertile spouse. Allowed. Within the Church its low-fertility divorce needs the Church’s approval like any other, and parents gain piety for each child born of their marriage.</td></tr>
+        <tr><td class="n">9</td><td class="item">The Pentarchy</td><td><span class="lean m">Before the schism only</span><span class="dec">✓ Decided</span></td><td>The Byzantine rite held it inside the undivided Church. The game itself prohibits it in Catholicism after 1054.</td></tr>
+        <tr><td class="n">10</td><td class="item">Communal Possessions</td><td><span class="lean a">Allow</span><span class="dec">✓ Decided</span></td><td>Shared goods, as in Acts 4:32. It was only heretical when made a duty for all.</td></tr>
+        <tr><td class="n">11</td><td class="item">Alexandrian Catechism</td><td><span class="lean a">Allow</span><span class="dec">✓ Decided</span></td><td>Reason can know the moral law, which is Catholic natural law. Odd side effect: it makes “zealous” a sin.</td></tr>
+        <tr><td class="n">12</td><td class="item">Pacifism</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Rejects just war entirely. Waldensians and Cathars held this.</td></tr>
+        <tr><td class="n">13</td><td class="item">Literalism</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Scripture “needs no interpretation”, which rejects the Church’s teaching authority.</td></tr>
+        <tr><td class="n">14</td><td class="item">Astrology</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Divining the future from the stars was condemned.</td></tr>
+        <tr><td class="n">15</td><td class="item">Esotericism</td><td><span class="lean f">Forbid</span><span class="dec">✓ Decided</span></td><td>Occult knowledge and alchemy.</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+
+  <!-- Start changes -->
+  <h2><span class="num">2</span>What changes at game start</h2>
+  <p class="small muted" style="margin:-6px 0 12px">The starting rites that break this list today, with my leans applied.</p>
+  <div class="starts">
+    <div class="st"><span class="rite">Mozarabic</span>
+      <div class="chg"><span class="c no">Same-sex accepted</span><span class="arr">→</span><span class="c ok">Shunned</span></div>
+      <div class="chg"><span class="c no">Pluralist</span><span class="arr">→</span><span class="c ok">Righteous</span></div>
+      <span class="note">Applies at every start date. In 867 it’s part of the undivided Church.</span></div>
+    <div class="st"><span class="rite">Insular</span>
+      <div class="chg"><span class="c no">Pluralist</span><span class="arr">→</span><span class="c ok">Righteous</span></div>
+      <span class="note">The developers set Pluralist so Insular wouldn’t push Catholics out of Britain. Watch for that in testing.</span></div>
+    <div class="st"><span class="rite">Georgian (867)</span>
+      <div class="chg"><span class="c no">Divorce allowed</span><span class="arr">→</span><span class="c ok">Must be approved</span></div>
+      <span class="note">Only if it belongs to the undivided Church in 867.</span></div>
+    <div class="st"><span class="rite">All Christian rites</span>
+      <div class="chg"><span class="c no">Uncle–niece</span><span class="arr">→</span><span class="c ok">Cousins</span></div>
+      <span class="note">Decided in call #1. Catholic marriage gets stricter from day one.</span></div>
+    <div class="st"><span class="rite">Byzantine (867)</span>
+      <div class="chg"><span class="c ok">Pentarchy</span><span class="arr">→</span><span class="c ok">Kept until the schism</span></div>
+      <span class="note">Decided in call #9. Forbidden in Catholicism after the schism.</span></div>
+  </div>
+
+  <!-- Doctrines -->
+  <h2><span class="num">3</span>Doctrines</h2>
+
+  <div class="area">
+    <div class="area-h"><h3>Faith and Church</h3><span>Locked: these define the Catholic faith.</span></div>
+    <div class="groups">
+      <div class="g"><span class="gn">God</span><div class="opts"><span class="c ok">One God <span class="def">★</span></span><span class="c no">Many gods</span></div></div>
+      <div class="g"><span class="gn">Head of Faith<small>main rite only</small></span><div class="opts"><span class="c ok">Spiritual head (the Pope) <span class="def">★</span></span><span class="c no">No head</span><span class="c no">Temporal head</span></div><p class="why">The Pope leads the Church. No king can.</p></div>
+      <div class="g"><span class="gn">Religious attitude</span><div class="opts"><span class="c ok">Fundamentalist</span><span class="c ok">Righteous <span class="def">★</span></span><span class="c no">Pluralist</span></div><p class="why">The game’s text for Pluralist says no single view of God is right. That’s indifferentism.</p></div>
+      <div class="g"><span class="gn">Clerical tradition</span><div class="opts"><span class="c ok">Theocratic <span class="def">★</span></span><span class="c no">Lay clergy</span></div><p class="why">The game’s text for Lay clergy says any believer can preach the faith. That denies the ordained priesthood, as the Waldensians did.</p></div>
+      <div class="g"><span class="gn">Sacraments</span><div class="opts"><span class="c ok">Central <span class="def">★</span></span><span class="c no">No sacraments</span></div></div>
+      <div class="g"><span class="gn">Clerical gender</span><div class="opts"><span class="c ok">Male only <span class="def">★</span></span><span class="c no">Either</span><span class="c no">Female only</span></div><p class="why">Only men can be ordained.</p></div>
+    </div>
+  </div>
+
+  <div class="area">
+    <div class="area-h"><h3>Marriage and family</h3><span>Locked: moral teaching.</span></div>
+    <div class="groups">
+      <div class="g"><span class="gn">Marriage</span><div class="opts"><span class="c ok">Monogamy <span class="def">★</span></span><span class="c no">Polygamy</span><span class="c no">Concubines</span></div></div>
+      <div class="g"><span class="gn">Divorce</span><div class="opts"><span class="c ok">Disallowed</span><span class="c ok">Must be approved <span class="def">★</span></span><span class="c no">Allowed</span></div><p class="why">Marriage can’t be dissolved. “Must be approved” stands for annulment: the Church judging that a marriage was never valid.</p></div>
+      <div class="g"><span class="gn">Bastardy</span><div class="opts"><span class="c ok">Legitimization <span class="def">★</span></span><span class="c ok">No legitimization</span><span class="c no">No bastards</span></div><p class="why">The game’s text for “No bastards” says marriage doesn’t matter for lineage.</p></div>
+      <div class="g"><span class="gn">Close-kin marriage</span><div class="opts"><span class="c ok">Dynastic</span><span class="c ok">No cousins</span><span class="c ok">Cousins</span><span class="c no">Uncle–niece <span class="def">★</span></span><span class="c no">Unrestricted</span></div><p class="why">Calls #1 and #2: cousins allowed by dispensation; uncle–niece forbidden.</p></div>
+    </div>
+  </div>
+
+  <div class="area">
+    <div class="area-h"><h3>Sins and crimes</h3><span>“Crime” and “Shunned” both condemn the act. They differ only in punishment, so both are allowed.</span></div>
+    <div class="groups">
+      <div class="g"><span class="gn">Same-sex relations</span><div class="opts"><span class="c ok">Crime</span><span class="c ok">Shunned <span class="def">★</span></span><span class="c no">Accepted</span></div></div>
+      <div class="g"><span class="gn">Deviancy</span><div class="opts"><span class="c ok">Crime <span class="def">★</span></span><span class="c ok">Shunned</span><span class="c no">Accepted</span><span class="c no">Virtuous</span></div></div>
+      <div class="g"><span class="gn">Adultery (men)</span><div class="opts"><span class="c ok">Crime</span><span class="c ok">Shunned <span class="def">★</span></span><span class="c no">Accepted</span></div></div>
+      <div class="g"><span class="gn">Adultery (women)</span><div class="opts"><span class="c ok">Crime <span class="def">★</span></span><span class="c ok">Shunned</span><span class="c no">Accepted</span></div></div>
+      <div class="g"><span class="gn">Kinslaying</span><div class="opts"><span class="c ok">Any dynasty member</span><span class="c ok">Extended family</span><span class="c ok">Close kin <span class="def">★</span></span><span class="c ok">Shunned</span><span class="c no">Accepted</span></div><p class="why">“Shunned” still treats it as murder, so it’s allowed.</p></div>
+      <div class="g"><span class="gn">Witchcraft</span><div class="opts"><span class="c ok">Crime <span class="def">★</span></span><span class="c ok">Shunned</span><span class="c no">Accepted</span><span class="c no">Virtuous</span></div></div>
+      <div class="g"><span class="gn">Usury</span><div class="opts"><span class="c ok">Forbidden <span class="def">★</span></span><span class="c no">Discouraged</span><span class="c no">Outsiders only</span><span class="c no">Accepted</span></div><p class="why">Call #3. The Council of Vienne (1311) called it heresy to deny that usury is a sin.</p></div>
+    </div>
+  </div>
+
+  <div class="area">
+    <div class="area-h"><h3>Clergy and practice</h3><span>Free: church discipline, so rites may differ.</span></div>
+    <div class="groups">
+      <div class="g"><span class="gn">Clerical marriage</span><div class="opts"><span class="c ok">Celibate <span class="def">★</span></span><span class="c ok">Married priests</span></div><p class="why">A discipline. Eastern Catholics have married priests today.</p></div>
+      <div class="g"><span class="gn">Clerical appointment</span><div class="opts"><span class="c ok">All five options <span class="def">★ Spiritual, for life</span></span></div><p class="why">Kept free so the Investiture struggle can play out.</p></div>
+      <div class="g"><span class="gn">Clerical function</span><div class="opts"><span class="c ok">Control <span class="def">★</span></span><span class="c ok">Alms and pacification</span><span class="c ok">Recruitment</span></div><p class="why">Canon law barred clerics from bearing arms, but military orders and fighting bishops existed.</p></div>
+      <div class="g"><span class="gn">Monasticism</span><div class="opts"><span class="c ok">Encouraged</span><span class="c ok">Accepted <span class="def">★</span></span><span class="c no">Absent</span><span class="c no">Forbidden</span></div><p class="why">Religious life has always been part of the Church.</p></div>
+      <div class="g"><span class="gn">Pilgrimage</span><div class="opts"><span class="c ok">Encouraged <span class="def">★</span></span><span class="c ok">Local rites</span><span class="c ok">Mandatory</span><span class="c no">Forbidden</span></div><p class="why">The game’s text for Forbidden calls holy places “heresy”.</p></div>
+    </div>
+  </div>
+
+  <div class="area">
+    <div class="area-h"><h3>Customs</h3><span>Mostly free.</span></div>
+    <div class="groups">
+      <div class="g"><span class="gn">Funeral</span><div class="opts"><span class="c ok">Stoic burial <span class="def">★</span></span><span class="c ok">Bewailing (keening)</span><span class="c no">Family rites</span><span class="c no">Cremation</span><span class="c no">Sky burial</span><span class="c no">Mummification</span></div><p class="why">The medieval Church forbade cremation.</p></div>
+      <div class="g"><span class="gn">Anointing rulers</span><div class="opts"><span class="c ok">None</span><span class="c ok">Permitted</span><span class="c ok">Imperial <span class="def">★</span></span></div></div>
+      <div class="g"><span class="gn">Diet</span><div class="opts"><span class="c ok">No restrictions <span class="def">★</span></span><span class="c ok">Temperate clergy</span><span class="c ok">Fasting elect</span><span class="c no">Fish allowed</span><span class="c no">All meat forbidden</span><span class="c no">Nothing of the slain</span><span class="c no">Flesh alone</span></div><p class="why">Fasting is fine. Holding meat itself unclean was condemned (Council of Braga, 561).</p></div>
+      <div class="g"><span class="gn">Alcohol</span><div class="opts"><span class="c ok">Permitted <span class="def">★</span></span><span class="c ok">Highborn only</span><span class="c no">Forbidden</span></div></div>
+      <div class="g"><span class="gn">Gender view<small>politics, not doctrine</small></span><div class="opts"><span class="c ok">Male-dominated <span class="def">★</span></span><span class="c ok">Equal</span><span class="c no">Female-dominated</span></div></div>
+    </div>
+  </div>
+
+  <!-- Tenets -->
+  <h2><span class="num">4</span>Tenets</h2>
+  <div class="tenets">
+    <div class="tb pro">
+      <h3>Protected: true Catholic teaching</h3>
+      <p>Rites may hold them as core. No Pope or council may ever Prohibit them.</p>
+      <div class="chips"><span class="c pro">Communion</span><span class="c pro">Transubstantiation</span><span class="c pro">Purgatory</span><span class="c pro">Confession</span><span class="c pro">Original Sin</span><span class="c pro">Apostolic Succession</span><span class="c pro">Veneration of Saints</span><span class="c pro">Mother of God</span></div>
+    </div>
+    <div class="tb ok">
+      <h3>Allowed: orthodox practices</h3>
+      <p>Rites may hold them. A Pope or council may still restrict them, as a matter of discipline.</p>
+      <div class="chips"><span class="c ok">Peace of God</span><span class="c ok">To Work Is to Pray</span><span class="c ok">Celestial Hierarchy</span><span class="c ok">Soldiery of Christ</span><span class="c ok">Charity</span><span class="c ok">Scholasticism</span><span class="c ok">Love Thy Neighbour</span><span class="c ok">Divine Liturgy</span><span class="c ok">Fervent Proselytism</span><span class="c ok">Anachoresis</span><span class="c ok">Mortification of the Flesh</span><span class="c ok">Hesychasm</span><span class="c ok">Holy Myron</span><span class="c ok">Khachkars</span><span class="c ok">Armed Pilgrimages</span><span class="c ok">Vows of Poverty</span><span class="c ok">Mendicant Preaching</span><span class="c ok">Asceticism</span><span class="c ok">Communal Identity</span><span class="c ok">Unrelenting Faith</span><span class="c ok">Legalism</span><span class="c ok">Religious Law</span><span class="c ok">Ritual Celebrations</span><span class="c ok">Sacred Childbirth</span><span class="c ok">Sanctity of Nature</span><span class="c ok">Adaptability</span></div>
+    </div>
+    <div class="tb ask">
+      <h3>Decided by your calls</h3>
+      <p>Calls #8 to #15 in section 1.</p>
+      <span class="sub-h">Allowed</span><div class="chips"><span class="c ok">Be Fruitful and Multiply (no divorce; piety for children born in wedlock)</span><span class="c ok">The Pentarchy (before the schism only)</span><span class="c ok">Communal Possessions</span><span class="c ok">Alexandrian Catechism</span></div><span class="sub-h">Forbidden</span><div class="chips"><span class="c no">Pacifism</span><span class="c no">Literalism</span><span class="c no">Astrology</span><span class="c no">Esotericism</span></div>
+    </div>
+    <div class="tb no">
+      <h3>Forbidden</h3>
+      <span class="sub-h">Classic heresies · the pool for signature heresies <span class="sig">⚑</span></span>
+      <div class="chips"><span class="c no">Adoptionism <span class="sig">⚑</span></span><span class="c no">Monophysitism <span class="sig">⚑</span></span><span class="c no">Miaphysitism <span class="sig">⚑</span></span><span class="c no">Gnosticism <span class="sig">⚑</span></span><span class="c no">Simony <span class="sig">⚑</span></span><span class="c no">Iconoclasm <span class="sig">⚑</span></span><span class="c no">Consolamentum <span class="sig">⚑</span></span></div>
+      <span class="sub-h">Pagan, immoral or foreign</span>
+      <div class="chips"><span class="c no">Carnal Exaltation</span><span class="c no">Human Sacrifice</span><span class="c no">Ritual Cannibalism</span><span class="c no">Exaltation of Pain</span><span class="c no">Sacred Lies</span><span class="c no">Polyamory</span><span class="c no">Natural Primitivism</span><span class="c no">Divine Marriage</span><span class="c no">Sacred Murder</span><span class="c no">Hedonism</span><span class="c no">Pursuit of Power</span><span class="c no">Sanctioned False Conversions</span><span class="c no">Pastoral Isolation</span><span class="c no">All 5 Syncretisms</span><span class="c no">Megalithic Constructions</span><span class="c no">Sacred Mountains</span><span class="c no">Chthonic Redoubts</span><span class="c no">Righteous Rebirth</span><span class="c no">Mind Without Mind</span><span class="c no">Cranial Trophies</span></div>
+    </div>
+  </div>
+
+  <footer>Built from the CK3 1.21.0.3 and By God Alone game files and their in-game texts. This is a draft: correct anything that doesn’t fit your understanding of the faith.</footer>
+</div>
+</body>
+</html>

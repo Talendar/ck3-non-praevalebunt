@@ -1,0 +1,396 @@
+﻿# Non Praevalebunt - tenet overrides (works with or without Shadows of the Cross)
+# Each block below is a full copy of the vanilla definition (a definition can only be replaced whole),
+# with the Non Praevalebunt changes marked by comments. This file must sort after 00_tenet_types.txt and 00_pam_tenets.txt.
+
+tenet_be_fruitful_and_multiply = {
+	icon = tenet_be_fruitful_and_multiply
+
+	requires_dlc_flag = by_god_alone
+
+	name = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					pam_latin_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_be_fruitful_and_multiply_latin_name
+			}
+			triggered_desc = {
+				trigger = {
+					pam_greek_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_be_fruitful_and_multiply_greek_name
+			}		
+			desc = tenet_be_fruitful_and_multiply_default_name
+		}
+	}
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					pam_latin_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_be_fruitful_and_multiply_latin_desc
+			}
+			triggered_desc = {
+				trigger = {
+					pam_greek_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_be_fruitful_and_multiply_greek_desc
+			}
+			desc = tenet_be_fruitful_and_multiply_default_desc
+		}
+	}
+
+	historical_glossary = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					pam_latin_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_be_fruitful_and_multiply_latin_historical_glossary
+			}
+			triggered_desc = {
+				trigger = {
+					pam_greek_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_be_fruitful_and_multiply_greek_historical_glossary
+			}
+			desc = tenet_be_fruitful_and_multiply_default_historical_glossary
+		}
+	}
+
+	is_shown = {
+		has_pam_dlc_trigger = yes
+	}
+
+	can_pick = {
+		religion = religion:christianity_religion
+	}
+
+	piety_cost = {
+		value = faith_tenet_cost_low
+
+		# Multiplier for keeping same tenet
+		if = {
+			limit = { rite_has_tenet = tenet_be_fruitful_and_multiply }
+			multiply = faith_unchanged_doctrine_cost_mult
+		}
+	}
+
+	parameters = {
+		tenet_be_fruitful_and_multiply_easy_spouse_romance
+		tenet_be_fruitful_and_multiply_low_fertility_divorce
+		# Non Praevalebunt: added. Within the Catholic Church parents gain piety for each child born of their
+		# marriage (np_blessed_children_effect), and the low-fertility divorce above never bypasses the Pope:
+		# the guard keeps Church rites with this tenet on "Must be Approved" divorce (np_effects.txt).
+		# The vanilla divorce parameter stays declared because vanilla scripts still read it.
+		np_blessed_children_piety
+		tenet_be_fruitful_and_multiply_health_boost_after_child
+		tenet_be_fruitful_and_multiply_temple_growth
+	}
+
+	personal_tenet_parameters = {
+		tenet_be_fruitful_and_multiply_health_on_child
+		tenet_be_fruitful_and_multiply_fruitful_upbringing
+	}
+
+	character_modifier = {
+		fertility = 0.25
+	}
+
+	personal_tenet_modifier = {
+		fertility = 0.25
+	}
+
+	county_modifier = {
+		levy_size = 0.15
+		levy_reinforcement_rate = 0.15
+		# Non Praevalebunt: added. Raising and providing for large families has a cost
+		# (it replaces the vanilla downside, chastity as a sin).
+		all_tax_mult = -0.05
+	}
+
+	traits = {
+		virtues = {
+			# fecund is uncommon congenital - scale compensates for the small population that actually carries it.
+			fecund = { weight = 50 scale = 3 }
+		}
+		# Non Praevalebunt: removed "sins = { chaste }". Chastity is a virtue: the Council of Trent
+		# (session 24, canon 10) teaches that virginity and celibacy are not below marriage.
+	}
+}
+
+
+tenet_adaptive = {
+	icon = tenet_adaptive
+
+	piety_cost = {
+		if = {
+			limit = {
+				OR = {
+					rite_religion_tag = christianity_religion
+					rite_religion_tag = islam_religion
+				}
+			}
+			value = faith_tenet_cost_high
+		}
+		else_if = {
+			limit = {
+				OR = {
+					rite_religion_tag = judaism_religion
+					rite_religion_tag = buddhism_religion
+					rite_religion_tag = jainism_religion
+					rite_has_doctrine = pagan_hostility_doctrine
+				}
+			}
+			value = faith_tenet_cost_low
+		}
+		else = {
+			value = faith_tenet_cost_mid
+		}
+
+		# Multiplier for keeping same tenet
+		if = {
+			limit = { rite_has_tenet = tenet_adaptive }
+			multiply = faith_unchanged_doctrine_cost_mult
+		}
+	}
+
+	can_pick = {
+		# Non Praevalebunt: the Church forbids Pluralist (it denies that one teaching is true), so within the
+		# Church Adaptability is also allowed with Righteous. Fundamentalist still excludes it.
+		custom_description = {
+			text = np_adaptive_pluralism_trigger
+			OR = {
+				NOR = {
+					doctrine:doctrine_pluralism_fundamentalist = { is_in_list = selected_doctrines }
+					doctrine:doctrine_pluralism_righteous = { is_in_list = selected_doctrines }
+				}
+				AND = {
+					exists = rite:roman_rite
+					this = rite:roman_rite.faith
+					doctrine:doctrine_pluralism_righteous = { is_in_list = selected_doctrines }
+				}
+			}
+		}
+	}
+
+	parameters = {
+		tenet_adaptive_conversion_resistance
+		reduced_vassal_religion_discontent
+		allow_adopt_any_holy_site
+		tenet_adaptive_study_rite_bonus
+	}
+
+	character_modifier = {
+		different_faith_popular_opinion_mult = -0.25
+		different_faith_liege_opinion = 15
+		different_faith_suzerain_opinion = 15
+		opinion_of_different_faith_liege = 15
+		opinion_of_different_faith_suzerain = 15
+		trade_route_length_add = 1
+		trade_competitiveness_add = 2
+	}
+
+	personal_tenet_modifier = {
+		minority_opinion = 10
+		minority_tax_contribution_mult = 0.1
+		monthly_diplomacy_lifestyle_xp_gain_mult = 0.2
+		study_faith_scheme_phase_duration_add = medium_scheme_phase_duration_bonus_value
+		learn_language_scheme_phase_duration_add = medium_scheme_phase_duration_bonus_value
+		max_learn_language_schemes_add = 1
+		trade_competitiveness_mult = 0.05
+	}
+
+	personal_tenet_parameters = {
+		adaptive_study_rite_cultural_acceptance
+		tenet_adaptive_study_rite_bonus
+	}
+
+	traits = {
+		virtues = {
+			# Non Praevalebunt: humble instead of fickle. Inconstancy is a vice, not a virtue (James 1:8).
+			humble = { weight = 20 scale = 1 }
+		}
+		sins = {
+			stubborn = { weight = 20 scale = 1 }
+		}
+	}
+}
+
+tenet_alexandrian_catechism = {
+	icon = tenet_alexandrian_catechism
+
+	piety_cost = {
+		value = faith_tenet_cost_mid
+
+		# Multiplier for keeping same tenet
+		if = {
+			limit = { rite_has_tenet = tenet_alexandrian_catechism }
+			multiply = faith_unchanged_doctrine_cost_mult
+		}
+	}
+
+	name = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					NOT = { faith = { religion = religion:christianity_religion } }
+				}
+				desc = tenet_islamic_rationalism_name
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					pam_latin_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_alexandrian_catechism_latin_name
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					pam_greek_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_alexandrian_catechism_greek_name
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					religion = religion:christianity_religion
+					pam_greek_as_liturgical_language_trigger = no
+					pam_latin_as_liturgical_language_trigger = no
+				}
+				desc = tenet_alexandrian_catechism_default_name
+			}
+			triggered_desc = {
+				trigger = {
+					rite_religion_tag = christianity_religion
+					has_pam_dlc_trigger = no
+				}
+				desc = tenet_alexandrian_catechism_name
+			}
+			desc = tenet_islamic_rationalism_name
+		}
+	}
+
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					NOT = { faith = { religion = religion:christianity_religion } }
+				}
+				desc = tenet_islamic_rationalism_desc
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					pam_latin_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_alexandrian_catechism_latin_desc
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					pam_greek_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_alexandrian_catechism_greek_desc
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					religion = religion:christianity_religion
+					pam_greek_as_liturgical_language_trigger = no
+					pam_latin_as_liturgical_language_trigger = no
+				}
+				desc = tenet_alexandrian_catechism_default_desc
+			}
+			triggered_desc = {
+				trigger = {
+					faith = { religion = religion:christianity_religion }
+					has_pam_dlc_trigger = no
+				}
+				desc = tenet_alexandrian_catechism_desc
+			}
+			desc = tenet_islamic_rationalism_desc
+		}
+	}
+
+	historical_glossary = {
+		first_valid = {
+			triggered_desc = {
+				trigger = {
+					rite_religion_tag = islam_religion
+				}
+				desc = tenet_islamic_rationalism_historical_glossary
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					pam_latin_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_alexandrian_catechism_latin_historical_glossary
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					pam_greek_as_liturgical_language_trigger = yes
+				}
+				desc = tenet_alexandrian_catechism_greek_historical_glossary
+			}
+			triggered_desc = {
+				trigger = {
+					has_pam_dlc_trigger = yes
+					religion = religion:christianity_religion
+					pam_greek_as_liturgical_language_trigger = no
+					pam_latin_as_liturgical_language_trigger = no
+				}
+				desc = tenet_alexandrian_catechism_default_historical_glossary
+			}
+		}
+	}
+
+	can_pick = {
+		OR = {
+			religion = religion:christianity_religion
+			religion = religion:islam_religion
+		}
+		custom_description = {
+			text = doctrine_pluralism_fundamentalist_trigger
+			NOT = { doctrine:doctrine_pluralism_fundamentalist = { is_in_list = selected_doctrines } }
+		}
+	}
+
+	divergence_multiplier = 1.5
+
+	character_modifier = {
+		monthly_learning_lifestyle_xp_gain_mult = 0.1
+		learning_per_stress_level = 2
+	}
+	
+	parameters = {
+		scholasticism_is_holy
+	}
+
+	personal_tenet_modifier = {
+		trade_category_books_xp_gain_mult = 0.25
+		trade_good_books_paper_sell_price_mult = 0.02
+	}
+
+	personal_tenet_parameters = {
+		tenet_alexandrian_catechism_catechetical_school
+		tenet_alexandrian_catechism_catechesis_conversion
+	}
+
+	traits = {
+		virtues = {
+			eccentric = { weight = 15 scale = 1 }
+		}
+		sins = {
+			# Non Praevalebunt: arbitrary instead of zealous. Zeal for God is good (John 2:17); acting without
+			# reason is what a tenet about reason should despise.
+			arbitrary = { weight = 15 scale = 1 }
+		}
+	}
+}

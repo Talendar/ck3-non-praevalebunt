@@ -1,0 +1,138 @@
+﻿# Non Praevalebunt - on_action hooks
+# Every hook below only APPENDS to vanilla on_actions (on_actions = { ... }), so no vanilla or other-mod
+# effect blocks are replaced. See common/on_action/_on_actions.info.
+# Works with or without Shadows of the Cross: nothing here names a SOTC key. SOTC is only recognized
+# through a character flag it sets (sotc_sede_keeper), which is simply absent without SOTC.
+
+##############################################
+# Guard: right after any rite change
+##############################################
+
+# Code on_action, root = the rite that changed (fires with a short delay after the change).
+on_rite_updated = {
+	on_actions = { np_on_rite_updated }
+}
+
+np_on_rite_updated = {
+	trigger = {
+		np_rite_in_church_trigger = yes
+	}
+	effect = {
+		np_schism_head_cleanup_effect = yes
+		np_guard_rite_effect = yes
+	}
+}
+
+##############################################
+# Guard: monthly sweep (backup for anything the change hook misses)
+##############################################
+
+# Code on_action, root = the faith.
+on_faith_monthly = {
+	on_actions = { np_on_faith_monthly }
+}
+
+np_on_faith_monthly = {
+	trigger = {
+		exists = rite:roman_rite
+		this = rite:roman_rite.faith
+	}
+	effect = {
+		# Also covers saves where the mod was added mid-game (the game-start hook never ran).
+		np_pope_head_setup_effect = yes
+		np_schism_head_cleanup_effect = yes
+		every_faith_rite = {
+			np_guard_rite_effect = yes
+		}
+		# Backup for the Pope rule: catches any path with no title gain (e.g. Shadows of the Cross
+		# crowning its interregnum steward) and a non-Roman main rite.
+		title:k_papal_state.holder ?= {
+			if = {
+				limit = {
+					NOT = { has_character_flag = sotc_sede_keeper }
+				}
+				np_pope_take_roman_rite_effect = yes
+			}
+		}
+	}
+}
+
+##############################################
+# Start of game: head of faith, cleanup, notice
+##############################################
+
+on_game_start_after_lobby = {
+	on_actions = { np_on_game_start }
+}
+
+np_on_game_start = {
+	effect = {
+		np_pope_head_setup_effect = yes
+		if = {
+			limit = { exists = rite:roman_rite }
+			rite:roman_rite.faith = {
+				every_faith_rite = {
+					np_guard_rite_effect = yes
+				}
+			}
+		}
+		np_startup_notice_effect = yes
+		debug_log = "Non Praevalebunt: start-of-game setup done"
+	}
+}
+
+##############################################
+# Pope rule: every new Pope takes the Roman rite
+##############################################
+
+# Code on_action, root = the character who gained the title, scope:title = the title.
+on_title_gain = {
+	on_actions = { np_on_title_gain }
+}
+
+np_on_title_gain = {
+	trigger = {
+		scope:title = title:k_papal_state
+		exists = rite:roman_rite
+		OR = {
+			NOT = { faith = rite:roman_rite.faith }
+			NOT = { rite = rite:roman_rite }
+		}
+		# Shadows of the Cross: its interregnum steward only keeps the See; he is not a Pope.
+		NOT = { has_character_flag = sotc_sede_keeper }
+	}
+	effect = {
+		# Delayed, so it runs after the game's own on_title_gain effects.
+		trigger_event = {
+			on_action = np_pope_takes_roman_rite
+			days = 1
+		}
+	}
+}
+
+# Root = the Pope.
+np_pope_takes_roman_rite = {
+	trigger = {
+		has_title = title:k_papal_state
+		exists = rite:roman_rite
+		NOT = { has_character_flag = sotc_sede_keeper }
+	}
+	effect = {
+		np_pope_take_roman_rite_effect = yes
+	}
+}
+
+##############################################
+# Be Fruitful and Multiply: blessed children
+##############################################
+
+# Code on_action, root = the newborn; scope:mother, scope:father, scope:is_bastard.
+on_birth_child = {
+	on_actions = { np_on_birth_child }
+}
+
+np_on_birth_child = {
+	effect = {
+		np_blessed_children_effect = yes
+	}
+}

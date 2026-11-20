@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – Great Schism</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --west:#a67c25; --west-soft:#f6ecd2; --east:#2f5d8a; --east-soft:#e2ecf6; --one:#6b4e8a; --one-soft:#ece4f4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --no:#9a2a2a; --no-soft:#f7e2e0; --ask:#a0670f; --ask-soft:#fbecd2;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --west:#d6ae5c; --west-soft:#352b17; --east:#7fb0e0; --east-soft:#1c2a38; --one:#b79ad8; --one-soft:#2a2236;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --ask:#e2a94f; --ask-soft:#3a2c14;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --west:#d6ae5c; --west-soft:#352b17; --east:#7fb0e0; --east-soft:#1c2a38; --one:#b79ad8; --one-soft:#2a2236;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --ask:#e2a94f; --ask-soft:#3a2c14;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Summary */
+.summary{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sum{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.sum .big{font-family:Cinzel,Georgia,serif;font-weight:700;font-size:1.05rem}
+.sum.ok{border-top:4px solid var(--ok)} .sum.ask{border-top:4px solid var(--ask)} .sum.info{border-top:4px solid var(--one)}
+
+/* Split diagram */
+.split{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch}
+.box{border-radius:14px;padding:14px 16px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.box.one{border-top:5px solid var(--one)} .box.west{border-top:5px solid var(--west)} .box.east{border-top:5px solid var(--east)}
+.box .label{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.box h3{font-size:1.05rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.c{display:inline-flex;align-items:center;gap:5px;font-size:.84rem;font-weight:600;border-radius:999px;padding:3px 10px;border:1px solid var(--line);background:var(--surface-2);white-space:nowrap}
+.c.main{border-color:var(--crimson);background:color-mix(in srgb,var(--crimson) 10%,var(--surface))}
+.c.main::after{content:"main";font-size:.68rem;font-weight:700;color:var(--crimson);text-transform:uppercase;letter-spacing:.06em}
+.c.off{opacity:.6;text-decoration:line-through}
+.c.q::after{content:"?";font-weight:800;color:var(--ask)}
+.guard{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;border-radius:8px;padding:4px 10px;align-self:flex-start}
+.guard.on{background:var(--ok-soft);color:var(--ok)} .guard.off{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.arrow-col{display:grid;place-items:center;color:var(--muted);font-weight:700;text-align:center;font-size:.85rem}
+.arrow-col .a{font-size:1.6rem;line-height:1}
+.under{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.under .box{box-shadow:none}
+
+/* Paths */
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.path{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.path .who{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.path h3{font-size:1rem}
+.row{display:grid;grid-template-columns:70px 1fr;gap:8px;font-size:.88rem;align-items:start}
+.row .k{font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 6px;text-align:center}
+.k.today{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.k.mod{background:var(--ok-soft);color:var(--ok)}
+.v{font-weight:700;font-size:.78rem;border-radius:6px;padding:2px 8px;align-self:flex-start}
+.v.good{background:var(--ok-soft);color:var(--ok)} .v.bad{background:var(--no-soft);color:var(--no)} .v.worse{background:var(--no);color:#fff}
+.history{margin-top:12px;font-size:.9rem;padding:12px 14px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--line)}
+
+/* Watch */
+.watch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.w b{display:block;margin-bottom:2px}
+.lvl{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px;margin-bottom:6px;background:var(--gold-soft)}
+
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+
+@media (max-width:860px){
+  .summary,.paths,.watch,.under{grid-template-columns:1fr}
+  .split{grid-template-columns:1fr}
+  .arrow-col .a{transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · 867 games</div>
+  <h1>The Great Schism</h1>
+  <p class="sub">What the game does, and what the mod adds</p>
+  <a class="back" href="design-recommendation.html">← Back to the main recommendation</a>
+</header>
+
+<div class="wrap">
+
+  <section class="summary">
+    <div class="sum ok"><span class="big">Mostly automatic</span><span class="small">The game already moves the right rites to the right side. The mod just switches its guard from the undivided Church to Catholicism.</span></div>
+    <div class="sum ok"><span class="big">Hole closed ✓</span><span class="small">Mending the schism could fold Catholicism <b>into</b> Orthodoxy, or even into a heresy. You approved the fix: every reunion is with Rome (section 3).</span></div>
+    <div class="sum info"><span class="big">Open item answered</span><span class="small"><b>Mozarabic:</b> confirmed, you saw it inside the Church in 867. <b>Georgian:</b> almost surely too, since the game’s split code moves it out. A quick check will confirm.</span></div>
+  </section>
+
+  <!-- The split -->
+  <h2><span class="num">1</span>Before and after the split</h2>
+  <div class="split">
+    <div class="box one">
+      <span class="label">Before · 867</span>
+      <h3>One undivided Church</h3>
+      <div class="chips"><span class="c main">Roman</span><span class="c">Insular</span><span class="c">Ambrosian</span><span class="c">Beneventan</span><span class="c">Carolingian</span><span class="c">Byzantine</span><span class="c">Slavic (885)</span><span class="c">Mozarabic</span><span class="c q">Georgian</span></div>
+      <span class="guard on">⛨ Guarded by the mod</span>
+      <p class="small muted">The Pentarchy is allowed here, before the schism only.</p>
+    </div>
+    <div class="arrow-col"><span class="a">➜</span>The schism<br><span class="small muted" style="font-weight:400">date set by play</span></div>
+    <div style="display:grid;gap:12px">
+      <div class="box west">
+        <span class="label">After · West</span>
+        <h3>Catholicism</h3>
+        <div class="chips"><span class="c main">Roman</span><span class="c">Insular</span><span class="c">Mozarabic</span><span class="c">Ambrosian</span><span class="c off">Beneventan</span><span class="c off">Carolingian</span></div>
+        <span class="guard on">⛨ Guarded by the mod</span>
+      </div>
+      <div class="box east">
+        <span class="label">After · East</span>
+        <h3>Orthodoxy</h3>
+        <div class="chips"><span class="c main">Byzantine</span><span class="c">Georgian</span><span class="c">Slavic</span></div>
+        <span class="guard off">Not guarded: goes its own way</span>
+      </div>
+    </div>
+  </div>
+  <div class="under">
+    <div class="box"><h3>Rites founded during play</h3><p class="small">They follow the rite they came from. A rite founded from the Roman rite goes to Catholicism, one from the Byzantine rite goes to Orthodoxy. The game does this on its own.</p></div>
+    <div class="box"><h3>Which side counts as “the Church”</h3><p class="small">The game gives that role to whichever rite is the main one at the moment of the split. Our rule that every Pope takes the Roman rite makes that always Rome.</p></div>
+  </div>
+  <p class="small muted" style="margin-top:10px">Struck-through rites are retired by the game at the split. ? = to confirm in the game.</p>
+
+  <!-- Prevent -->
+  <h2><span class="num">2</span>If the schism is prevented</h2>
+  <div class="card">
+    <p>The game has a “Prevent the Great Schism” decision. If someone takes it, the Church stays one, and the mod simply keeps guarding the undivided Church, Byzantine rite included. <b>Nothing extra to build.</b></p>
+  </div>
+
+  <!-- Mend -->
+  <h2><span class="num">3</span>If the schism is mended <span style="font-family:'Source Sans 3',sans-serif;font-size:.75rem;font-weight:700;background:var(--ok-soft);color:var(--ok);border-radius:6px;padding:3px 8px;letter-spacing:.06em">✓ APPROVED</span></h2>
+  <p class="small muted" style="margin:-6px 0 12px">After the split, a ruler can take “Mend the Great Schism”. What happens depends on who takes it.</p>
+  <div class="paths">
+    <div class="path">
+      <span class="who">A Catholic mends it</span>
+      <h3>Orthodoxy joins Rome</h3>
+      <div class="row"><span class="k today">Today</span><span>The Orthodox rites join Catholicism under the Pope. <span class="v good">Fine</span></span></div>
+      <div class="row"><span class="k mod">Mod</span><span>Guards them again, and clears out any forbidden beliefs they picked up while Orthodox.</span></div>
+    </div>
+    <div class="path">
+      <span class="who">An Orthodox ruler mends it</span>
+      <h3>Rome joins Orthodoxy</h3>
+      <div class="row"><span class="k today">Today</span><span>The Catholic rites, Roman included, become side rites under the Patriarch. <span class="v bad">The Church absorbed</span></span></div>
+      <div class="row"><span class="k mod">Mod</span><span>Reunion happens <b>with Rome</b> instead: the Orthodox rites join Catholicism. The Orthodox mender becomes Catholic along with his rite.</span></div>
+    </div>
+    <div class="path">
+      <span class="who">Any other Christian mends it</span>
+      <h3>Both join the mender’s faith</h3>
+      <div class="row"><span class="k today">Today</span><span>Catholicism and Orthodoxy both fold into the mender’s faith, which could be a heresy. <span class="v worse">Worst case</span></span></div>
+      <div class="row"><span class="k mod">Mod</span><span>Blocked. Only Catholic and Orthodox rulers can mend the schism.</span></div>
+    </div>
+  </div>
+  <div class="history"><b>History agrees:</b> the real attempts at reunion, at Lyon (1274) and Florence (1439), were reunions <i>with Rome</i>, with the Greeks accepting the Pope’s primacy. <b>How:</b> replace one small game script for the reunion and add one condition to the decision. Shadows of the Cross doesn’t touch either.</div>
+
+  <!-- Watch -->
+  <h2><span class="num">4</span>What to watch in testing</h2>
+  <div class="watch">
+    <div class="w"><span class="lvl">Check</span><b>Pope changing rite</b><span class="small muted">If a Byzantine-rite cardinal becomes Pope, he switches to the Roman rite. The game may count that switch as a quarrel and push the schism along a little.</span></div>
+    <div class="w"><span class="lvl">Check</span><b>Georgian in 867</b><span class="small muted">Mozarabic is confirmed. Check Georgian, and that the start-of-game cleanup fixes both.</span></div>
+    <div class="w"><span class="lvl">Check</span><b>The switch itself</b><span class="small muted">Right after the split, the guard must watch Catholicism, not the empty old Church.</span></div>
+  </div>
+
+  <footer>Read from the By God Alone game files: the schism, prevention and mending scripts. Shadows of the Cross 1.2.0 was checked for overlap.</footer>
+</div>
+</body>
+</html>

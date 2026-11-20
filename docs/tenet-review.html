@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – Tenet Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --no:#9a2a2a; --no-soft:#f7e2e0; --mid:#a0670f; --mid-soft:#fbecd2;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --mid:#e2a94f; --mid-soft:#3a2c14;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --mid:#e2a94f; --mid-soft:#3a2c14;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 6px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.lead{margin:0 0 14px;color:var(--muted);font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Messages */
+.msgs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
+.msg{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.msg .bar{background:linear-gradient(90deg,var(--crimson),color-mix(in srgb,var(--crimson) 70%,var(--gold)));color:#fff;padding:10px 14px;font-family:Cinzel,Georgia,serif;font-weight:700}
+.msg .body{padding:12px 14px;font-size:.92rem;display:grid;gap:8px}
+.msg .verse{font-family:Georgia,serif;font-style:italic}
+.msg .when{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* Tables */
+.tbl{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:720px}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--surface-2);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+td.t{font-weight:700;white-space:nowrap}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:6px;padding:2px 8px;white-space:nowrap}
+.tag.clear{background:var(--no-soft);color:var(--no)} .tag.odd{background:var(--mid-soft);color:var(--mid)}
+.tr{display:inline-block;font-size:.8rem;font-weight:600;border-radius:999px;padding:1px 8px;border:1px solid var(--line);background:var(--surface-2);white-space:nowrap}
+.tr.v::before{content:"virtue: ";color:var(--ok);font-weight:700}
+.tr.s::before{content:"sin: ";color:var(--no);font-weight:700}
+.fix{color:var(--ok);font-weight:600}
+.cite{font-size:.82rem;color:var(--muted)}
+
+/* Options */
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.opt{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.opt.pick{border:2px solid var(--ok)}
+.opt h3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.opt .lean{font-family:"Source Sans 3",sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;background:var(--ok);color:#fff;border-radius:6px;padding:2px 8px}
+.pc{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;font-size:.88rem}
+.pc .p{color:var(--ok);font-weight:700} .pc .c{color:var(--no);font-weight:700}
+
+.note{margin-top:12px;font-size:.9rem;padding:12px 14px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--line)}
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (max-width:820px){.msgs,.opts{grid-template-columns:1fr}}
+@media (max-width:760px){table{min-width:0}thead{display:none}tr{display:block;border-bottom:1px solid var(--line);padding:8px 0}tr:last-child{border-bottom:none}td{display:block;border:none;padding:3px 14px}td.t{white-space:normal}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · Review</div>
+  <h1>Messages and Tenets</h1>
+  <p class="sub">The new message texts, tenets that clash with Catholic teaching, and options for Be Fruitful</p>
+  <a class="back" href="design-recommendation.html">← Back to the main recommendation</a>
+</header>
+
+<div class="wrap">
+
+  <!-- Messages -->
+  <h2><span class="num">1</span>The new messages (AN1)</h2>
+  <p class="lead">Rewritten with some roleplay and a short catechesis. Any future message will follow the same style.</p>
+  <div class="msgs" style="margin-top:0">
+    <div class="msg">
+      <div class="bar">Upon This Rock</div>
+      <div class="body">
+        <span class="when">Once, at game start</span>
+        <p class="verse">“Thou art Peter; and upon this rock I will build my church, and the gates of hell shall not prevail against it.” (Matthew 16:18)</p>
+        <p>Christ promised that His Church would never teach error in faith or morals. Her rites may differ in custom and discipline, but never in what she believes. When a rite strays, the Church calls it back, and you will see it in your rite updates.</p>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="bar">The Keys of Peter</div>
+      <div class="body">
+        <span class="when">If another see is made head before the schism</span>
+        <p>Some would set another see over the whole Church. Yet Christ gave the keys of the kingdom to Peter (Matthew 16:19), and they pass to his successor, the Bishop of Rome. The Pope remains head of faith of the undivided Church.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tenet clashes -->
+  <h2><span class="num">2</span>Other tenets with the same problem (AN3)</h2>
+  <p class="lead">I checked the virtues and sins of all 38 approved tenets in the game files. A tenet’s virtue and sin decide which traits its followers admire or despise.</p>
+  <div class="tbl"><div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Tenet</th><th>Trait</th><th>Why it clashes</th><th>Proposed fix</th></tr></thead>
+      <tbody>
+        <tr><td class="t">Be Fruitful and Multiply <br><span class="tag clear">Clear clash</span></td><td><span class="tr s">chaste</span></td><td>Makes chastity a sin.<br><span class="cite">Trent, session 24, canon 10: virginity and celibacy are not below marriage.</span></td><td class="fix">Remove the sin, and give it a fitting downside instead (section 3).</td></tr>
+        <tr><td class="t">Alexandrian Catechism <br><span class="tag clear">Clear clash</span></td><td><span class="tr s">zealous</span></td><td>Makes zeal for God a sin.<br><span class="cite">“The zeal of thy house hath eaten me up.” (John 2:17)</span></td><td class="fix">Sin: <b>arbitrary</b> instead. Acting without reason fits a tenet about reason.</td></tr>
+        <tr><td class="t">Adaptability <br><span class="tag clear">Clear clash</span></td><td><span class="tr v">fickle</span></td><td>Makes inconstancy a virtue.<br><span class="cite">“A double minded man is inconstant in all his ways.” (James 1:8)</span></td><td class="fix">Virtue: <b>humble</b> instead. Its sin, stubborn, can stay.</td></tr>
+        <tr><td class="t">Khachkars <br><span class="tag odd">Borderline</span></td><td><span class="tr v">stubborn</span></td><td>Obstinacy is a vice, but here it stands for Armenian steadfastness in the faith.</td><td>Leave as is.</td></tr>
+        <tr><td class="t">Fervent Proselytism, Ritual Celebrations <br><span class="tag odd">Odd</span></td><td><span class="tr s">shy</span></td><td>Shyness is a temperament, not a moral fault.</td><td>Leave as is.</td></tr>
+        <tr><td class="t">Anachoresis <br><span class="tag odd">Odd</span></td><td><span class="tr s">gregarious</span></td><td>Sociability isn’t sinful. Here it reflects the hermit’s ideal.</td><td>Leave as is.</td></tr>
+        <tr><td class="t">Mother of God, Sacred Childbirth <br><span class="tag odd">Odd</span></td><td><span class="tr v">pregnant</span></td><td>A state of life, not a virtue. Still, honoring motherhood is harmless.</td><td>Leave as is.</td></tr>
+        <tr><td class="t">Veneration of Saints, Transubstantiation <br><span class="tag odd">Odd</span></td><td><span class="tr v">consecrated blood</span></td><td>Holiness isn’t inherited. Harmless as a show of honor to saintly families.</td><td>Leave as is.</td></tr>
+      </tbody>
+    </table>
+  </div></div>
+  <p class="note"><b>Fine:</b> the other 27 tenets pair a real virtue with a real vice. For example, Confession admires honesty and despises deceit, and Purgatory admires forgiveness and despises vengeance. <b>Cost of each fix:</b> the mod has to replace the tenet’s whole definition, so the change also applies to non-Catholic faiths that hold it. Shadows of the Cross users also lose SOTC’s optional price rule for that tenet. That’s why I’d fix only the three clear clashes.</p>
+
+  <!-- Be Fruitful options -->
+  <h2><span class="num">3</span>Be Fruitful: other downside options (AN4)</h2>
+  <p class="lead">“Chaste” stops being a sin in every option. All of the tenet’s other effects stay.</p>
+  <div class="opts">
+    <div class="opt pick">
+      <h3>A · Small tax cost <span class="lean">MY LEAN</span></h3>
+      <p class="small">Counties pay −5% tax, for the cost of raising and providing for large families.</p>
+      <div class="pc"><span class="p">+</span><span>Ongoing and easy to understand. It’s the same kind of cost as Charity’s −3% tax.</span><span class="c">−</span><span>Any lord with this tenet earns a little less.</span></div>
+    </div>
+    <div class="opt">
+      <h3>B · Higher price to adopt</h3>
+      <p class="small">The tenet costs more piety to make core.</p>
+      <div class="pc"><span class="p">+</span><span>No ongoing penalty.</span><span class="c">−</span><span>Paid once, so it’s barely felt afterwards. It also doesn’t touch rites that start with it.</span></div>
+    </div>
+    <div class="opt">
+      <h3>C · A different sin: callous</h3>
+      <p class="small">Followers despise coldness and cruelty toward one’s own.</p>
+      <div class="pc"><span class="p">+</span><span>Keeps the usual “virtue and sin” shape.</span><span class="c">−</span><span>Weak link to the tenet’s theme, and Love Thy Neighbour already uses this sin.</span></div>
+    </div>
+    <div class="opt">
+      <h3>D · No downside, drop the piety bonus</h3>
+      <p class="small">No sin, no cost, and no piety for children.</p>
+      <div class="pc"><span class="p">+</span><span>Simplest. Close to the base game’s strength.</span><span class="c">−</span><span>A tenet with no trade-off at all.</span></div>
+    </div>
+  </div>
+
+  <footer>Virtues, sins and penalties were read from the CK3 1.21.0.3 and By God Alone tenet files. Scripture is quoted from the Douay-Rheims.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – Deferred Items</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --mid:#a0670f; --mid-soft:#fbecd2; --hi:#9a2a2a; --hi-soft:#f7e2e0;
+  --v2:#2f5d8a; --v2-soft:#e2ecf6; --v3:#6b4e8a; --v3-soft:#ece4f4;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --mid:#e2a94f; --mid-soft:#3a2c14; --hi:#e07a72; --hi-soft:#3a1f1d;
+    --v2:#7fb0e0; --v2-soft:#1c2a38; --v3:#b79ad8; --v3-soft:#2a2236;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --mid:#e2a94f; --mid-soft:#3a2c14; --hi:#e07a72; --hi-soft:#3a1f1d;
+  --v2:#7fb0e0; --v2-soft:#1c2a38; --v3:#b79ad8; --v3-soft:#2a2236;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 6px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.lead{margin:0 0 14px;color:var(--muted);font-size:.92rem}
+
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Overview */
+.overview{margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ov{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
+.ov .n{font-family:Cinzel,Georgia,serif;font-size:1.8rem;font-weight:700;line-height:1}
+.ov .l{font-size:.85rem;color:var(--muted)}
+.ov.v2 .n{color:var(--v2)} .ov.v3 .n{color:var(--v3)} .ov.at .n{color:var(--gold)} .ov.imp .n{color:var(--hi)}
+
+.legend{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.85rem;color:var(--muted)}
+
+/* Badges */
+.b{display:inline-flex;align-items:center;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:3px 8px;white-space:nowrap}
+.b.v2{background:var(--v2-soft);color:var(--v2)} .b.v3{background:var(--v3-soft);color:var(--v3)} .b.at{background:var(--gold-soft);color:var(--ink)}
+.b.done{background:var(--ok);color:#fff}
+.b.none{background:var(--ok-soft);color:var(--ok)} .b.small{background:var(--mid-soft);color:var(--mid)} .b.vis{background:var(--hi-soft);color:var(--hi)}
+
+/* Item cards */
+.items{display:grid;gap:10px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;display:grid;grid-template-columns:30px 1fr;gap:12px}
+.item .k{font-family:Cinzel,Georgia,serif;font-weight:700;color:var(--crimson);font-size:1.2rem;line-height:1.2}
+.item .top{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:8px}
+.item .top h3{margin-right:auto}
+.rows{display:grid;gap:6px}
+.r{display:grid;grid-template-columns:120px 1fr;gap:10px;font-size:.9rem;align-items:start}
+.r .lab{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (max-width:820px){.overview{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.r{grid-template-columns:1fr;gap:2px}.item{grid-template-columns:1fr}.item .k{display:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · v0.1</div>
+  <h1>What Was Deferred</h1>
+  <p class="sub">Not in v0.1 yet: what each item is, what happens meanwhile, and when it comes</p>
+  <a class="back" href="design-recommendation.html">← Back to the main recommendation</a>
+</header>
+
+<div class="wrap">
+
+  <section class="overview">
+    <div class="ov v2"><div class="n">3</div><div class="l">still planned for v0.2 (G, H, I)</div></div>
+    <div class="ov v3"><div class="n">3</div><div class="l">planned for v0.3</div></div>
+    <div class="ov at"><div class="n">7</div><div class="l">fixed in v0.1 (A–F and J)</div></div>
+    <div class="ov imp"><div class="n">1</div><div class="l">you might notice while testing v0.1 (G)</div></div>
+  </section>
+  <div class="legend">Effect on a v0.1 test game: <span class="b none">None</span> <span class="b small">Small</span> <span class="b vis">Visible</span></div>
+
+  <!-- From the review -->
+  <h2><span class="num">1</span>Deferred from the review</h2>
+  <p class="lead">Issues the review found. All six are now fixed in v0.1, at your request. Shadows of the Cross compatibility is automatic: one mod, no patch, and it works with or without SOTC.</p>
+  <div class="items">
+
+    <article class="item"><span class="k">A</span><div>
+      <div class="top"><h3>Main rite before the schism</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>A game rule, “Pope as Head Before the Schism” (on by default), makes the Papacy head of the undivided Church at game start. After the schism the old faith gives the title up, and the game makes the Pope head of Catholicism. If the schism is <i>prevented</i>, Rome keeps the primacy: if another see is seated, the Papacy is restored and players are told.</span></div>
+        <div class="r"><span class="lab">The issue</span><span>Before the schism the undivided Church has no head of faith in the game. So every month it makes the rite with the most counties (and at least as many holy sites) the main rite. That can be the Byzantine rite.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>The main rite may flip to Byzantine if the East grows larger. A newly elected non-Roman Pope’s old rite can also stay main for a short while. <b>The guard is not affected:</b> it protects every rite of the faith that holds the Roman rite, whichever one is main.</span></div>
+        <div class="r"><span class="lab">The fix</span><span>Make the Pope head of faith before the schism. The main rite then always follows him, and he is always Roman. It comes behind a game rule that’s on by default.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">B</span><div>
+      <div class="top"><h3>Be Fruitful and Multiply’s divorce loophole</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>The loophole is closed. A Church rite with this tenet always uses “Must be approved” for divorce, so every divorce, including one for low fertility, needs the Church’s approval (a bishop or the Pope). Within the Church, each parent also gains 50 piety for each child born of their marriage (not of concubines). The tenet keeps all its other effects: +25% fertility, +15% levies and reinforcement, easier spouse romance, health bonuses at birth, and faster temple growth. Outside the Church it works as in the base game.</span></div>
+        <div class="r"><span class="lab">The issue</span><span>This tenet lets a ruler divorce a spouse who can’t have children, even where divorce is Disallowed. You approved the tenet only without that effect.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>No Church rite starts with it as a core tenet. Even with it, the loophole only matters under “Disallowed”. Under the default “Must be approved”, the Pope still has to approve the divorce.</span></div>
+        <div class="r"><span class="lab">Why later</span><span>Removing the effect means replacing the tenet’s whole definition. That belongs with the lock work, which replaces definitions anyway, and with the SOTC patch, since SOTC also redefines tenets.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">C</span><div>
+      <div class="top"><h3>Shadows of the Cross: “canon” tenets</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>Automatic. When the guard swaps a tenet, it also updates SOTC’s canon record on that rite, so SOTC keeps the swap. Without SOTC there’s no record, and nothing happens.</span></div>
+        <div class="r"><span class="lab">The issue</span><span>SOTC marks two tenets per rite as “canon” and puts them back if they’re removed. If a canon tenet were forbidden, the guard and SOTC would undo each other over and over.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>I checked: no Church rite starts with a forbidden canon tenet. Only a rite founded later could hit this. If you ever see “The Faith Is Upheld” repeating every month for the same rite, this is the cause.</span></div>
+        <div class="r"><span class="lab">The fix</span><span>A small SOTC patch that updates SOTC’s canon record whenever the guard swaps the tenet.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">D</span><div>
+      <div class="top"><h3>Shadows of the Cross: its heretical tenets by name</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>Not needed by name. The mod removes any tenet the Church prohibits that isn’t on your approved list, and SOTC prohibits all three in every Christian faith.</span></div>
+        <div class="r"><span class="lab">The issue</span><span>SOTC adds three heretical tenets: Homoian Creed, Faultless Clergy and Free Will. Naming them in the base mod would cause errors for players without SOTC.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>They’re already caught. The Church prohibits them and they’re not on your approved list, so the guard removes them. The patch would only name them explicitly.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">E</span><div>
+      <div class="top"><h3>Mozarabic: Adaptability next to Righteous</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>Within the Church, Adaptability now works with Righteous too. Fundamentalist still excludes it.</span></div>
+        <div class="r"><span class="lab">The issue</span><span>The start-of-game cleanup changes Mozarabic from Pluralist to Righteous, but it keeps the Adaptability tenet, which you approved. The game’s own rule only lets Pluralist rites <i>pick</i> Adaptability.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>The game doesn’t re-check tenets a rite already holds, so nothing breaks. It only matters if someone tries to pick Adaptability again later.</span></div>
+        <div class="r"><span class="lab">The fix</span><span>When the lock replaces tenet definitions, add an exception so Adaptability fits a Righteous rite. That’s my lean. The other choice is to swap Mozarabic’s Adaptability for another tenet.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">F</span><div>
+      <div class="top"><h3>Two messages per correction</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>The mod no longer sends its own message, so you only get the game’s “Rite updated”. A one-time notice at game start explains why such changes happen.</span></div>
+        <div class="r"><span class="lab">The issue</span><span>When the guard fixes your rite, the game sends its own “Rite updated” message, and the mod adds “The Faith Is Upheld”.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>You get two messages for one fix. Ours explains <i>why</i>; the game’s shows <i>what</i> changed.</span></div>
+        <div class="r"><span class="lab">The fix</span><span>Decide after you see it in play: keep both, or merge them into one.</span></div>
+      </div>
+    </div></article>
+  </div>
+
+  <!-- Planned -->
+  <h2><span class="num">2</span>Planned in the design, not built yet</h2>
+  <p class="lead">Parts of the approved design that come in later versions.</p>
+  <div class="items">
+
+    <article class="item"><span class="k">G</span><div>
+      <div class="top"><h3>The lock</h3><span class="b v2">v0.2</span><span class="b vis">Visible</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>Forbidden options disappear from councils, synods, the rite editor and AI drift.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>Those can still pick forbidden things, and the guard undoes them within days. Example: a council “passes” divorce allowed, then a few days later the guard reverts it and you get a message.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">H</span><div>
+      <div class="top"><h3>Protected tenets</h3><span class="b v2">v0.2</span><span class="b small">Small</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>No Pope or council can ever Prohibit the 8 protected tenets, such as Transubstantiation.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>An AI Pope could still prohibit one. The guard won’t strip it from rites, since it’s on your approved list, but the Church would officially list it as prohibited.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">I</span><div>
+      <div class="top"><h3>Rule 2: never past the heresy line</h3><span class="b v2">v0.2</span><span class="b small">Small</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>A rite in good standing may never pass 65 points, even through allowed differences like married priests.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>v0.1 only removes forbidden beliefs. A rite could still pile up enough allowed differences to pass 65. The game would then call it heretical, and the Pope could cut it off, even though it believes nothing wrong. This should be rare.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">J</span><div>
+      <div class="top"><h3>Pope as head before the schism</h3><span class="b done">✓ Fixed in v0.1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>The fix for item A. It also lets the Pope approve divorces (“Must be approved”) and use his powers before the schism.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>Same as the base game: no head of faith until the schism.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">K</span><div>
+      <div class="top"><h3>Heresy features</h3><span class="b v3">v0.3</span><span class="b small">Small</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>Kind 1 outbreaks aim at Tier 2 rites, outbreaks come about twice as often, fallen rites get a signature heresy that carries them past the line, and they can return when they drop every error.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>Outbreaks work as in the base game, with two differences. A kind 2 outbreak rite is marked fallen and left alone, but it stays inside the Church below the line until v0.3. A kind 1 push on a rite in good standing gets undone by the guard instead of making it fall.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">L</span><div>
+      <div class="top"><h3>Mending fix</h3><span class="b v3">v0.3</span><span class="b none">None</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>Every reunion after the schism happens with Rome. Only Catholic and Orthodox rulers can mend.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>Base game behavior. An Orthodox or other Christian ruler who mends the schism could fold Catholicism into their own faith. That’s rare: it needs the schism to happen first, then a specific decision.</span></div>
+      </div>
+    </div></article>
+
+    <article class="item"><span class="k">M</span><div>
+      <div class="top"><h3>Seek Communion: a true return</h3><span class="b v3">v0.3</span><span class="b none">None</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What it does</span><span>A heresy the Pope takes back gives up its errors and rejoins as Tier 2.</span></div>
+        <div class="r"><span class="lab">Meanwhile</span><span>Base game behavior: a heresy can regain friendly status while keeping its errors.</span></div>
+      </div>
+    </div></article>
+  </div>
+
+  <!-- Housekeeping -->
+  <h2><span class="num">3</span>Release housekeeping</h2>
+  <p class="lead">Before publishing on the Workshop.</p>
+  <div class="items">
+    <article class="item"><span class="k">N</span><div>
+      <div class="top"><h3>Packaging</h3><span class="b at">Before release</span><span class="b none">None</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">To do</span><span>Keep the docs/ pages out of the Workshop upload. Add a thumbnail. Set the Workshop title to “Non Praevalebunt – Catholic Doctrine Guard”, and bump the version.</span></div>
+      </div>
+    </div></article>
+  </div>
+
+  <footer>Effects were checked against the CK3 1.21.0.3, By God Alone and Shadows of the Cross 1.2.0 files. None of this has been tested in play yet.</footer>
+</div>
+</body>
+</html>
