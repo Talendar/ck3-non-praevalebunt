@@ -168,10 +168,10 @@ footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
   <div class="items">
 
     <article class="item"><span class="k">G</span><div>
-      <div class="top"><h3>The lock</h3><span class="b v2">v0.2</span><span class="b vis">Visible</span></div>
+      <div class="top"><h3>The lock</h3><span class="b done">✓ Fixed in v0.2</span></div>
       <div class="rows">
-        <div class="r"><span class="lab">What it does</span><span>Forbidden options disappear from councils, synods, the rite editor and AI drift.</span></div>
-        <div class="r"><span class="lab">Meanwhile</span><span>Those can still pick forbidden things, and the guard undoes them within days. Example: a council “passes” divorce allowed, then a few days later the guard reverts it and you get a message.</span></div>
+        <div class="r"><span class="lab">What it does</span><span>Forbidden choices are refused or undone on the spot: AI drift, new rites, the AI Pope’s choices, ecumenical councils and your own rite editor. See <a href="v02-plan.html">the v0.2 plan</a>.</span></div>
+        <div class="r"><span class="lab">Still open</span><span>Shadows of the Cross’s own synods and tools have no safe hook. The guard still catches them right after.</span></div>
       </div>
     </div></article>
 
@@ -180,15 +180,15 @@ footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
       <div class="rows">
         <div class="r"><span class="lab">What it does</span><span>No Pope can ever Prohibit the 8 protected tenets, such as Transubstantiation, or declare a forbidden tenet, such as Literalism, “in good standing”.</span></div>
         <div class="r"><span class="lab" style="color:var(--ok)">Fixed by</span><span>Within the Church, the bull and decision checks refuse both. Shadows of the Cross’s papal demands skip those checks, so a backstop catches them: the Pope sets the bull aside, the tenet’s status is restored, and the faithful get his letter instead of the usual one.</span></div>
-        <div class="r"><span class="lab">Still open</span><span>Ecumenical councils are not covered yet. They come with the lock (G) in v0.2.</span></div>
+        <div class="r"><span class="lab" style="color:var(--ok)">v0.2</span><span>Ecumenical councils are covered too: the Pope does not confirm a ruling that approves a forbidden tenet or condemns a protected one, and writes to the faithful.</span></div>
       </div>
     </div></article>
 
     <article class="item"><span class="k">I</span><div>
-      <div class="top"><h3>Rule 2: never past the heresy line</h3><span class="b v2">v0.2</span><span class="b small">Small</span></div>
+      <div class="top"><h3>Rule 2: never past the heresy line</h3><span class="b done">✓ Fixed in v0.2</span></div>
       <div class="rows">
         <div class="r"><span class="lab">What it does</span><span>A rite in good standing may never pass 65 points, even through allowed differences like married priests.</span></div>
-        <div class="r"><span class="lab">Meanwhile</span><span>v0.1 only removes forbidden beliefs. A rite could still pile up enough allowed differences to pass 65. The game would then call it heretical, and the Pope could cut it off, even though it believes nothing wrong. This should be rare.</span></div>
+        <div class="r"><span class="lab" style="color:var(--ok)">Built as</span><span>At 60, the game pulls the rite back toward Roman practice, landing at 55. This applies to every rite in good standing, historic ones included (your choice). No Pope can brand such a rite a heresy, even a zealous one.</span></div>
       </div>
     </div></article>
 

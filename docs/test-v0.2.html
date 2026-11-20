@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – v0.2 Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4; --ok:#2f7a4a; --ok-soft:#e3f1e7; --no-soft:#f7e2e0;
+  --code-bg:#2a2017; --code-ink:#f4eee2;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a; --ok:#6fc08e; --ok-soft:#1b2e22; --no-soft:#3a1f1d;
+    --code-bg:#0d0a08; --code-ink:#efe6d8;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a; --ok:#6fc08e; --ok-soft:#1b2e22; --no-soft:#3a1f1d;
+  --code-bg:#0d0a08; --code-ink:#efe6d8;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px 56px}
+h1,h2{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.25rem;color:var(--crimson);margin:36px 0 14px}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.4rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+
+.status{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.s{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.92rem;display:grid;gap:4px}
+.s b{font-family:Cinzel,Georgia,serif}
+.s .v{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.s.pass{border-left:5px solid var(--ok)} .s.pass .v{color:var(--ok)}
+.s.left{border-left:5px solid var(--gold);background:var(--gold-soft)} .s.left .v{color:var(--gold)}
+
+.steps{display:grid;gap:12px}
+.st{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+.st .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:Cinzel,Georgia,serif;font-weight:700;font-size:1.1rem;background:var(--crimson);color:var(--surface)}
+.st .body{display:grid;gap:8px;min-width:0;font-size:.95rem}
+.cmd{display:block;position:relative;background:var(--code-bg);color:var(--code-ink);font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:.88rem;padding:10px 74px 10px 12px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.copy{position:absolute;top:8px;right:8px;font:600 .75rem "Source Sans 3",system-ui,sans-serif;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--code-ink);cursor:pointer}
+.warn{font-size:.92rem;padding:12px 14px;border-radius:12px;background:var(--no-soft);border:1px solid var(--line)}
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (max-width:720px){.status{grid-template-columns:1fr}.st{grid-template-columns:minmax(0,1fr)}.st .n{width:36px;height:36px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · v0.2</div>
+  <h1>v0.2 Test</h1>
+  <p class="sub">All checks passed</p>
+</header>
+
+<div class="wrap">
+
+  <h2>Where it stands</h2>
+  <div class="status">
+    <div class="s pass"><span class="v">Passed</span><b>Your campaign</b><span>Your save loads and runs with v0.2.</span></div>
+    <div class="s pass"><span class="v">Passed</span><b>Doors 1 to 5</b><span>Drift, new rites, AI choices, councils (both letters) and the rite editor.</span></div>
+    <div class="s pass"><span class="v">Passed</span><b>The pull-back</b><span>The Mozarabic rite, pushed past 60, was pulled back below it. A real AI drift was also caught live.</span></div>
+  </div>
+
+  <h2>The last check (done)</h2>
+  <p class="warn">In the launcher, keep “Non Praevalebunt (v0.2 test)” on and “Non Praevalebunt” off. Switch back after this test.</p>
+  <div class="steps" style="margin-top:12px">
+    <article class="st"><span class="n">1</span><div class="body">
+      <span>Start a <b>new game in 867</b> with any Christian ruler.</span>
+    </div></article>
+    <article class="st"><span class="n">2</span><div class="body">
+      <span>Open the console and paste this line, then press Enter:</span>
+      <code class="cmd">effect np_test_pull_back_effect = yes</code>
+      <span class="muted small">It pushes the Mozarabic rite toward heresy, then lets the mod pull it back. A few “Rite Changed” banners are expected.</span>
+    </div></article>
+    <article class="st"><span class="n">3</span><div class="body">
+      <span>Play a few days, <b>quit to desktop</b>, and tell me “done”. I read the verdict in the log.</span>
+    </div></article>
+  </div>
+
+  <footer>Non Praevalebunt · v0.2 test</footer>
+</div>
+<script>
+document.querySelectorAll('.cmd').forEach(function (el) {
+  var text = el.textContent;
+  var btn = document.createElement('button');
+  btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+  btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el.firstChild);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Select + Ctrl+C'; }
+    };
+    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done, fallback); } else { fallback(); }
+  });
+  el.appendChild(btn);
+});
+</script>
+</body>
+</html>

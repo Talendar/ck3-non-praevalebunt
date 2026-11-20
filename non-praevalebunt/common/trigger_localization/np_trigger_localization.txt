@@ -11,3 +11,9 @@ np_righteous_adaptive_trigger = {
 	first_not = NP_RIGHTEOUS_ADAPTIVE
 	third_not = NP_RIGHTEOUS_ADAPTIVE
 }
+
+np_rite_window_lock_trigger = {
+	first = NP_RITE_WINDOW_LOCK
+	first_not = NP_RITE_WINDOW_LOCK
+	third_not = NP_RITE_WINDOW_LOCK
+}

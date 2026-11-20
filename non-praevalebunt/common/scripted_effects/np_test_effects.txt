@@ -1,0 +1,88 @@
+﻿# Non Praevalebunt - console test helpers (docs/quick-test.html)
+# The game never runs these by itself. Each one is a single short console line, because the console cuts
+# commands at about 255 characters: effect np_test_..._effect = yes
+# Each logs "NP test: ..." lines to logs/debug.log, ending in (GOOD) or (BAD).
+
+# Door 4: a council "condemns" Purgatory. The player stands in for the council (scope:activity) and the Pope
+# hosts it. The veto must turn the proposal into flag:np_set_aside, and the Pope's letter follows a day later.
+np_test_council_tenet_effect = {
+	save_scope_as = activity
+	title:k_papal_state.holder = { save_scope_as = host }
+	set_variable = { name = current_topic value = tenet:tenet_purgatory }
+	set_variable = { name = current_debate_proposal value = flag:prohibit }
+	ecumenical_council_conservative_backlash_effect = yes
+	if = {
+		limit = { var:current_debate_proposal ?= flag:np_set_aside }
+		debug_log = "NP test: the council's ruling against Purgatory was set aside (GOOD)"
+	}
+	else = {
+		debug_log = "NP test: the council's ruling against Purgatory was NOT set aside (BAD)"
+	}
+	remove_variable = current_topic
+	remove_variable = current_debate_proposal
+}
+
+# Door 4: a council "adopts" polygamy for the whole Church. The revert must restore monogamy at once, and the
+# Pope's letter follows a day later.
+np_test_council_doctrine_effect = {
+	save_scope_as = activity
+	title:k_papal_state.holder = { save_scope_as = host }
+	doctrine:doctrine_polygamy = { save_scope_as = ec_proposal_doctrine }
+	set_variable = { name = current_topic value = doctrine:doctrine_monogamy }
+	rite:roman_rite.faith = { change_doctrine = doctrine_polygamy }
+	ecumenical_council_host_rite_adopt_doctrine_effect = yes
+	if = {
+		limit = { rite:roman_rite.faith.main_rite = { rite_has_doctrine = doctrine_polygamy } }
+		debug_log = "NP test: the Church still holds polygamy after the council (BAD)"
+	}
+	else = {
+		debug_log = "NP test: the council's polygamy was reverted (GOOD)"
+	}
+	remove_variable = current_topic
+}
+
+# Rule 2: push the Mozarabic rite toward heresy, then run the pull-back at once. No guard pass in between:
+# the guard's cleanup of forbidden picks lowers divergence, which kept earlier tries under 60. The pull-back
+# runs the guard itself afterwards.
+np_test_pull_back_effect = {
+	rite:mozarabic_church = {
+		change_rite_divergence = {
+			value = 65
+			include_unknown = yes
+		}
+		if = {
+			limit = { "divergence(faith.main_rite)" >= np_heresy_pull_back_line_value }
+			debug_log = "NP test: the Mozarabic rite is now at or past 60"
+		}
+		else = {
+			debug_log = "NP test: the Mozarabic rite is still below 60 after the push (test inconclusive)"
+		}
+		np_pull_back_rite_effect = yes
+		if = {
+			limit = { "divergence(faith.main_rite)" >= np_heresy_pull_back_line_value }
+			debug_log = "NP test: the Mozarabic rite is still at or past 60 after the pull-back (BAD)"
+		}
+		else = {
+			debug_log = "NP test: the Mozarabic rite is below 60 after the pull-back (GOOD)"
+		}
+	}
+}
+
+# Rule 2: which Church rites sit close to the heresy line right now (one line per rite at 50 or more).
+np_test_divergence_report_effect = {
+	rite:roman_rite.faith = {
+		every_faith_rite = {
+			if = {
+				limit = { "divergence(faith.main_rite)" >= 60 }
+				debug_log = "NP test: a rite at 60 or more"
+				debug_log_scopes = yes
+			}
+			else_if = {
+				limit = { "divergence(faith.main_rite)" >= 50 }
+				debug_log = "NP test: a rite at 50 to 59"
+				debug_log_scopes = yes
+			}
+		}
+	}
+	debug_log = "NP test: divergence report done"
+}

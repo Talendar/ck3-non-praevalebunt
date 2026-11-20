@@ -20,6 +20,7 @@ np_on_rite_updated = {
 	effect = {
 		np_schism_head_cleanup_effect = yes
 		np_guard_rite_effect = yes
+		np_pull_back_rite_effect = yes
 	}
 }
 
@@ -43,6 +44,9 @@ np_on_faith_monthly = {
 		np_schism_head_cleanup_effect = yes
 		every_faith_rite = {
 			np_guard_rite_effect = yes
+			# Rule 2: a rite in good standing never crosses the heresy line. Checked for every rite, because
+			# a change to the main rite moves every other rite's divergence without updating them.
+			np_pull_back_rite_effect = yes
 		}
 		# Backup for the Pope rule: catches any path with no title gain (e.g. Shadows of the Cross
 		# crowning its interregnum steward) and a non-Roman main rite.

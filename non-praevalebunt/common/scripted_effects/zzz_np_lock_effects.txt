@@ -1,0 +1,233 @@
+﻿# Non Praevalebunt v0.2: the lock (effects).
+#
+# Full copies of four base-game effects (By God Alone), each with one addition marked "Non Praevalebunt".
+# Shadows of the Cross calls all four at the same points in its own versions of the code around them, and
+# redefines none of them, so these copies work with and without it.
+#   rite_yearly_hor_divergence_drift_commit_effect   (common/scripted_effects/pam_effects.txt)
+#   rite_growth_resolve_differences_effect           (common/scripted_effects/00_religion_effects.txt)
+#   ecumenical_council_conservative_backlash_effect  (common/scripted_effects/pam_ecumenical_council_effects.txt)
+#   ecumenical_council_host_rite_adopt_doctrine_effect (same file)
+#
+# The zzz_ prefix makes this file load after the base game and after other mods, so these copies replace the
+# originals. Re-copy the base-game parts if a game update changes them.
+
+# The AI's yearly drift (door 1). Runs right after a rite's head has moved it. If a Church rite in good standing
+# drifted into something forbidden, the guard sets it right at once and the drift counts as not having happened:
+# no letter, no fervor change, and the head may try again another year. Otherwise, the base game as usual.
+rite_yearly_hor_divergence_drift_commit_effect = {
+	# Non Praevalebunt
+	if = {
+		limit = {
+			exists = scope:diverged_rite
+			scope:diverged_rite = {
+				np_rite_is_guarded_trigger = yes
+				OR = {
+					np_rite_has_forbidden_doctrine_trigger = yes
+					np_rite_has_forbidden_tenet_trigger = yes
+				}
+			}
+		}
+		scope:diverged_rite = { np_guard_rite_effect = yes }
+		debug_log = "Non Praevalebunt: a rite's drift into forbidden beliefs was undone at once"
+		debug_log_scopes = yes
+	}
+	else = {
+		random_rite_tenet = {
+			limit = {
+				NOT = { is_in_list = drift_tenets_before }
+			}
+			save_scope_as = diverged_added_tenet
+		}
+		scope:diverged_hor = {
+			random_character_doctrine = {
+				rite_filter = scope:diverged_rite
+				limit = {
+					NOT = { is_in_list = drift_doctrines_before }
+				}
+				save_scope_as = diverged_added_doctrine
+			}
+		}
+
+		if = {
+			limit = {
+				OR = {
+					exists = scope:diverged_added_tenet
+					exists = scope:diverged_added_doctrine
+				}
+			}
+			scope:diverged_hor = {
+				add_character_flag = hor_already_drifted_rite_flag
+			}
+			if = {
+				limit = { scope:diverged_change <= -1 }
+				scope:diverged_rite.faith = {
+					change_fervor = {
+						value = notable_fervor_value
+						desc = fervor_gain_pam_rite_consolidated
+					}
+				}
+			}
+			else_if = {
+				limit = { scope:diverged_change >= 1 }
+				scope:diverged_rite.faith = {
+					change_fervor = {
+						value = significant_fervor_loss
+						desc = fervor_loss_pam_rite_diverged
+					}
+				}
+			}
+			rite_yearly_hor_divergence_drift_notify_effect = yes
+		}
+	}
+}
+
+# New rites springing up (door 2). Runs right after a new rite is built, before it spreads to any county.
+# A new Church rite is set right at once. A founder who is a heresiarch is founding a heresy on purpose
+# (the dangerous-rite outbreak), so that rite is left alone, as the guard would leave it.
+rite_growth_resolve_differences_effect = {
+	# Non Praevalebunt
+	if = {
+		limit = {
+			exists = scope:new_rite
+			NOT = { scope:founder ?= { has_trait = heresiarch } }
+			scope:new_rite = { np_rite_in_church_trigger = yes }
+		}
+		scope:new_rite = { np_guard_rite_effect = yes }
+	}
+	clear_saved_scope = differing_tenet
+	clear_saved_scope = differing_doctrine
+
+	# Lead with prohibited so the named tenet matches the widget highlight
+	scope:new_rite = {
+		random_rite_tenet = {
+			status = prohibited
+			limit = { rite_growth_tenet_is_unique_to_new_rite_trigger = yes }
+			save_scope_as = differing_tenet
+		}
+		if = {
+			limit = { NOT = { exists = scope:differing_tenet } }
+			random_rite_tenet = {
+				status = known
+				limit = { rite_growth_tenet_is_unique_to_new_rite_trigger = yes }
+				save_scope_as = differing_tenet
+			}
+		}
+		if = {
+			limit = { NOT = { exists = scope:differing_tenet } }
+			random_rite_tenet = {
+				limit = { rite_growth_tenet_is_unique_to_new_rite_trigger = yes }
+				save_scope_as = differing_tenet
+			}
+		}
+	}
+
+	if = {
+		limit = { NOT = { exists = scope:differing_tenet } }
+		scope:founder = {
+			random_character_doctrine = {
+				limit = { rite_growth_doctrine_is_unique_to_new_rite_trigger = yes }
+				save_scope_as = differing_doctrine
+			}
+		}
+	}
+}
+
+# Ecumenical councils, tenet rulings (door 4). Runs right before every tenet ruling takes effect, and in its
+# preview. The Pope does not confirm a ruling that breaks the Church's rules (np_council_veto_tenet_ruling_effect).
+ecumenical_council_conservative_backlash_effect = {
+	# Non Praevalebunt
+	np_council_veto_tenet_ruling_effect = yes
+	scope:activity.var:current_topic ?= {
+		save_scope_as = tenet
+	}
+	if = {
+		limit = {
+			ecumenical_council_proposal_change_magnitude_value > 0
+		}
+		hidden_effect = {
+			scope:activity = {
+				every_guest_subset = {
+					name = conservative
+					save_temporary_scope_as = ec_backlash_conservative
+					add_opinion = {
+						target = scope:host
+						modifier = ecumenical_council_forced_change_opinion
+						opinion = ecumenical_council_forced_change_opinion_penalty_value
+					}
+					scope:activity = {
+						every_guest_subset = {
+							name = innovator
+							limit = {
+								this != scope:host
+								this != scope:ec_backlash_conservative
+							}
+							save_temporary_scope_as = ec_backlash_innovator
+							scope:ec_backlash_conservative = {
+								add_opinion = {
+									target = scope:ec_backlash_innovator
+									modifier = ecumenical_council_forced_change_opinion
+									opinion = ecumenical_council_forced_change_opinion_penalty_value
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				scope:activity = {
+					NOT = {
+						has_variable = ec_backlash_tt_shown
+					}
+				}
+			}
+			scope:activity = {
+				set_variable = ec_backlash_tt_shown
+			}
+			custom_tooltip = ecumenical_council_conservative_backlash_tt
+		}
+	}
+}
+
+# Ecumenical councils, doctrine rulings (door 4). Runs right after the faith's doctrine changed. Within the
+# Church a forbidden doctrine is reverted at once (np_council_revert_doctrine_effect), and the host's own rite
+# does not carry it over. Otherwise, the base game as usual.
+ecumenical_council_host_rite_adopt_doctrine_effect = {
+	# Non Praevalebunt
+	if = {
+		limit = {
+			exists = scope:ec_proposal_doctrine
+			exists = rite:roman_rite
+			scope:host.faith = rite:roman_rite.faith
+			scope:ec_proposal_doctrine = { np_council_doctrine_is_forbidden_trigger = yes }
+		}
+		np_council_revert_doctrine_effect = yes
+	}
+	else = {
+		ecumenical_council_save_host_branched_rite_effect = yes
+		if = {
+			limit = {
+				exists = scope:ec_host_rite
+				exists = scope:ec_proposal_doctrine
+				NOR = {
+					scope:ec_proposal_doctrine = doctrine:doctrine_no_head
+					scope:ec_proposal_doctrine = doctrine:doctrine_spiritual_head
+					scope:ec_proposal_doctrine = doctrine:doctrine_temporal_head
+				}
+				scope:ec_host_rite = {
+					NOT = { rite_has_doctrine = scope:ec_proposal_doctrine }
+					rite_can_choose_doctrine = scope:ec_proposal_doctrine
+				}
+			}
+			scope:ec_host_rite = {
+				custom_tooltip = {
+					text = ecumenical_council_host_rite_adopts_doctrine_tt
+					hidden_effect = {
+						change_rite_doctrine = scope:ec_proposal_doctrine
+					}
+				}
+			}
+		}
+	}
+}

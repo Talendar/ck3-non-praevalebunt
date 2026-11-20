@@ -1,0 +1,83 @@
+﻿# Non Praevalebunt v0.2: the lock (triggers).
+#
+# Full copies of two base-game triggers (By God Alone, common/scripted_triggers/pam_scripted_triggers.txt),
+# each with one addition marked "Non Praevalebunt". Shadows of the Cross uses both and redefines neither.
+# The zzz_ prefix makes this file load after the base game and after other mods, so these copies replace the
+# originals. Re-copy the base-game parts if a game update changes them.
+
+# Door 3. "May the AI permit this tenet?" Asked for the AI Pope's core-tenet change on election, AI bulls,
+# AI council votes and, with Shadows of the Cross, AI synod motions. Within the Church, never a forbidden tenet.
+# $CHARACTER$ is the character deciding; the tenet is the scope.
+pam_tenet_ai_may_permit_trigger = {
+	# Non Praevalebunt
+	trigger_if = {
+		limit = { $CHARACTER$ = { np_character_in_church_trigger = yes } }
+		np_tenet_is_allowed_trigger = yes
+	}
+	trigger_if = {
+		limit = {
+			$CHARACTER$.faith = { has_tenet_popularity_trigger = yes }
+			pam_tenet_is_christian_vice_trigger = yes
+		}
+		OR = {
+			situation:the_christian_church ?= { situation_current_phase = saeculum_obscurum }
+			pam_tenet_is_at_least_very_popular_trigger = { CHARACTER = $CHARACTER$ }
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			$CHARACTER$.faith = { has_tenet_popularity_trigger = yes }
+			OR = {
+				pam_tenet_is_christological_heresy_trigger = yes
+				pam_tenet_is_christian_abomination_trigger = yes
+				tenet_is_anathema_to_faith_trigger = { FAITH = $CHARACTER$.faith }
+			}
+		}
+		pam_tenet_is_overwhelmingly_popular_trigger = { CHARACTER = $CHARACTER$ }
+	}
+	trigger_else = {
+		always = yes
+	}
+}
+
+# Rule 2. Who may be branded a heresy, by decision or by bull. Within the Church, never a rite in good
+# standing (one the guard protects: it holds nothing forbidden). A zealous Pope could otherwise brand one
+# from 4/5 of the heresy line.
+pam_rite_can_be_declared_heresy_trigger = {
+	save_temporary_scope_as = pam_rite_candidate
+	# Non Praevalebunt
+	custom_tooltip = {
+		text = np_rite_heresy_not_good_standing_tt
+		np_rite_is_guarded_trigger = no
+	}
+	custom_tooltip = {
+		text = pam_rite_heresy_not_mainline_tt
+		this != faith.main_rite
+	}
+	custom_tooltip = {
+		text = pam_rite_heresy_no_antipope_tt
+		faith = {
+			NOT = {
+				any_faith_ruler = {
+					rite = scope:pam_rite_candidate
+					is_following_religious_head_challenger = yes
+				}
+			}
+		}
+	}
+	trigger_if = {
+		limit = {
+			faith.religious_head ?= { has_trait = zealous }
+		}
+		custom_tooltip = {
+			text = pam_rite_heresy_divergence_zealous_tt
+			"divergence(faith.main_rite)" > faith_heresy_threshold_times_4_over_5
+		}
+	}
+	trigger_else = {
+		custom_tooltip = {
+			text = pam_rite_heresy_divergence_tt
+			"divergence(faith.main_rite)" > faith.heresy_threshold
+		}
+	}
+}

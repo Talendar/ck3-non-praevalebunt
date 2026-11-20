@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – v0.2 Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --no:#9a2a2a; --no-soft:#f7e2e0; --t2:#2f5d8a; --t2-soft:#e2ecf6;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --t2:#7fb0e0; --t2-soft:#1c2a38;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --t2:#7fb0e0; --t2-soft:#1c2a38;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Before / after strip */
+.ba{margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ba .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:8px}
+.ba .today{border-top:4px solid var(--no)} .ba .next{border-top:4px solid var(--ok)}
+.tag{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.today .tag{color:var(--no)} .next .tag{color:var(--ok)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.9rem}
+.chip{padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
+.chip.bad{background:var(--no-soft);border-color:color-mix(in srgb,var(--no) 35%,transparent)}
+.chip.good{background:var(--ok-soft);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}
+.arrow{color:var(--muted)}
+
+/* Doors */
+.doors{display:grid;gap:12px}
+.door{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px}
+.door .n{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:Cinzel,Georgia,serif;font-weight:700;background:var(--crimson);color:var(--surface)}
+.door .body{display:grid;gap:8px;min-width:0}
+.door .top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.b{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+.b.sure{background:var(--ok-soft);color:var(--ok)}
+.b.test{background:var(--gold-soft);color:var(--gold)}
+.b.none{background:var(--no-soft);color:var(--no)}
+.b.pick{background:var(--t2-soft);color:var(--t2)}
+.rows{display:grid;gap:6px;font-size:.92rem}
+.r{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px}
+.lab{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.lab.now{color:var(--no)} .lab.v2{color:var(--ok)}
+
+/* Heresy line */
+.line-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:14px}
+.scale{position:relative;height:46px;border-radius:10px;overflow:hidden;background:linear-gradient(90deg,var(--ok-soft) 0 60%,var(--gold-soft) 60% 65%,var(--no-soft) 65% 100%);border:1px solid var(--line)}
+.scale .mk{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.55}
+.scale .lb{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:.78rem;font-weight:700;background:var(--surface);padding:1px 6px;border-radius:6px;border:1px solid var(--line);white-space:nowrap}
+.legend{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:.88rem}
+.legend div{padding:10px 12px;border-radius:10px;border:1px solid var(--line)}
+.legend .g{background:var(--ok-soft)} .legend .y{background:var(--gold-soft)} .legend .x{background:var(--no-soft)}
+
+/* Picks */
+.picks{display:grid;gap:14px}
+.pickc{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--t2);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:10px}
+.pickc h3{display:flex;gap:10px;align-items:baseline}
+.pickc h3 .id{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--t2);border-radius:6px;padding:1px 7px}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font-size:.92rem}
+.opt.rec{border-color:color-mix(in srgb,var(--ok) 45%,transparent);background:var(--ok-soft)}
+.opt .k{font-weight:700;font-family:Cinzel,Georgia,serif}
+.rec-tag{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-left:6px}
+
+.note{margin-top:14px;font-size:.92rem;padding:12px 14px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--line)}
+.same{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.same div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.9rem}
+.same b{display:block;font-family:Cinzel,Georgia,serif;margin-bottom:2px}
+
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (max-width:760px){
+  .ba,.legend,.same{grid-template-columns:1fr}
+  .door{grid-template-columns:minmax(0,1fr)}.door .n{width:34px;height:34px}
+  .r{grid-template-columns:minmax(0,1fr);gap:2px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · ✓ Decided: P1 A · P2 A, for every rite in good standing, historic ones included · P3 A</div>
+  <h1>v0.2: The Lock</h1>
+  <p class="sub">Stop forbidden beliefs at the door, instead of throwing them out afterwards</p>
+  <a class="back" href="design-recommendation.html">← Back to the main recommendation</a>
+</header>
+
+<div class="wrap">
+
+  <section class="ba">
+    <article class="card today">
+      <span class="tag">Today (v0.1.1)</span>
+      <div class="flow"><span class="chip bad">A rite adopts “divorce allowed”</span><span class="arrow">→</span><span class="chip">“Rite Changed” banner</span><span class="arrow">→</span><span class="chip good">Guard undoes it, up to a month later</span></div>
+      <p class="small muted">Correct in the end, but noisy, and sometimes costly: lost fervor, wasted piety.</p>
+    </article>
+    <article class="card next">
+      <span class="tag">With v0.2</span>
+      <div class="flow"><span class="chip good">The forbidden choice is refused or undone on the spot</span><span class="arrow">→</span><span class="chip">No banner, no cost</span></div>
+      <p class="small muted">The guard stays as a safety net for anything that still slips through.</p>
+    </article>
+  </section>
+
+  <p class="note">Why not simply hide forbidden options everywhere? Shadows of the Cross rewrites the rules of most doctrines and tenets. If we rewrote them too, we would erase its changes. So, as with the bulls, we hook the few game steps every change passes through. Each hook below is a base-game step that SOTC calls but doesn’t rewrite. I checked each one in the game files.</p>
+
+  <h2><span class="num">1</span>The six doors, and what v0.2 does at each</h2>
+  <div class="doors">
+
+    <article class="door"><span class="n">1</span><div class="body">
+      <div class="top"><h3>The AI’s yearly drift</h3><span class="b sure">Safe hook</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What</span><span>Each year a rite’s AI leader may adopt a new doctrine or tenet. This is the main source of the banners you saw.</span></div>
+        <div class="r"><span class="lab now">Today</span><span>Adopted, announced by letter, fervor lost; then the guard reverts it.</span></div>
+        <div class="r"><span class="lab v2">v0.2</span><span>Undone the instant it is picked, before any letter or fervor loss. The rite simply doesn’t drift that year.</span></div>
+      </div>
+    </div></article>
+
+    <article class="door"><span class="n">2</span><div class="body">
+      <div class="top"><h3>New rites springing up</h3><span class="b sure">Safe hook</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What</span><span>Big rites sometimes split, and the game builds a new rite with fresh differences.</span></div>
+        <div class="r"><span class="lab now">Today</span><span>The new rite may be born with forbidden beliefs, cleaned at the next monthly check.</span></div>
+        <div class="r"><span class="lab v2">v0.2</span><span>Cleaned right after it is built, before it spreads to any county.</span></div>
+      </div>
+    </div></article>
+
+    <article class="door"><span class="n">3</span><div class="body">
+      <div class="top"><h3>The AI Pope’s choices</h3><span class="b sure">Safe hook</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What</span><span>A newly elected AI Pope may swap one core tenet of his rite. AI rite leaders in SOTC synods pick tenets too.</span></div>
+        <div class="r"><span class="lab now">Today</span><span>He may pick a forbidden tenet; the guard reverts it. (His bulls are already locked since v0.1.1.)</span></div>
+        <div class="r"><span class="lab v2">v0.2</span><span>The AI never even considers a forbidden tenet. One shared “may the AI permit this?” check covers all of these.</span></div>
+      </div>
+    </div></article>
+
+    <article class="door"><span class="n">4</span><div class="body">
+      <div class="top"><h3>Ecumenical councils</h3><span class="b sure">Safe hook</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What</span><span>A council can permit, condemn or make core a tenet, or change a doctrine. With SOTC it can even condemn a core teaching such as Communion.</span></div>
+        <div class="r"><span class="lab now">Today</span><span>Not stopped. Forbidden doctrines get reverted later; a condemned Communion would stay condemned.</span></div>
+        <div class="r"><span class="lab v2">v0.2</span><span>Same rules as bulls. A ruling that approves a forbidden tenet or condemns a protected one is set aside before it takes effect, and the Pope writes to you. A forbidden doctrine is reverted the moment it passes, with the same letter.</span></div>
+      </div>
+    </div></article>
+
+    <article class="door"><span class="n">5</span><div class="body">
+      <div class="top"><h3>Your own rite editor</h3><span class="b test">Needs an in-game test</span><span class="b pick">Your pick: P1</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What</span><span>When you found or reform a rite, you choose its doctrines and tenets yourself.</span></div>
+        <div class="r"><span class="lab now">Today</span><span>You can confirm a forbidden choice and pay piety for it; the guard reverts it within a month.</span></div>
+        <div class="r"><span class="lab v2">v0.2</span><span>The “Confirm” button refuses while anything forbidden is selected, with a tooltip saying why. Forbidden options still show and can be clicked; only confirming is blocked. SOTC uses the same trick for its own rules.</span></div>
+      </div>
+    </div></article>
+
+    <article class="door"><span class="n">6</span><div class="body">
+      <div class="top"><h3>SOTC synods and tools</h3><span class="b none">No safe hook</span></div>
+      <div class="rows">
+        <div class="r"><span class="lab">What</span><span>SOTC’s synods, its rite tools and its yearly “canon repair” change rites through SOTC’s own steps.</span></div>
+        <div class="r"><span class="lab v2">v0.2</span><span>Unchanged: the guard catches them right after, as today. AI synods already avoid forbidden tenets thanks to door 3.</span></div>
+      </div>
+    </div></article>
+
+  </div>
+
+  <h2><span class="num">2</span>Never past the heresy line</h2>
+  <div class="line-card">
+    <div class="scale" aria-label="Divergence scale from 0 to 100">
+      <span class="mk" style="left:60%"></span><span class="mk" style="left:65%"></span>
+      <span class="lb" style="left:30%">0 – 59: safe</span>
+      <span class="lb" style="left:62.5%">60</span>
+      <span class="lb" style="left:82%">65+: “heretical”</span>
+    </div>
+    <div class="legend">
+      <div class="g"><b>The problem.</b> A rite that believes nothing wrong can still pile up enough allowed differences (married priests, local feasts) to pass 65. The game then treats it as heretical.</div>
+      <div class="y"><b>Pull back.</b> When a rite in good standing reaches 60, the game moves it back toward Roman practice. The game itself picks which allowed differences to drop.</div>
+      <div class="x"><b>No branding.</b> A zealous Pope can already brand a rite heretical once it passes 52. The mod stops any Pope from branding a rite that holds nothing forbidden.</div>
+    </div>
+    <p class="small muted">Rites that truly fall into heresy are untouched by this: they hold forbidden beliefs, so they are not “in good standing”. In v0.3, heresy outbreaks will still make rites fall on purpose.</p>
+  </div>
+
+  <h2><span class="num">3</span>Your picks</h2>
+  <div class="picks">
+
+    <article class="pickc">
+      <h3><span class="id">P1</span>Lock the rite editor?</h3>
+      <div class="opts">
+        <div class="opt rec"><span class="k">A</span><span><b>Lock it</b><span class="rec-tag">Recommended</span><br>“Confirm” refuses forbidden choices. Side effect: while you belong to the Church, you can’t found a brand-new faith with forbidden beliefs from the editor. You could still convert to an existing heresy first.</span></div>
+        <div class="opt"><span class="k">B</span><span><b>Leave it</b><br>As today: you may confirm, pay the piety, and the guard reverts it within a month.</span></div>
+      </div>
+    </article>
+
+    <article class="pickc">
+      <h3><span class="id">P2</span>The heresy line</h3>
+      <div class="opts">
+        <div class="opt rec"><span class="k">A</span><span><b>Pull back and no branding</b><span class="rec-tag">Recommended</span><br>Rites in good standing never cross 65, and no Pope can brand them.</span></div>
+        <div class="opt"><span class="k">B</span><span><b>No branding only</b><br>They may drift past 65 and suffer the game’s heresy effects, but no Pope can brand them.</span></div>
+        <div class="opt"><span class="k">C</span><span><b>Neither</b><br>As today. Rare, but a faithful rite can end up branded.</span></div>
+      </div>
+    </article>
+
+    <article class="pickc">
+      <h3><span class="id">P3</span>SOTC’s adoption cost for our 4 edited items</h3>
+      <p class="small muted">Be Fruitful, Adaptability, Alexandrian Catechism and Righteous. With SOTC on, they currently cost what the base game charges to adopt, not SOTC’s adjusted price.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="k">A</span><span><b>Leave it</b><span class="rec-tag">Recommended</span><br>A small price difference on four items. Nothing breaks.</span></div>
+        <div class="opt"><span class="k">B</span><span><b>Borrow SOTC’s prices when it is present</b><br>Possible with a fallback trick, but it means naming SOTC’s internal values in our mod. If SOTC renames them, we silently fall back to base prices.</span></div>
+      </div>
+    </article>
+
+  </div>
+
+  <h2><span class="num">4</span>What stays the same</h2>
+  <div class="same">
+    <div><b>The guard</b>Still runs after every rite change and every month, as the safety net.</div>
+    <div><b>Heresies</b>Outbreaks and historical heresies work as before. Their changes come in v0.3.</div>
+    <div><b>Your campaign</b>v0.2 loads into a running v0.1.1 save. I’ll test it with one of yours before release.</div>
+  </div>
+
+  <footer>Non Praevalebunt · v0.2 plan · hooks checked against CK3 1.21 and Shadows of the Cross 1.2.0</footer>
+</div>
+</body>
+</html>

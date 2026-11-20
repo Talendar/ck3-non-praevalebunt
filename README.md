@@ -4,11 +4,13 @@
 
 A Crusader Kings III mod for **By God Alone** that keeps the Church's rites faithful to Catholic teaching. Rites may still differ in custom and discipline (liturgy, married priests, fasting, monastic rules), but never in faith or morals.
 
-> **Status: v0.1.1.** The first in-game test passed (867 start, with Shadows of the Cross). Expect rough edges.
+> **Status: v0.2.0.** Tested in game: an 867 start and a running v0.1.1 campaign save, with Shadows of the Cross. Expect rough edges.
 
 ## What it does
 
 - **Guards the Church's rites.** If a rite of the Church picks up a forbidden doctrine or tenet (for example divorce allowed, polygamy, or a heresy like Adoptionism), the Church sets it right. Rites in good standing are checked after every rite change and once a month.
+- **Locks the doors (v0.2).** Forbidden choices are refused or undone on the spot, with no banner or cost: the AI's yearly drift, newly founded rites, the AI Pope's choices, ecumenical councils (the Pope does not confirm a ruling against the faith, and writes to the faithful) and your own rite editor ("Confirm" refuses). See [`docs/v02-plan.html`](docs/v02-plan.html).
+- **Keeps faithful rites from the heresy line (v0.2).** A rite that holds nothing forbidden is pulled back toward Roman practice before it reaches the game's heresy line, and no Pope can brand it a heresy.
 - **Uses an approved list.** Every doctrine and tenet is marked allowed or forbidden. See [`docs/allowed-list.html`](docs/allowed-list.html).
 - **Keeps the Pope Roman.** Every new Pope takes the Roman rite, so a drifted rite can never become "Catholicism".
 - **Guards the Pope's bulls.** Within the Church, no bull can declare a forbidden tenet "in good standing" (for example Literalism), and none can condemn true Catholic teaching (for example Purgatory). If one slips through another route, the Pope sets it aside and writes to the faithful.
@@ -25,7 +27,12 @@ A Crusader Kings III mod for **By God Alone** that keeps the Church's rites fait
 
 - Requires CK3 **1.21.x**. Built for the **By God Alone** DLC.
 - Works **with or without Shadows of the Cross**, with no patch needed.
-- Replaces these definitions: tenets `tenet_be_fruitful_and_multiply`, `tenet_adaptive`, `tenet_alexandrian_catechism`; the doctrine `doctrine_pluralism_righteous`; the triggers `pam_tenet_can_be_permitted_trigger`, `pam_tenet_can_be_permitted_no_actor_trigger`, `pam_tenet_can_be_prohibited_trigger`, `pam_tenet_can_be_prohibited_no_actor_trigger`; the effect `pam_bull_notify_faith_rulers_effect`; and the names of the faith `christian_faith`. Other mods that change the same ones may conflict.
+- Replaces these definitions. Other mods that change the same ones may conflict.
+  - Tenets: `tenet_be_fruitful_and_multiply`, `tenet_adaptive`, `tenet_alexandrian_catechism`.
+  - Doctrines: `doctrine_pluralism_righteous`, `doctrine_clerical_marriage_allowed`, `doctrine_clerical_marriage_disallowed`.
+  - Triggers: `pam_tenet_can_be_permitted_trigger`, `pam_tenet_can_be_permitted_no_actor_trigger`, `pam_tenet_can_be_prohibited_trigger`, `pam_tenet_can_be_prohibited_no_actor_trigger`, `pam_tenet_ai_may_permit_trigger`, `pam_rite_can_be_declared_heresy_trigger`.
+  - Effects: `pam_bull_notify_faith_rulers_effect`, `rite_yearly_hor_divergence_drift_commit_effect`, `rite_growth_resolve_differences_effect`, `ecumenical_council_conservative_backlash_effect`, `ecumenical_council_host_rite_adopt_doctrine_effect`.
+  - The names of the faith `christian_faith`.
 
 ## Install (manual)
 

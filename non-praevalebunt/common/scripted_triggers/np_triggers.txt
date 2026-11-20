@@ -224,3 +224,131 @@ np_bull_breaks_church_rules_trigger = {
 np_rite_has_forbidden_tenet_trigger = {
 	any_rite_tenet = { np_tenet_is_forbidden_trigger = yes }
 }
+
+##############################################
+# v0.2: the lock
+##############################################
+
+# Doctrine scope. The forbidden doctrines of np_rite_has_forbidden_doctrine_trigger, one by one.
+# Left out: the head-of-faith doctrines (forbidden only on the main rite; see np_council_doctrine_is_forbidden_trigger)
+# and the Be Fruitful + divorce "Disallowed" pair (a combination; checked where both are known).
+np_doctrine_is_forbidden_trigger = {
+	OR = {
+		this = doctrine:doctrine_polytheist
+		this = doctrine:doctrine_pluralism_pluralistic
+		this = doctrine:doctrine_theocracy_lay_clergy
+		this = doctrine:doctrine_sacraments_absent
+		this = doctrine:doctrine_clerical_gender_either
+		this = doctrine:doctrine_clerical_gender_female_only
+		this = doctrine:doctrine_polygamy
+		this = doctrine:doctrine_concubines
+		this = doctrine:doctrine_divorce_allowed
+		this = doctrine:doctrine_bastardry_none
+		this = doctrine:doctrine_consanguinity_aunt_nephew_and_uncle_niece
+		this = doctrine:doctrine_consanguinity_unrestricted
+		this = doctrine:doctrine_homosexuality_accepted
+		this = doctrine:doctrine_deviancy_accepted
+		this = doctrine:doctrine_deviancy_virtuous
+		this = doctrine:doctrine_adultery_men_accepted
+		this = doctrine:doctrine_adultery_women_accepted
+		this = doctrine:doctrine_kinslaying_accepted
+		this = doctrine:doctrine_witchcraft_accepted
+		this = doctrine:doctrine_witchcraft_virtuous
+		this = doctrine:doctrine_usury_discouraged
+		this = doctrine:doctrine_usury_outsiders_only
+		this = doctrine:doctrine_usury_accepted
+		this = doctrine:doctrine_monasticism_absent
+		this = doctrine:doctrine_monasticism_forbidden
+		this = doctrine:doctrine_pilgrimage_forbidden
+		this = doctrine:doctrine_family_rites
+		this = doctrine:doctrine_funeral_cremation
+		this = doctrine:doctrine_funeral_sky_burial
+		this = doctrine:doctrine_funeral_mummification
+		this = doctrine:special_doctrine_meat_only
+		this = doctrine:special_doctrine_meat_forbidden_fish
+		this = doctrine:special_doctrine_meat_forbidden
+		this = doctrine:special_doctrine_nothing_of_the_slain
+		this = doctrine:special_doctrine_alcohol_forbidden
+		this = doctrine:doctrine_gender_female_dominated
+	}
+}
+
+# Doctrine scope, for a council ruling on the faith's doctrines (which are the main rite's).
+# Adds the head-of-faith doctrines, which are forbidden on the main rite, and the divorce pair.
+np_council_doctrine_is_forbidden_trigger = {
+	OR = {
+		np_doctrine_is_forbidden_trigger = yes
+		this = doctrine:doctrine_no_head
+		this = doctrine:doctrine_temporal_head
+		AND = {
+			this = doctrine:doctrine_divorce_disallowed
+			exists = rite:roman_rite
+			rite:roman_rite.faith.main_rite = { rite_has_tenet = tenet_be_fruitful_and_multiply }
+		}
+	}
+}
+
+# Faith scope, inside a doctrine's can_pick in the rite window (the list selected_doctrines holds the
+# doctrines and core tenets currently picked there). True if the selection holds nothing forbidden, or if the
+# lock does not apply: outside the Church, without an editing character, or when the editor leads a rite that
+# has fallen into heresy (the guard leaves those alone, so the lock does too).
+np_selection_is_clean_trigger = {
+	trigger_if = {
+		limit = {
+			exists = rite:roman_rite
+			this = rite:roman_rite.faith
+			exists = scope:actor
+			scope:actor.rite ?= { np_rite_is_guarded_trigger = yes }
+		}
+		NOT = {
+			any_doctrine = {
+				is_in_list = selected_doctrines
+				np_doctrine_is_forbidden_trigger = yes
+			}
+		}
+		NOT = {
+			any_tenet = {
+				is_in_list = selected_doctrines
+				np_tenet_is_forbidden_trigger = yes
+			}
+		}
+		NOT = {
+			AND = {
+				doctrine:doctrine_divorce_disallowed = { is_in_list = selected_doctrines }
+				tenet:tenet_be_fruitful_and_multiply = { is_in_list = selected_doctrines }
+			}
+		}
+	}
+}
+
+# Any scope, inside a council's tenet ruling (needs scope:activity and scope:host). True if, within the Church,
+# the ruling would Prohibit a protected tenet, or Permit or make core a forbidden one. Only tenet rulings carry
+# these proposal flags, so var:current_topic is a tenet here.
+np_council_tenet_ruling_breaks_rules_trigger = {
+	exists = scope:activity
+	exists = scope:host
+	exists = scope:activity.var:current_topic
+	exists = rite:roman_rite
+	scope:host.faith = rite:roman_rite.faith
+	OR = {
+		AND = {
+			scope:activity.var:current_debate_proposal ?= flag:prohibit
+			scope:activity.var:current_topic = { np_tenet_is_protected_trigger = yes }
+		}
+		AND = {
+			OR = {
+				scope:activity.var:current_debate_proposal ?= flag:permit
+				scope:activity.var:current_debate_proposal ?= flag:make_core
+			}
+			scope:activity.var:current_topic = { np_tenet_is_forbidden_trigger = yes }
+		}
+	}
+}
+
+# Rite scope. Rule 2: a rite in good standing has come within 5 points of the heresy line.
+# The main rite is excluded: its divergence from itself is 0.
+np_rite_needs_pull_back_trigger = {
+	np_rite_is_guarded_trigger = yes
+	NOT = { this = faith.main_rite }
+	"divergence(faith.main_rite)" >= np_heresy_pull_back_line_value
+}

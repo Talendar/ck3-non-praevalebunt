@@ -359,6 +359,85 @@ np_set_aside_bull_effect = {
 	debug_log = "Non Praevalebunt: the Pope set aside a bull that broke the Church's rules"
 }
 
+##############################################
+# v0.2: the lock
+##############################################
+
+# Inside ecumenical_council_conservative_backlash_effect (zzz_np_lock_effects.txt), which every council runs
+# right before its tenet ruling takes effect (base game and Shadows of the Cross alike). Within the Church, a
+# ruling that would Permit or make core a forbidden tenet, or Prohibit a protected one, is not confirmed by the
+# Pope: the proposal becomes a flag the ruling ignores, so nothing changes, and the faithful get his letter.
+# In the ruling's preview only the tooltip shows; nothing runs.
+np_council_veto_tenet_ruling_effect = {
+	if = {
+		limit = { np_council_tenet_ruling_breaks_rules_trigger = yes }
+		custom_tooltip = np_council_ruling_set_aside_tt
+		hidden_effect = {
+			scope:activity.var:current_topic = { save_scope_as = np_council_tenet }
+			if = {
+				limit = { scope:activity.var:current_debate_proposal ?= flag:prohibit }
+				save_scope_value_as = { name = np_council_ruling value = flag:prohibit }
+			}
+			else = {
+				save_scope_value_as = { name = np_council_ruling value = flag:permit }
+			}
+			scope:activity = {
+				set_variable = { name = current_debate_proposal value = flag:np_set_aside }
+			}
+			np_council_send_letter_effect = yes
+		}
+		debug_log = "Non Praevalebunt: the Pope did not confirm a council's tenet ruling"
+	}
+}
+
+# Inside ecumenical_council_host_rite_adopt_doctrine_effect (zzz_np_lock_effects.txt), which every council runs
+# right after it changes one of the faith's doctrines. Within the Church, a forbidden doctrine is not confirmed:
+# the faith goes back to the doctrine it held (the debate's topic), the guard checks the main rite, and the
+# faithful get the Pope's letter.
+np_council_revert_doctrine_effect = {
+	custom_tooltip = np_council_ruling_set_aside_tt
+	hidden_effect = {
+		scope:ec_proposal_doctrine = { save_scope_as = np_council_doctrine }
+		scope:host.faith = {
+			if = {
+				limit = { exists = scope:activity.var:current_topic }
+				change_doctrine = scope:activity.var:current_topic
+			}
+			main_rite = { np_guard_rite_effect = yes }
+		}
+		np_council_send_letter_effect = yes
+	}
+	debug_log = "Non Praevalebunt: the Pope did not confirm a council's doctrine ruling"
+}
+
+# Players of the Church (except the Pope himself) get the Pope's letter about a council ruling he did not
+# confirm (np_events.0003). Needs scope:np_council_tenet with scope:np_council_ruling, or scope:np_council_doctrine.
+np_council_send_letter_effect = {
+	every_player = {
+		limit = {
+			np_character_in_church_trigger = yes
+			NOT = { has_title = title:k_papal_state }
+		}
+		trigger_event = { id = np_events.0003 days = 1 }
+	}
+}
+
+# Rite scope. Rule 2: a rite in good standing never crosses the heresy line. When it comes within 5 points of
+# it, the game moves it back toward the main rite (a negative divergence change, as in the base game's own
+# backward drift), landing 10 points below the line. The game picks which allowed differences to drop.
+np_pull_back_rite_effect = {
+	if = {
+		limit = { np_rite_needs_pull_back_trigger = yes }
+		change_rite_divergence = {
+			value = np_pull_back_divergence_value
+			override_tenets_first = no
+		}
+		np_guard_rite_effect = yes
+		debug_log = "Non Praevalebunt: a rite in good standing was pulled back from the heresy line"
+		debug_log_scopes = yes
+	}
+}
+
 # One-time letter at game start, so players of the Church know why "Rite Changed" messages may appear.
 # Sent one day after the start: a message sent at the very first moment is lost before the map is shown.
 # The event itself checks that a Pope exists and that the player is not the Pope.

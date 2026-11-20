@@ -1,0 +1,18 @@
+﻿# Non Praevalebunt - script values
+
+# Rite scope. Rule 2: where a rite in good standing gets pulled back, 5 points before the heresy line
+# (the Church's line is 65, or 60 with a Fundamentalist main rite). The base game holds new rites back by
+# the same 5 points (rite_growth_spawn_doctrine_divergence).
+np_heresy_pull_back_line_value = {
+	value = faith.heresy_threshold
+	subtract = 5
+}
+
+# Rite scope. Rule 2: how far to pull the rite back toward the main rite, as a negative divergence change.
+# It lands 10 points below the line, so ordinary drift does not bring it straight back.
+np_pull_back_divergence_value = {
+	value = faith.heresy_threshold
+	subtract = 10
+	subtract = "divergence(faith.main_rite)"
+	max = -5
+}

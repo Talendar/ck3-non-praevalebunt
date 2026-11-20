@@ -65,3 +65,45 @@ np_events.0002 = {
 		name = np_events.0002.a
 	}
 }
+
+##############################################
+# 0003: A council ruling not confirmed (v0.2)
+# A letter from the Pope to each player of the Church, when a council voted something that breaks the Church's
+# rules and he would not confirm it. Sent by np_council_send_letter_effect. Scopes: np_council_tenet with the
+# scope value np_council_ruling (flag:permit or flag:prohibit), or np_council_doctrine.
+##############################################
+
+np_events.0003 = {
+	type = letter_event
+	opening = np_events.0002.opening
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { exists = scope:np_council_doctrine }
+				desc = np_events.0003.desc.doctrine
+			}
+			triggered_desc = {
+				trigger = { scope:np_council_ruling ?= flag:prohibit }
+				desc = np_events.0003.desc.prohibit
+			}
+			desc = np_events.0003.desc.permit
+		}
+	}
+	sender = scope:np_pope
+
+	trigger = {
+		exists = title:k_papal_state.holder
+		OR = {
+			exists = scope:np_council_tenet
+			exists = scope:np_council_doctrine
+		}
+	}
+
+	immediate = {
+		title:k_papal_state.holder = { save_scope_as = np_pope }
+	}
+
+	option = {
+		name = np_events.0003.a
+	}
+}
