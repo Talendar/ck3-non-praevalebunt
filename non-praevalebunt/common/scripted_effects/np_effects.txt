@@ -328,14 +328,44 @@ np_build_approved_tenet_list_effect = {
 	tenet:tenet_sanctity_of_nature = { add_to_temporary_list = np_approved_tenets }
 }
 
-# One-time notice at game start, so players know why "Rite updated" messages may appear.
+# Inside pam_bull_events.0002, when np_bull_breaks_church_rules_trigger is true (see
+# common/scripted_effects/zzz_np_bull_effects.txt). The Pope sets the bull aside: the tenet's status in the
+# faith is restored, secret holders of a forbidden tenet are secret again, and the faithful get his letter.
+np_set_aside_bull_effect = {
+	scope:bull_issuer.faith = {
+		if = {
+			limit = { scope:bull_issuer.var:bull_option = flag:tenet_permitted }
+			set_tenet_status = {
+				tenet = scope:tenet_scope
+				status = prohibited
+			}
+			pam_faith_grant_forbidden_personal_tenet_secrets_effect = { TENET = scope:tenet_scope }
+		}
+		else = {
+			set_tenet_status = {
+				tenet = scope:tenet_scope
+				status = permitted
+			}
+			pam_faith_cleanup_forbidden_personal_tenet_secrets_effect = yes
+		}
+	}
+	every_player = {
+		limit = {
+			np_character_in_church_trigger = yes
+			this != scope:bull_issuer
+		}
+		trigger_event = { id = np_events.0002 days = 1 }
+	}
+	debug_log = "Non Praevalebunt: the Pope set aside a bull that broke the Church's rules"
+}
+
+# One-time letter at game start, so players of the Church know why "Rite Changed" messages may appear.
+# Sent one day after the start: a message sent at the very first moment is lost before the map is shown.
+# The event itself checks that a Pope exists and that the player is not the Pope.
 np_startup_notice_effect = {
 	every_player = {
-		send_interface_message = {
-			type = event_generic_neutral
-			title = np_msg_mod_active
-			desc = np_msg_mod_active_desc
-		}
+		limit = { np_character_in_church_trigger = yes }
+		trigger_event = { id = np_events.0001 days = 1 }
 	}
 }
 

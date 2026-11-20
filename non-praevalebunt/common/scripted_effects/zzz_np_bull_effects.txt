@@ -1,0 +1,33 @@
+﻿# Non Praevalebunt: backstop for the Pope's bulls on tenets.
+#
+# Every bull ends in pam_bull_events.0002 (By God Alone), whatever started it: the base game's bull
+# decisions, Shadows of the Cross's bull decisions, or Shadows of the Cross's papal demands. The demands
+# skip the checks in zzz_np_tenet_stance_triggers.txt, so this file catches what gets past them.
+#
+# This is a full copy of pam_bull_notify_faith_rulers_effect from common/scripted_effects/pam_effects.txt,
+# which the event runs right after the bull takes effect. The base game's body is kept in the "else"
+# branch. When a bull breaks the Church's rules, the Pope sets it aside instead: the tenet's status is
+# restored and the faithful get his letter (np_events.0002) instead of the usual one.
+#
+# The zzz_ prefix makes this file load after the base game's file and after other mods, so this copy
+# replaces the original. Re-copy the base game's part if a game update changes it.
+
+pam_bull_notify_faith_rulers_effect = {
+	if = {
+		limit = { np_bull_breaks_church_rules_trigger = yes }
+		np_set_aside_bull_effect = yes
+	}
+	else = {
+		scope:bull_issuer = {
+			faith = {
+				every_faith_character = {
+					limit = {
+						is_ruler = yes
+						this != scope:bull_issuer
+					}
+					trigger_event = { id = pam_bull_events.0004 days = 1 }
+				}
+			}
+		}
+	}
+}

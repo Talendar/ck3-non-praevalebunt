@@ -1,0 +1,67 @@
+﻿namespace = np_events
+
+##############################################
+# 0001: Upon This Rock
+# A letter from the Pope to each player of the Church, one day after the game starts.
+# Sent by np_startup_notice_effect (common/scripted_effects/np_effects.txt).
+##############################################
+
+np_events.0001 = {
+	type = letter_event
+	opening = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { is_female = yes }
+				desc = np_events.0001.opening.daughter
+			}
+			desc = np_events.0001.opening.son
+		}
+	}
+	desc = np_events.0001.desc
+	sender = scope:np_pope
+
+	trigger = {
+		exists = title:k_papal_state.holder
+		NOT = { has_title = title:k_papal_state }
+		np_character_in_church_trigger = yes
+	}
+
+	immediate = {
+		title:k_papal_state.holder = { save_scope_as = np_pope }
+	}
+
+	option = {
+		name = np_events.0001.a
+	}
+}
+
+##############################################
+# 0002: A bull set aside
+# A letter from the Pope to each player of the Church, when he sets aside a bull that would Permit a
+# forbidden tenet or Prohibit a protected one. Sent by np_set_aside_bull_effect instead of the usual
+# "bull enacted" letter. Scopes from pam_bull_events.0002: bull_issuer, tenet_scope.
+##############################################
+
+np_events.0002 = {
+	type = letter_event
+	opening = np_events.0002.opening
+	desc = {
+		first_valid = {
+			triggered_desc = {
+				trigger = { scope:bull_issuer.var:bull_option ?= flag:tenet_forbidden }
+				desc = np_events.0002.desc.prohibit
+			}
+			desc = np_events.0002.desc.permit
+		}
+	}
+	sender = scope:bull_issuer
+
+	trigger = {
+		exists = scope:bull_issuer
+		exists = scope:tenet_scope
+	}
+
+	option = {
+		name = np_events.0002.a
+	}
+}

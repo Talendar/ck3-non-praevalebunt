@@ -1,0 +1,9 @@
+﻿l_english:
+ # The undivided Church before the Great Schism (faith christian_faith). The base game calls it
+ # "Chalcedonianism". Seen from Rome, it is the Catholic Church: it called itself both "Catholic"
+ # and "Orthodox". After the schism, the Catholic faith keeps the same names.
+ christian_faith: "Catholicism"
+ christian_faith_adj: "Catholic"
+ christian_faith_adherent: "Catholic"
+ christian_faith_adherent_plural: "Catholics"
+ christian_faith_desc: "The one, holy, catholic and apostolic Church, still undivided. East and West share one faith and one communion, handed down from the Apostles through their successors, the bishops. Among them the Bishop of Rome, successor of Saint Peter, holds the first place."

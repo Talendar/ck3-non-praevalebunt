@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – Quick Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --no:#9a2a2a; --no-soft:#f7e2e0; --t2:#2f5d8a; --t2-soft:#e2ecf6;
+  --code-bg:#2a2017; --code-ink:#f4eee2;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --t2:#7fb0e0; --t2-soft:#1c2a38;
+    --code-bg:#0d0a08; --code-ink:#efe6d8;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --t2:#7fb0e0; --t2-soft:#1c2a38;
+  --code-bg:#0d0a08; --code-ink:#efe6d8;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+code{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:.86em;background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Who does what */
+.who{margin-top:24px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch}
+.who .box{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px;text-align:center}
+.who .box b{display:block;font-family:Cinzel,Georgia,serif;font-size:1rem;margin-bottom:2px}
+.who .you{border-top:4px solid var(--gold)} .who .me{border-top:4px solid var(--t2)} .who .done{border-top:4px solid var(--ok)}
+.who .arrow{display:grid;place-items:center;color:var(--muted);font-size:1.4rem}
+
+/* Setup */
+.setup{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.card .tag{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.path{font-size:.92rem}
+.path span{white-space:nowrap}
+.path .sep{color:var(--muted);margin:0 4px}
+
+/* Steps */
+.steps{display:grid;gap:12px}
+.st{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+.st .n{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-family:Cinzel,Georgia,serif;font-weight:700;font-size:1.1rem;background:var(--crimson);color:var(--surface)}
+.st .body{display:grid;gap:10px;min-width:0}
+.do,.see{display:grid;grid-template-columns:86px minmax(0,1fr);gap:10px;align-items:start;font-size:.95rem}
+.lbl{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;text-align:center}
+.do .lbl{background:var(--gold-soft);color:var(--gold)}
+.see .lbl{background:var(--ok-soft);color:var(--ok)}
+.cmd{display:block;position:relative;background:var(--code-bg);color:var(--code-ink);font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:.86rem;padding:10px 74px 10px 12px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:6px;border:none}
+.copy{position:absolute;top:8px;right:8px;font:600 .75rem "Source Sans 3",system-ui,sans-serif;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:var(--code-ink);cursor:pointer}
+.copy:hover{background:rgba(255,255,255,.18)}
+.opt{font-size:.85rem;color:var(--muted)}
+
+/* Log check */
+.logs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.log{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--t2);border-radius:12px;padding:14px 16px;font-size:.92rem;display:grid;gap:6px}
+.log b{font-family:Cinzel,Georgia,serif}
+
+.note{margin-top:14px;font-size:.92rem;padding:12px 14px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--line)}
+.warn{margin-top:14px;font-size:.92rem;padding:12px 14px;border-radius:12px;background:var(--no-soft);border:1px solid var(--line)}
+
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (max-width:760px){
+  .who{grid-template-columns:1fr}.who .arrow{transform:rotate(90deg)}
+  .setup,.logs{grid-template-columns:1fr}
+  .st{grid-template-columns:minmax(0,1fr)}.st .n{width:36px;height:36px;font-size:.95rem}
+  .do,.see{grid-template-columns:minmax(0,1fr);gap:4px}.lbl{justify-self:start}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · v0.1</div>
+  <h1>Quick Test</h1>
+  <p class="sub">About 10 minutes in an 867 start. You play, I read the logs.</p>
+  <a class="back" href="design-recommendation.html">← Back to the main recommendation</a>
+</header>
+
+<div class="wrap">
+
+  <section class="who">
+    <div class="box you"><b>You</b><span class="small muted">Play a few minutes and run one console command</span></div>
+    <div class="arrow">→</div>
+    <div class="box me"><b>Me</b><span class="small muted">Read the game’s logs and fix any errors</span></div>
+    <div class="arrow">→</div>
+    <div class="box done"><b>Then</b><span class="small muted">You start your real campaign</span></div>
+  </section>
+
+  <h2><span class="num">1</span>Before you start (once)</h2>
+  <div class="setup">
+    <article class="card">
+      <span class="tag">Steam: turn on debug mode</span>
+      <p class="path"><span>Right-click Crusader Kings III</span><span class="sep">›</span><span>Properties</span><span class="sep">›</span><span>General</span><span class="sep">›</span><span>Launch options</span></p>
+      <p>Type <code>-debug_mode</code> in the box. It is empty today, so nothing else is needed.</p>
+      <p class="opt">This unlocks the console. Remove it later if you like.</p>
+    </article>
+    <article class="card">
+      <span class="tag">Launcher: turn on the mod</span>
+      <p>Open your playset and add <b>Non Praevalebunt</b>. It is already in the mod list.</p>
+      <p>Keep your usual mods on, SOTC included. Put ours <b>last</b>.</p>
+      <p class="opt">If it is not in the list, restart the launcher.</p>
+    </article>
+  </div>
+
+  <h2><span class="num">2</span>In the game</h2>
+  <div class="steps">
+
+    <article class="st">
+      <span class="n">1</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Start a new game in <b>867</b>. Pick any Christian ruler in Western Europe, for example a count in Francia or Italy.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>A message called <b>“Upon This Rock”</b> on the first day.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">2</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Open your faith’s window.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>The <b>Pope</b> is the head of the faith.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">3</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Open the console: the key under Esc, left of 1. Paste this line, press Enter, then close the console.
+          <code class="cmd">effect rite:roman_rite = { change_rite_doctrine = doctrine_divorce_allowed }</code></span></div>
+        <div class="see"><span class="lbl">You see</span><span>Nothing yet. This plants an error on purpose: “divorce allowed” in the Roman rite.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">4</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Unpause and play at top speed for about <b>2 months</b>.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>The guard has put the Roman rite back to <b>divorce needs approval</b>. <span class="opt">If you can’t find it in the faith window, don’t worry: the log tells me.</span></span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">5</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span><b>Quit to desktop</b>, so the game finishes writing its logs. Then tell me “done”.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>Nothing more. No need to save.</span></div>
+      </div>
+    </article>
+
+  </div>
+
+  <h2><span class="num">3</span>What I check afterwards</h2>
+  <div class="logs">
+    <div class="log">
+      <b>error.log</b>
+      <span>Any error from our files. Errors from your other mods are ignored.</span>
+    </div>
+    <div class="log">
+      <b>game.log</b>
+      <span>Our own notes: the Pope made head of the Church, the start-of-game fixes (Mozarabic), and the guard undoing the console test.</span>
+    </div>
+  </div>
+  <p class="note">You don’t need to check the Mozarabic rite yourself. The log shows whether it was fixed.</p>
+  <p class="warn">If the game crashes, the mod is missing from the launcher, or a step looks wrong, stop there and tell me what you saw. A screenshot helps.</p>
+
+  <h2 id="retest"><span class="num">4</span>Retest for v0.1.1</h2>
+  <p class="muted small" style="margin-bottom:12px">Same setup as before: debug mode on, the mod last in your playset. The launcher already has the new version.</p>
+  <div class="steps">
+
+    <article class="st">
+      <span class="n">1</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Start a new game in <b>867</b> with a Christian ruler, as before.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>Your faith is called <b>Catholicism</b>, not Chalcedonianism.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">2</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Unpause for a few days.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>A <b>letter from the Pope</b>: “Beloved son in Christ,” with Matthew 16:18.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">3</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Open the console and paste these two lines, one at a time, pressing Enter after each. They only ask questions and change nothing.
+          <code class="cmd">effect tenet:tenet_literalism = { if = { limit = { pam_tenet_can_be_permitted_no_actor_trigger = yes } debug_log = "NP test: Literalism can be permitted (BAD)" } else = { debug_log = "NP test: Literalism blocked (GOOD)" } }</code>
+          <code class="cmd">effect tenet:tenet_purgatory = { if = { limit = { pam_tenet_can_be_prohibited_no_actor_trigger = yes } debug_log = "NP test: Purgatory can be prohibited (BAD)" } else = { debug_log = "NP test: Purgatory protected (GOOD)" } }</code></span></div>
+        <div class="see"><span class="lbl">You see</span><span>Nothing. The answers go to the log.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">4</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span>Paste this third line and press Enter. It fakes a bull approving Simony, the way a Shadows of the Cross demand could.
+          <code class="cmd">effect title:k_papal_state.holder = { save_scope_as = bull_issuer set_variable = { name = bull_option value = flag:tenet_permitted years = 1 } } tenet:tenet_simony = { save_scope_as = tenet_scope } pam_bull_notify_faith_rulers_effect = yes</code></span></div>
+        <div class="see"><span class="lbl">You see</span><span>Unpause for a day or two. A <b>letter from the Pope</b>: he has set aside a bull declaring Simony in good standing.</span></div>
+      </div>
+    </article>
+
+    <article class="st">
+      <span class="n">5</span>
+      <div class="body">
+        <div class="do"><span class="lbl">You do</span><span><b>Quit to desktop</b> and tell me “done”.</span></div>
+        <div class="see"><span class="lbl">You see</span><span>Nothing more. I read the logs.</span></div>
+      </div>
+    </article>
+
+  </div>
+
+  <footer>Non Praevalebunt · quick test for v0.1, retest for v0.1.1 · logs are read from the Proton copy of the CK3 user folder</footer>
+</div>
+<script>
+document.querySelectorAll('.cmd').forEach(function (el) {
+  var text = el.textContent;
+  var btn = document.createElement('button');
+  btn.className = 'copy'; btn.type = 'button'; btn.textContent = 'Copy';
+  btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el.firstChild);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'Select + Ctrl+C'; }
+    };
+    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done, fallback); } else { fallback(); }
+  });
+  el.appendChild(btn);
+});
+</script>
+</body>
+</html>

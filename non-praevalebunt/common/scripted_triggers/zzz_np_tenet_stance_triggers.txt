@@ -1,0 +1,97 @@
+﻿# Non Praevalebunt: the Pope's bulls on tenets.
+#
+# Full copies of four Crusader Kings III triggers from common/scripted_triggers/pam_scripted_triggers.txt
+# (By God Alone), each with one addition marked "Non Praevalebunt". The game uses them to decide which
+# tenets a head of faith may Permit or Prohibit, by papal bull or by the tenet stance decisions.
+# Shadows of the Cross uses these same triggers in its own bull decisions without changing them.
+#
+# Within the Church (the faith of the Roman rite):
+#   a forbidden tenet can never be Permitted (docs/allowed-list.html), and
+#   a protected tenet (true Catholic teaching) can never be Prohibited.
+#
+# The zzz_ prefix makes this file load after the base game's file and after other mods, so these copies
+# replace the originals. Re-copy the vanilla parts if a game update changes them.
+
+pam_tenet_can_be_permitted_trigger = {
+	save_temporary_scope_as = pam_tenet_candidate
+	custom_tooltip = {
+		text = pam_tenet_stance_can_be_permitted_tt
+		scope:actor.rite = {
+			NOR = {
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = permitted }
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = core }
+			}
+		}
+	}
+	# Non Praevalebunt
+	trigger_if = {
+		limit = { scope:actor = { np_character_in_church_trigger = yes } }
+		custom_tooltip = {
+			text = np_tenet_cannot_be_permitted_tt
+			np_tenet_is_allowed_trigger = yes
+		}
+	}
+}
+
+pam_tenet_can_be_permitted_no_actor_trigger = {
+	save_temporary_scope_as = pam_tenet_candidate
+	custom_tooltip = {
+		text = pam_tenet_stance_can_be_permitted_tt
+		root.rite = {
+			NOR = {
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = permitted }
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = core }
+			}
+		}
+	}
+	# Non Praevalebunt
+	trigger_if = {
+		limit = { root = { np_character_in_church_trigger = yes } }
+		custom_tooltip = {
+			text = np_tenet_cannot_be_permitted_tt
+			np_tenet_is_allowed_trigger = yes
+		}
+	}
+}
+
+pam_tenet_can_be_prohibited_trigger = {
+	save_temporary_scope_as = pam_tenet_candidate
+	custom_tooltip = {
+		text = pam_tenet_stance_can_be_prohibited_tt
+		scope:actor.rite = {
+			NOR = {
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = prohibited }
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = core }
+			}
+		}
+	}
+	# Non Praevalebunt
+	trigger_if = {
+		limit = { scope:actor = { np_character_in_church_trigger = yes } }
+		custom_tooltip = {
+			text = np_tenet_cannot_be_prohibited_tt
+			np_tenet_is_protected_trigger = no
+		}
+	}
+}
+
+pam_tenet_can_be_prohibited_no_actor_trigger = {
+	save_temporary_scope_as = pam_tenet_candidate
+	custom_tooltip = {
+		text = pam_tenet_stance_can_be_prohibited_tt
+		root.rite = {
+			NOR = {
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = prohibited }
+				has_tenet_status = { tenet = scope:pam_tenet_candidate status = core }
+			}
+		}
+	}
+	# Non Praevalebunt
+	trigger_if = {
+		limit = { root = { np_character_in_church_trigger = yes } }
+		custom_tooltip = {
+			text = np_tenet_cannot_be_prohibited_tt
+			np_tenet_is_protected_trigger = no
+		}
+	}
+}

@@ -140,14 +140,7 @@ np_tenet_is_allowed_trigger = {
 			rite:roman_rite.faith = faith:christian_faith
 		}
 		# Protected: true Catholic teaching
-		this = tenet:tenet_communion
-		this = tenet:tenet_transubstantiation
-		this = tenet:tenet_purgatory
-		this = tenet:tenet_confession
-		this = tenet:tenet_original_sin
-		this = tenet:tenet_apostolic_succession
-		this = tenet:tenet_dulia
-		this = tenet:tenet_hyperdulia
+		np_tenet_is_protected_trigger = yes
 		# Allowed: orthodox practices
 		this = tenet:tenet_peace_of_god
 		this = tenet:tenet_ora_et_labora
@@ -179,6 +172,49 @@ np_tenet_is_allowed_trigger = {
 		this = tenet:tenet_be_fruitful_and_multiply
 		this = tenet:tenet_communal_possessions
 		this = tenet:tenet_alexandrian_catechism
+	}
+}
+
+# Tenet scope. The 8 protected tenets (docs/allowed-list.html): true Catholic teaching.
+# Within the Church they can never be Prohibited, by bull or by decision.
+np_tenet_is_protected_trigger = {
+	OR = {
+		this = tenet:tenet_communion
+		this = tenet:tenet_transubstantiation
+		this = tenet:tenet_purgatory
+		this = tenet:tenet_confession
+		this = tenet:tenet_original_sin
+		this = tenet:tenet_apostolic_succession
+		this = tenet:tenet_dulia
+		this = tenet:tenet_hyperdulia
+	}
+}
+
+# Character scope. True if the character belongs to the Church: the faith that holds the Roman rite.
+# Before the Great Schism that is the undivided Church; after it, Catholicism.
+np_character_in_church_trigger = {
+	exists = rite:roman_rite
+	faith = rite:roman_rite.faith
+}
+
+# Any scope, inside pam_bull_events.0002 (needs scope:bull_issuer and scope:tenet_scope).
+# True if a bull of the Church's head would Permit a forbidden tenet or Prohibit a protected one.
+np_bull_breaks_church_rules_trigger = {
+	exists = scope:bull_issuer
+	exists = scope:tenet_scope
+	scope:bull_issuer = {
+		np_character_in_church_trigger = yes
+		has_variable = bull_option
+	}
+	OR = {
+		AND = {
+			scope:bull_issuer.var:bull_option = flag:tenet_permitted
+			scope:tenet_scope = { np_tenet_is_allowed_trigger = no }
+		}
+		AND = {
+			scope:bull_issuer.var:bull_option = flag:tenet_forbidden
+			scope:tenet_scope = { np_tenet_is_protected_trigger = yes }
+		}
 	}
 }
 

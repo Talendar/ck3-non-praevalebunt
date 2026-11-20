@@ -1,4 +1,4 @@
-# Non Praevalebunt - trigger localization (tooltip text for custom_description)
+﻿# Non Praevalebunt - trigger localization (tooltip text for custom_description)
 
 np_adaptive_pluralism_trigger = {
 	first = NP_ADAPTIVE_PLURALISM
