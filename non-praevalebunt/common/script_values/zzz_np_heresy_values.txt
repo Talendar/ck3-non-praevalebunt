@@ -1,0 +1,111 @@
+﻿# Non Praevalebunt v0.3: more heresy outbreaks in the Church (docs/v03-plan.html, feature 2).
+#
+# Copies of four base-game script values (By God Alone, common/script_values/pam_heresy_values.txt), each with one
+# addition marked "Non Praevalebunt". Shadows of the Cross reads them but redefines none of them. All four are read in
+# faith scope. For the Church only (the faith holding the Roman rite):
+#   the fervor bounce after an outbreak is halved (60/75/90 -> 30/40/50), and
+#   the monthly odds of an outbreak, while fervor is 40 or less, are about doubled.
+# Together that is roughly twice as many outbreaks. The 5-year pause between outbreaks is unchanged.
+# The zzz_ prefix makes this file load after the base game and after other mods, so these copies win.
+
+pam_heresy_fervor_reset_component_1_value = {
+	value = 60
+	# Non Praevalebunt
+	if = {
+		limit = { np_faith_is_church_trigger = yes }
+		value = 30
+	}
+}
+
+pam_heresy_fervor_reset_component_2_value = {
+	value = 75
+	# Non Praevalebunt
+	if = {
+		limit = { np_faith_is_church_trigger = yes }
+		value = 40
+	}
+}
+
+pam_heresy_fervor_reset_component_3_value = {
+	value = 90
+	# Non Praevalebunt
+	if = {
+		limit = { np_faith_is_church_trigger = yes }
+		value = 50
+	}
+}
+
+pam_heresy_pulse_no_event_value = {
+	if = {
+		limit = { fervor > 30 }
+		value = 99
+	}
+	else_if = {
+		limit = { fervor > 20 }
+		value = 32
+	}
+	else_if = {
+		limit = { fervor > 10 }
+		value = 11
+	}
+	else = { value = 2 }
+	# In the more turbulent phases we lower this, so outbreaks happen more often
+	if = {
+		limit = {
+			religion = religion:christianity_religion
+			situation:the_christian_church ?= {
+				OR = {
+					situation_current_phase = saeculum_obscurum
+					situation_current_phase = investiture_crisis
+				}
+			}
+		}
+		divide = 1.5
+	}
+	else_if = {
+		limit = {
+			religion = religion:christianity_religion
+			situation:the_christian_church ?= { situation_current_phase = concord }
+		}
+		multiply = 2
+	}
+	else_if = {
+		limit = {
+			religion = religion:christianity_religion
+			situation:the_christian_church ?= {
+				OR = {
+					situation_current_phase = conversion_phase
+					situation_current_phase = crusade_phase
+				}
+			}
+		}
+		multiply = 1.4
+	}
+	# For a small faith we make outbreaks much rarer
+	if = {
+		limit = { NOT = { pam_heresy_main_rite_substantial_trigger = yes } }
+		multiply = 4
+	}
+	if = {
+		limit = { has_game_rule = much_less_heresy_outbreak_frequency }
+		multiply = 4
+	}
+	else_if = {
+		limit = { has_game_rule = less_heresy_outbreak_frequency }
+		multiply = 2
+	}
+	else_if = {
+		limit = { has_game_rule = more_heresy_outbreak_frequency }
+		multiply = 0.5
+	}
+	else_if = {
+		limit = { has_game_rule = much_more_heresy_outbreak_frequency }
+		multiply = 0.25
+	}
+	# Non Praevalebunt: the Church gets about twice the odds (this is the "no outbreak" weight, so it is halved).
+	if = {
+		limit = { np_faith_is_church_trigger = yes }
+		multiply = 0.5
+	}
+	min = 1
+}

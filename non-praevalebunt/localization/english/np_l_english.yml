@@ -19,6 +19,11 @@
  np_events.0003.catechesis: "A council speaks for the whole Church only in union with the successor of Peter. So it has always been: my predecessor Saint Leo the Great would not confirm a canon of the Council of Chalcedon, and Rome never received it."
  np_events.0003.a: "Amen."
 
+ # v0.3: Seek Communion is a true return (common/scripted_effects/zzz_np_heresy_effects.txt, events/np_events.txt)
+ np_seek_communion_true_return_tt: "The rites of [actor.GetFaith.GetName] return to the Church, laying down every belief she forbids (Non Praevalebunt)"
+ np_events.0004.desc: "Those who followed [np_returning_faith.GetName] have renounced their errors and come home to the unity of the Church. Their rites are received as rites of the Church, and their leaders are absolved.\n\nOur Lord said: “There shall be joy in heaven upon one sinner that doth penance, more than upon ninety-nine just who need not penance.” (Luke 15:7) The door stands open to all who return; they come in by the truth, laying their errors down at the threshold."
+ np_events.0004.a: "Thanks be to God."
+
  # v0.2: the rite window lock (common/religion/doctrine_types/np_doctrine_overrides.txt)
  NP_RITE_WINDOW_LOCK: "Nothing in this [rite|E] may go against the faith or morals of the Church (Non Praevalebunt)"
 

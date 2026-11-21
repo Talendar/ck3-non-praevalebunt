@@ -582,3 +582,423 @@ np_pope_take_roman_rite_effect = {
 		debug_log = "Non Praevalebunt: the Roman rite is the main rite again"
 	}
 }
+
+##############################################
+# v0.3: living heresies (docs/v03-plan.html)
+##############################################
+
+# Rite scope. An outbreak hit or created this rite: unless it is a historic rite (Tier 1, which never falls), it
+# falls. It is no longer guarded: the guard and the pull-back leave it alone from now on.
+np_rite_mark_fallen_effect = {
+	if = {
+		limit = {
+			np_rite_in_church_trigger = yes
+			np_rite_is_tier1_trigger = no
+			NOT = { has_variable = np_fallen }
+		}
+		set_variable = np_fallen
+		remove_variable = np_good_standing
+		debug_log = "Non Praevalebunt: a rite fell into heresy"
+		debug_log_scopes = yes
+	}
+}
+
+# Rite scope. Mark the rite fallen (if it can fall) and give it its signature heresy.
+np_rite_falls_effect = {
+	np_rite_mark_fallen_effect = yes
+	if = {
+		limit = {
+			has_variable = np_fallen
+			np_rite_in_church_trigger = yes
+			NOT = { has_variable = np_signature }
+		}
+		np_signature_heresy_effect = yes
+	}
+}
+
+# Rite scope, a fallen rite of the Church. One heretical core tenet, the classic heresy of its place and era, so
+# the game sees a real heresy: one clear error, as real heresies had (the Adoptionists, the Cathars...).
+# If the rite already holds a forbidden tenet of its own, that one is its signature. Otherwise the rite is first
+# brought back to about 30, then one tenet it does not share with the main rite (and that is not one of Shadows of
+# the Cross's canon tenets) is swapped for the heresy, landing it at 75 to 90. The heresy is then marked Prohibited
+# in the Church, and np_heresy_keep_past_line_effect corrects the landing if needed.
+np_signature_heresy_effect = {
+	clear_saved_scope = np_sig_out
+	clear_saved_scope = np_sig_tenet
+	save_scope_as = np_sig_rite
+	if = {
+		limit = { np_rite_has_forbidden_tenet_trigger = yes }
+		random_rite_tenet = {
+			limit = { np_tenet_is_forbidden_trigger = yes }
+			save_scope_as = np_sig_tenet
+		}
+	}
+	else = {
+		if = {
+			limit = { "divergence(faith.main_rite)" > 35 }
+			change_rite_divergence = {
+				value = np_signature_room_value
+				override_tenets_first = no
+			}
+		}
+		np_pick_signature_tenet_effect = yes
+		faith.main_rite = {
+			every_rite_tenet = { add_to_temporary_list = np_main_rite_tenets }
+		}
+		random_rite_tenet = {
+			limit = {
+				NOT = { is_in_list = np_main_rite_tenets }
+				trigger_if = {
+					limit = { scope:np_sig_rite = { has_variable = ac_foundation_1 } }
+					NOT = { this = scope:np_sig_rite.var:ac_foundation_1 }
+				}
+				trigger_if = {
+					limit = { scope:np_sig_rite = { has_variable = ac_foundation_2 } }
+					NOT = { this = scope:np_sig_rite.var:ac_foundation_2 }
+				}
+			}
+			save_scope_as = np_sig_out
+		}
+		# A rite that shares every tenet with the main rite gives up one of those instead (still never a canon tenet).
+		if = {
+			limit = { NOT = { exists = scope:np_sig_out } }
+			random_rite_tenet = {
+				limit = {
+					trigger_if = {
+						limit = { scope:np_sig_rite = { has_variable = ac_foundation_1 } }
+						NOT = { this = scope:np_sig_rite.var:ac_foundation_1 }
+					}
+					trigger_if = {
+						limit = { scope:np_sig_rite = { has_variable = ac_foundation_2 } }
+						NOT = { this = scope:np_sig_rite.var:ac_foundation_2 }
+					}
+				}
+				save_scope_as = np_sig_out
+			}
+		}
+		if = {
+			limit = { exists = scope:np_sig_out }
+			remove_rite_tenet = scope:np_sig_out
+		}
+		add_rite_tenet = scope:np_sig_tenet
+	}
+	if = {
+		limit = { exists = scope:np_sig_tenet }
+		set_variable = { name = np_signature value = scope:np_sig_tenet }
+	}
+	faith = { np_mark_forbidden_tenets_effect = yes }
+	np_heresy_keep_past_line_effect = yes
+	debug_log = "Non Praevalebunt: a fallen rite took its signature heresy"
+	debug_log_scopes = yes
+}
+
+# Rite scope (scope:np_sig_rite). Saves scope:np_sig_tenet: the classic heresy of the rite's place and era, read
+# from its head's capital (or else its founder's):
+#   Iberia before the year 1000: Adoptionism (Elipandus of Toledo).
+#   Near the East (Anatolia, Armenia, the Levant, Mesopotamia, Egypt): Monophysitism.
+#   The Balkans and Occitania: Gnosticism, the Bogomil and Cathar line.
+#   Anywhere else, and in rich worldly sees: Simony.
+np_pick_signature_tenet_effect = {
+	clear_saved_scope = np_sig_place
+	clear_saved_scope = np_sig_tenet
+	head_of_rite ?= {
+		capital_county ?= { title_province = { save_scope_as = np_sig_place } }
+	}
+	if = {
+		limit = { NOT = { exists = scope:np_sig_place } }
+		rite_founder ?= {
+			capital_county ?= { title_province = { save_scope_as = np_sig_place } }
+		}
+	}
+	if = {
+		limit = {
+			exists = scope:np_sig_place
+			current_date < 1000.1.1
+			scope:np_sig_place = { geographical_region = world_europe_west_iberia }
+		}
+		tenet:tenet_adoptionism = { save_scope_as = np_sig_tenet }
+	}
+	else_if = {
+		limit = {
+			exists = scope:np_sig_place
+			scope:np_sig_place = {
+				OR = {
+					geographical_region = world_asia_minor
+					geographical_region = world_middle_east
+					geographical_region = world_africa_north_east
+				}
+			}
+		}
+		tenet:tenet_monophysitism = { save_scope_as = np_sig_tenet }
+	}
+	else_if = {
+		limit = {
+			exists = scope:np_sig_place
+			scope:np_sig_place = {
+				OR = {
+					geographical_region = world_europe_south_east
+					geographical_region = custom_occitan
+				}
+			}
+		}
+		tenet:tenet_gnosticism = { save_scope_as = np_sig_tenet }
+	}
+	else = {
+		tenet:tenet_simony = { save_scope_as = np_sig_tenet }
+	}
+}
+
+# Rite scope, a fallen rite still in error. The rule stays true: a heretical belief always means the rite is past
+# the line. At or under the line it is pushed 15 points past it; at 95 or more it is brought back to about 85, short
+# of the automatic split at 100, and its signature heresy is put back if that removed it.
+np_heresy_keep_past_line_effect = {
+	if = {
+		limit = { "divergence(faith.main_rite)" <= faith.heresy_threshold }
+		change_rite_divergence = {
+			value = np_heresy_topup_value
+			include_unknown = yes
+		}
+	}
+	else_if = {
+		limit = { "divergence(faith.main_rite)" >= 95 }
+		change_rite_divergence = {
+			value = np_heresy_trim_value
+			override_tenets_first = no
+		}
+		if = {
+			limit = { has_variable = np_signature }
+			var:np_signature = { save_scope_as = np_keep_sig }
+			if = {
+				limit = {
+					NOT = { any_rite_tenet = { this = scope:np_keep_sig } }
+				}
+				add_rite_tenet = scope:np_keep_sig
+			}
+		}
+	}
+}
+
+# Rite scope, every rite of the Church, monthly. Upkeep for fallen rites:
+#   no signature yet (a rite that fell under v0.2, or a dangerous rite the guard caught): give it one;
+#   no error left at all: it comes home as a rite of the Church in good standing;
+#   still in error: keep it past the line, and make sure Rome condemns it.
+np_fallen_upkeep_effect = {
+	if = {
+		limit = {
+			has_variable = np_fallen
+			np_rite_in_church_trigger = yes
+		}
+		if = {
+			limit = { NOT = { has_variable = np_signature } }
+			np_signature_heresy_effect = yes
+		}
+		else_if = {
+			limit = { np_rite_holds_an_error_trigger = no }
+			np_rite_returns_effect = yes
+		}
+		else = {
+			np_heresy_keep_past_line_effect = yes
+			np_condemnation_clock_effect = yes
+		}
+	}
+}
+
+# Rite scope. A fallen rite that holds no error any more is a rite of the Church in good standing again. History
+# has this too: Felix of Urgell recanted, and Durand of Huesca led Waldensians back to Rome in 1208.
+np_rite_returns_effect = {
+	remove_variable = np_fallen
+	remove_variable = np_signature
+	remove_variable = np_condemn_pending
+	remove_variable = np_condemn_wait
+	set_variable = np_good_standing
+	debug_log = "Non Praevalebunt: a fallen rite laid down its errors and came home"
+	debug_log_scopes = yes
+}
+
+# Rite scope, a fallen rite past the line (P1 A). If Rome has not condemned it about 5 years after it was first seen
+# past the line, the Pope condemns it with the game's own bull (pam_bull_events.0003): same letters, same effects.
+# Only for an AI Pope who heads the faith; a rite that can't be declared a heresy (pam_rite_can_be_declared_heresy_trigger)
+# waits.
+np_condemnation_clock_effect = {
+	if = {
+		limit = {
+			"divergence(faith.main_rite)" > faith.heresy_threshold
+			exists = faith.religious_head
+			faith.religious_head = { is_ai = yes }
+		}
+		if = {
+			limit = { NOT = { has_variable = np_condemn_pending } }
+			set_variable = np_condemn_pending
+			set_variable = {
+				name = np_condemn_wait
+				years = 5
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { has_variable = np_condemn_wait }
+				pam_rite_can_be_declared_heresy_trigger = yes
+			}
+			np_condemn_fallen_rite_effect = yes
+		}
+	}
+}
+
+# Rite scope. The Pope condemns this rite: the same scopes and variables the heresy bull decision sets, then the
+# game's own bull event, which turns the rite into a faith of its own and writes to the faithful.
+np_condemn_fallen_rite_effect = {
+	save_scope_as = selected_item
+	save_scope_as = heresy_rite
+	remove_variable = np_condemn_pending
+	remove_variable = np_condemn_wait
+	faith.religious_head = {
+		save_scope_as = bull_issuer
+		set_variable = {
+			name = bull_option
+			value = flag:heresy
+			years = 1
+		}
+		set_variable = {
+			name = enact_a_bull_rite_heresy_cooldown
+			years = 5
+		}
+		trigger_event = pam_bull_events.0003
+	}
+	debug_log = "Non Praevalebunt: the Pope condemned a fallen rite"
+	debug_log_scopes = yes
+}
+
+# Faith scope, the Church. Every forbidden tenet that a rite of the Church holds as core is marked Prohibited in
+# the Church (if it is not already), so it counts fully toward the heresy line (30 points, or 60 for the classic
+# heresies, which carry a x2 weight). The classic heresies already start Prohibited.
+np_mark_forbidden_tenets_effect = {
+	save_scope_as = np_status_church
+	every_faith_rite = {
+		every_rite_tenet = {
+			limit = { np_tenet_is_forbidden_trigger = yes }
+			save_scope_as = np_status_tenet
+			if = {
+				limit = {
+					NOT = {
+						scope:np_status_church.main_rite = {
+							has_tenet_status = {
+								tenet = scope:np_status_tenet
+								status = prohibited
+							}
+						}
+					}
+				}
+				scope:np_status_church = {
+					set_tenet_status = {
+						tenet = scope:np_status_tenet
+						status = prohibited
+					}
+				}
+			}
+		}
+	}
+}
+
+# Rite scope. A rite that has just come into the Church (Seek Communion, a mended Schism, or a rite left behind in
+# the old undivided faith): a rite of the Church in good standing, set right by the guard and kept from the line.
+np_welcome_rite_effect = {
+	remove_variable = np_fallen
+	remove_variable = np_signature
+	remove_variable = np_condemn_pending
+	remove_variable = np_condemn_wait
+	remove_variable = c2_spread_remaining_converts
+	remove_variable = c3_spread_remaining_converts
+	set_variable = np_good_standing
+	force_refresh_head_of_rite = yes
+	np_guard_rite_effect = yes
+	np_pull_back_rite_effect = yes
+}
+
+# Character scope: the head of a heresy whose Seek Communion the Pope accepted (pam_seek_communion_reconcile_faith_effect).
+np_true_return_effect = {
+	faith = { save_scope_as = np_returning_faith }
+	rite:roman_rite.faith = { save_scope_as = np_returning_church }
+	scope:np_returning_faith = {
+		# Absolution, as in the base game, but both traits go.
+		every_faith_character = {
+			limit = {
+				OR = {
+					has_trait = heresiarch
+					has_trait = excommunicated
+				}
+			}
+			if = {
+				limit = { has_trait = heresiarch }
+				remove_trait = heresiarch
+			}
+			if = {
+				limit = { has_trait = excommunicated }
+				remove_trait = excommunicated
+			}
+		}
+		# The heresy stops spreading.
+		remove_variable = c3_spread_remaining_converts
+		if = {
+			limit = { exists = religious_head_title }
+			remove_religious_head_title = yes
+		}
+		every_faith_rite = { add_to_list = np_returning_rites }
+	}
+	every_in_list = {
+		list = np_returning_rites
+		set_can_convert_to_rite = no
+		set_parent_faith = {
+			target = scope:np_returning_church
+			main = no
+			include_derived = no
+		}
+	}
+	every_in_list = {
+		list = np_returning_rites
+		np_welcome_rite_effect = yes
+	}
+	every_player = {
+		limit = {
+			np_character_in_church_trigger = yes
+			NOT = { has_title = title:k_papal_state }
+		}
+		trigger_event = { id = np_events.0004 days = 1 }
+	}
+	debug_log = "Non Praevalebunt: a heresy returned to the Church through Seek Communion"
+}
+
+# Faith scope, the Church, monthly. After the Schism, any rite of ours left behind in the old undivided faith (for
+# example a heresy that returned before 1054, which the game's Schism code does not move) joins Catholicism.
+np_gather_stranded_rites_effect = {
+	if = {
+		limit = {
+			exists = faith:christian_faith
+			NOT = { this = faith:christian_faith }
+		}
+		save_scope_as = np_gather_church
+		faith:christian_faith = {
+			every_faith_rite = {
+				limit = {
+					rite_counties >= 1
+					OR = {
+						has_variable = np_good_standing
+						has_variable = np_fallen
+					}
+				}
+				add_to_list = np_stranded_rites
+			}
+		}
+		every_in_list = {
+			list = np_stranded_rites
+			set_parent_faith = {
+				target = scope:np_gather_church
+				main = no
+				include_derived = no
+			}
+			if = {
+				limit = { NOT = { has_variable = np_fallen } }
+				np_welcome_rite_effect = yes
+			}
+		}
+	}
+}

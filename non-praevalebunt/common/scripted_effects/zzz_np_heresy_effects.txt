@@ -1,0 +1,289 @@
+﻿# Non Praevalebunt v0.3: living heresies (docs/v03-plan.html). Effects.
+#
+# Full copies of base-game effects (By God Alone), each with additions marked "Non Praevalebunt". Shadows of the
+# Cross calls all of them and redefines none of them, so these copies work with and without it.
+#   pam_heresy_c1_pick_diverging_rite_effect   (common/scripted_effects/pam_heresy_shared_effects.txt)
+#   pam_heresy_fervor_reset_effect             (same file)
+#   pam_seek_communion_reconcile_faith_effect  (same file)
+#   mend_great_schism_scripted_effect          (common/scripted_effects/00_major_decisions_scripted_effects.txt)
+# The zzz_ prefix makes this file load after the base game and after other mods, so these copies replace the
+# originals. Re-copy the base-game parts if a game update changes them.
+
+# Feature 1: a light outbreak (Component 1) in the Church always hits a minor rite in good standing (Tier 2) if one
+# exists, and that rite falls. Otherwise the base game's pick, which may hit a historic rite: those never fall.
+# Faith scope. Saves scope:diverging_rite.
+pam_heresy_c1_pick_diverging_rite_effect = {
+	clear_saved_scope = diverging_rite
+	# Non Praevalebunt
+	if = {
+		limit = { np_faith_is_church_trigger = yes }
+
+		random_faith_rite = {
+			limit = {
+				this != faith.main_rite
+				rite_counties >= 1
+				# Non Praevalebunt: a minor rite of the Church in good standing (Tier 2). Unlike the base game's pick, it
+				# need not have a head of rite: a new rite may have none yet, and the outbreak event then anchors on any
+				# ruler of the rite. A rite led by a player is never picked: it counts as a historic rite (Tier 1).
+				np_rite_is_tier1_trigger = no
+				np_rite_is_guarded_trigger = yes
+			}
+
+			weight = {
+				base = 5
+				# More divergent rites are more likely to deepen further.
+				modifier = {
+					add = 10
+					"divergence(faith.main_rite)" >= 25
+				}
+				modifier = {
+					add = 20
+					"divergence(faith.main_rite)" >= 50
+				}
+				modifier = {
+					add = 20
+					"divergence(faith.main_rite)" >= 75
+				}
+				# Pluralism-resistant rites are less prone to lurching toward heresy.
+				modifier = {
+					factor = 0.5
+					rite_has_parameter = pluralism_pluralistic_resistant_to_heresy
+				}
+				# Insular Celtic and Mozarabic are doctrinally weird but historically not the seedbed for heresy outbreaks; dampen without excluding outright.
+				modifier = {
+					factor = 0.1
+					OR = {
+						this = rite:insular_celtic
+						this = rite:mozarabic_church
+					}
+				}
+			}
+
+			save_scope_as = diverging_rite
+		}
+		# Only the mark here. The signature heresy comes at the end of the outbreak (pam_heresy_fervor_reset_effect),
+		# after the outbreak's own push, so the two pushes together can't overshoot into a faith of its own.
+		scope:diverging_rite ?= {
+			np_rite_mark_fallen_effect = yes
+			debug_log = "Non Praevalebunt: a light outbreak hit a minor rite of the Church"
+			debug_log_scopes = yes
+		}
+		if = {
+			limit = { NOT = { exists = scope:diverging_rite } }
+			debug_log = "Non Praevalebunt: no minor rite for this light outbreak; the base game picks a historic rite, which can't fall"
+		}
+	}
+	if = {
+		limit = { NOT = { exists = scope:diverging_rite } }
+
+		random_faith_rite = {
+			limit = {
+				this != faith.main_rite
+				rite_counties >= 1
+				head_of_rite ?= { is_ai = yes }
+			}
+
+			weight = {
+				base = 5
+				# More divergent rites are more likely to deepen further.
+				modifier = {
+					add = 10
+					"divergence(faith.main_rite)" >= 25
+				}
+				modifier = {
+					add = 20
+					"divergence(faith.main_rite)" >= 50
+				}
+				modifier = {
+					add = 20
+					"divergence(faith.main_rite)" >= 75
+				}
+				# Pluralism-resistant rites are less prone to lurching toward heresy.
+				modifier = {
+					factor = 0.5
+					rite_has_parameter = pluralism_pluralistic_resistant_to_heresy
+				}
+				# Insular Celtic and Mozarabic are doctrinally weird but historically not the seedbed for heresy outbreaks; dampen without excluding outright.
+				modifier = {
+					factor = 0.1
+					OR = {
+						this = rite:insular_celtic
+						this = rite:mozarabic_church
+					}
+				}
+			}
+
+			save_scope_as = diverging_rite
+		}
+	}
+}
+
+# Feature 3: every outbreak ends here, in faith scope, in the base game and in Shadows of the Cross. A Church rite
+# that an outbreak hit or created (and that is not a historic rite) falls and takes its signature heresy.
+#   Component 1 (light): scope:diverging_rite. Components 2 (dangerous rite) and 3 (historical): scope:new_rite.
+pam_heresy_fervor_reset_effect = {
+	# Non Praevalebunt
+	if = {
+		limit = { $COMPONENT$ = 1 }
+		scope:diverging_rite ?= { np_rite_falls_effect = yes }
+	}
+	else = {
+		scope:new_rite ?= { np_rite_falls_effect = yes }
+	}
+	if = {
+		limit = { $COMPONENT$ = 1 }
+		change_fervor = {
+			value = pam_heresy_fervor_reset_component_1_value
+			desc = pam_heresy_fervor_reset_component_1_desc
+		}
+	}
+	else_if = {
+		limit = { $COMPONENT$ = 2 }
+		change_fervor = {
+			value = pam_heresy_fervor_reset_component_2_value
+			desc = pam_heresy_fervor_reset_component_2_desc
+		}
+	}
+	else = {
+		change_fervor = {
+			value = pam_heresy_fervor_reset_component_3_value
+			desc = pam_heresy_fervor_reset_component_3_desc
+		}
+	}
+}
+# Feature 5: Seek Communion is a true return. Character scope: the heresy's head, who sought communion and was
+# accepted (runs in pam_interactions_events.0130, and as a tooltip in the interaction and that event).
+# The base game only made the heresy "ecumenical" and absolved its leaders, leaving every error in place. Here the
+# heresy's rites rejoin the Church, each forbidden belief is swapped for the nearest allowed one (the guard), its
+# leaders are absolved, and its spread stops. The emptied faith remains as a shell, as the base game already does
+# when the Schism is mended. The base game's absolution is kept: both traits now go, not one or the other.
+pam_seek_communion_reconcile_faith_effect = {
+	# Non Praevalebunt
+	custom_tooltip = np_seek_communion_true_return_tt
+	custom_tooltip = {
+		text = pam_seek_communion_absolve_faith_tt
+		hidden_effect = {
+			np_true_return_effect = yes
+		}
+	}
+}
+
+# Feature 6: mending the Great Schism always reunites with Rome. Whoever takes the decision, Orthodoxy's rites
+# rejoin Catholicism under the Pope; the mender's own faith, if it is neither, is left alone. An Orthodox mender
+# becomes Catholic along with his rite. The base game's three branches made Rome a side rite of Orthodoxy, or folded
+# both churches into any Christian mender's faith, even a heresy.
+# Character scope: the mender. The base game's notifications now name the reunited Church (scope:mending_faith)
+# instead of the mender's faith; roman_restoration.0100 reads scope:mending_faith the same way.
+mend_great_schism_scripted_effect = {
+	# Non Praevalebunt: the reunited Church is always Catholicism.
+	faith:catholic = {
+		save_scope_as = mending_faith
+		if = {
+			limit = {
+				NOT = { has_doctrine = special_doctrine_ecumenical_christian }
+			}
+			add_doctrine = special_doctrine_ecumenical_christian
+		}
+		change_fervor = {
+			value = medium_fervor_gain
+			desc = fervor_gain_mended_schism
+		}
+	}
+	custom_tooltip = {
+		text = pam_mend_great_schism_effect_tt_byz
+		faith:orthodox = {
+			main_rite = {
+				save_scope_as = byzantine_rite
+			}
+			remove_religious_head_title = yes
+			every_faith_rite = {
+				limit = {
+					faith != scope:mending_faith
+				}
+				add_to_list = np_returning_rites
+			}
+		}
+		every_in_list = {
+			list = np_returning_rites
+			set_can_convert_to_rite = no
+			set_parent_faith = {
+				target = faith:catholic
+				main = no
+				include_derived = no
+			}
+		}
+	}
+	# Non Praevalebunt: the returning rites are rites of the Church in good standing. The guard swaps any forbidden
+	# belief for the nearest allowed one (the Pentarchy included, now that the Church is no longer undivided).
+	hidden_effect = {
+		every_in_list = {
+			list = np_returning_rites
+			np_welcome_rite_effect = yes
+		}
+	}
+	every_player = { #Notify all players of the same Faith.
+		limit = {
+			this != root
+			faith = scope:mending_faith
+		}
+		trigger_event = roman_restoration.0103
+	}
+	every_ruler = { #Notify rulers of other Christian branches that they are no longer valid and offer chance at conversion.
+		limit = {
+			faith.religion = scope:mending_faith.religion
+			faith != scope:mending_faith
+			NOT = { government_has_flag = government_is_theocracy }
+			this != this.faith.religious_head
+			faith = {
+				OR = {
+					has_doctrine = special_doctrine_ecumenical_christian
+					has_doctrine = special_doctrine_ecumenical_miaphysite
+				}
+			}
+		}
+		trigger_event = roman_restoration.0101
+	}
+	every_player = { #Then notify all infidel players that might be around.
+		limit = {
+			OR = {
+				AND = { #Either filthy heretics...
+					faith.religion = scope:mending_faith.religion
+					faith = {
+						NOR = {
+							has_doctrine = special_doctrine_ecumenical_christian
+							has_doctrine = special_doctrine_ecumenical_miaphysite
+						}
+					}
+				}
+				faith.religion != scope:mending_faith.religion #...Or Heathens.
+			}
+		}
+		trigger_event = roman_restoration.0102
+	}
+	religion:christianity_religion = {
+		every_faith = { #All main branches of Christianity that were considered Ecumenical are now heresies.
+			custom = every_ecumenical_christian_faith.tt
+			limit = {
+				this.religion = scope:mending_faith.religion
+				OR = {
+					has_doctrine = special_doctrine_ecumenical_christian
+					has_doctrine = special_doctrine_ecumenical_miaphysite
+				}
+				this != scope:mending_faith
+			}
+			if = {
+				limit = { has_doctrine = special_doctrine_ecumenical_christian }
+				remove_doctrine = special_doctrine_ecumenical_christian
+			}
+			else = {
+				remove_doctrine = special_doctrine_ecumenical_miaphysite
+			}
+			change_fervor = {
+				value = medium_fervor_loss
+				desc = fervor_loss_mended_schism
+			}
+		}
+	}
+
+	set_nickname_effect = { NICKNAME = nick_the_ecumenist }
+}

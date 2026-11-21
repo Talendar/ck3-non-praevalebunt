@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Non Praevalebunt – v0.3 Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4eee2; --surface:#fffcf6; --surface-2:#f9f3e7; --ink:#2a2017; --muted:#6c5e4f; --line:#e3d7c3;
+  --crimson:#8b1e2d; --gold:#a67c25; --gold-soft:#f3e6c4;
+  --ok:#2f7a4a; --ok-soft:#e3f1e7; --no:#9a2a2a; --no-soft:#f7e2e0; --t2:#2f5d8a; --t2-soft:#e2ecf6;
+  --shadow:0 1px 2px rgba(60,40,20,.06),0 6px 20px rgba(60,40,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+    --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+    --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --t2:#7fb0e0; --t2-soft:#1c2a38;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16120e; --surface:#211b15; --surface-2:#2a221a; --ink:#efe6d8; --muted:#b3a593; --line:#3b3127;
+  --crimson:#d8606f; --gold:#d6ae5c; --gold-soft:#3a2f1a;
+  --ok:#6fc08e; --ok-soft:#1b2e22; --no:#e07a72; --no-soft:#3a1f1d; --t2:#7fb0e0; --t2-soft:#1c2a38;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 56px}
+h1,h2,h3{font-family:Cinzel,Georgia,"Times New Roman",serif;letter-spacing:.02em;margin:0}
+h2{font-size:1.3rem;color:var(--crimson);margin:40px 0 14px;display:flex;align-items:center;gap:10px}
+h2 .num{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--crimson);border-radius:999px;width:26px;height:26px;display:inline-grid;place-items:center;flex:none}
+h3{font-size:1rem}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.hero{text-align:center;padding:40px 16px 22px;border-bottom:1px solid var(--line);background:radial-gradient(1100px 280px at 50% -80px,var(--gold-soft),transparent 70%)}
+.kicker{font-size:.78rem;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);font-weight:700}
+.hero h1{font-size:clamp(1.7rem,5vw,2.6rem);color:var(--crimson);margin:8px 0 4px}
+.hero .sub{color:var(--muted)}
+.back{display:inline-block;margin-top:10px;font-size:.88rem;color:var(--crimson);text-decoration:none;font-weight:600}
+
+/* Life of a heresy */
+.life{margin-top:24px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.life .stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:.86rem;display:grid;gap:4px;position:relative}
+.life .stage b{font-family:Cinzel,Georgia,serif;font-size:.92rem}
+.life .stage .k{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.life .s1{border-top:4px solid var(--gold)} .life .s2{border-top:4px solid var(--no)} .life .s3{border-top:4px solid var(--no)} .life .s4{border-top:4px solid var(--t2)} .life .s5{border-top:4px solid var(--ok)}
+
+/* Feature cards */
+.feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.feat{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;display:grid;gap:8px;align-content:start}
+.feat .top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.feat .n{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:Cinzel,Georgia,serif;font-weight:700;font-size:.85rem;background:var(--crimson);color:var(--surface);flex:none}
+.b{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+.b.sure{background:var(--ok-soft);color:var(--ok)} .b.pick{background:var(--t2-soft);color:var(--t2)}
+.feat p{font-size:.92rem}
+.feat ul{margin:0;padding-left:18px;font-size:.9rem}
+.feat li{margin:2px 0}
+
+/* Findings */
+.finds{display:grid;gap:10px}
+.find{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:12px;padding:12px 14px;font-size:.92rem}
+.find .i{font-family:Cinzel,Georgia,serif;font-weight:700;color:var(--gold);font-size:1.1rem}
+.find b{display:block}
+
+/* Scale */
+.scale{position:relative;height:42px;border-radius:10px;overflow:hidden;margin-top:6px;background:linear-gradient(90deg,var(--ok-soft) 0 65%,var(--gold-soft) 65% 75%,var(--no-soft) 75% 90%,var(--gold-soft) 90% 100%);border:1px solid var(--line)}
+.scale .lb{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:.72rem;font-weight:700;background:var(--surface);padding:1px 6px;border-radius:6px;border:1px solid var(--line);white-space:nowrap}
+
+/* Picks */
+.picks{display:grid;gap:14px}
+.pickc{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--t2);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;display:grid;gap:10px}
+.pickc h3{display:flex;gap:10px;align-items:baseline}
+.pickc h3 .id{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;font-weight:700;color:var(--surface);background:var(--t2);border-radius:6px;padding:1px 7px}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font-size:.92rem}
+.opt.rec{border-color:color-mix(in srgb,var(--ok) 45%,transparent);background:var(--ok-soft)}
+.opt .k{font-weight:700;font-family:Cinzel,Georgia,serif}
+.rec-tag{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-left:6px}
+
+.watch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.watch div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:.9rem}
+.watch b{display:block;font-family:Cinzel,Georgia,serif;margin-bottom:2px}
+footer{margin-top:36px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (max-width:820px){
+  .life{grid-template-columns:minmax(0,1fr)}
+  .feats,.watch{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">Non Praevalebunt · ✓ Decided: P1 A · P2 A · Built and tested in v0.3</div>
+  <h1>v0.3: Living Heresies</h1>
+  <p class="sub">Heresies arise, take a name, are condemned, and can come home</p>
+  <a class="back" href="heresy-plan.html">← The approved heresy plan</a>
+</header>
+
+<div class="wrap">
+
+  <section class="life" aria-label="The life of a heresy in v0.3">
+    <div class="stage s1"><span class="k">1 · Outbreak</span><b>A minor rite is hit</b><span>Outbreaks come about twice as often, and hit a minor rite first.</span></div>
+    <div class="stage s2"><span class="k">2 · Fall</span><b>It falls</b><span>The mod marks it fallen. It is no longer guarded.</span></div>
+    <div class="stage s3"><span class="k">3 · Signature</span><b>It takes a name</b><span>One classic heresy, fitting its place and era, carries it past the line.</span></div>
+    <div class="stage s4"><span class="k">4 · Condemnation</span><b>Rome condemns it</b><span>It becomes a faith of its own, outside the Church.</span></div>
+    <div class="stage s5"><span class="k">5 · Return</span><b>It may come home</b><span>Through Seek Communion, on the Church’s terms.</span></div>
+  </section>
+
+  <h2><span class="num">1</span>What gets built</h2>
+  <div class="feats">
+
+    <article class="feat"><div class="top"><span class="n">1</span><h3>Aimed outbreaks</h3><span class="b sure">Safe hook</span></div>
+      <p>A light outbreak always hits a minor (Tier 2) rite if one exists, and that rite falls. Only if none exists does it hit a historic rite, which only changes customs and never falls.</p></article>
+
+    <article class="feat"><div class="top"><span class="n">2</span><h3>More outbreaks</h3><span class="b sure">Safe hook</span></div>
+      <p>For the Church only, roughly twice as many:</p>
+      <ul><li>Fervor bounce after an outbreak halved: +60/+75/+90 becomes +30/+40/+50.</li><li>Monthly odds doubled while fervor is 40 or less.</li></ul>
+      <p class="small muted">The five-year pause between outbreaks stays. The game’s own frequency rule still applies on top.</p></article>
+
+    <article class="feat"><div class="top"><span class="n">3</span><h3>A signature heresy</h3><span class="b sure">Safe hook</span></div>
+      <p>A fallen rite takes one classic heresy as a core belief, by place and era:</p>
+      <ul><li>Iberia before 1000: Adoptionism</li><li>Near the East: Monophysitism</li><li>Balkans, Occitania: Gnosticism (the Bogomil and Cathar line)</li><li>Rich, worldly sees, and anywhere else: Simony</li></ul>
+      <p class="small muted">Every kind of outbreak counts: light, dangerous new rites, and historical heresies.</p></article>
+
+    <article class="feat"><div class="top"><span class="n">4</span><h3>The rule stays true</h3><span class="b sure">Safe hook</span></div>
+      <ul><li>A fallen rite back under the line, still in error, is pushed over again.</li><li>A fallen rite that drops every error comes back as a normal guarded rite.</li><li>Any forbidden tenet that shows up in the Church is marked Prohibited there. The classic ones already are.</li></ul></article>
+
+    <article class="feat"><div class="top"><span class="n">5</span><h3>Seek Communion: a true return</h3><span class="b sure">Safe hook</span></div>
+      <p>When the Pope accepts, the heresy’s rites rejoin the Church with every error swapped for the nearest allowed belief. Their leaders are absolved, and the heresy stops spreading. The emptied faith stays as a shell, as the base game already does when the Schism is mended.</p></article>
+
+    <article class="feat"><div class="top"><span class="n">6</span><h3>Mending the Schism: always with Rome</h3><span class="b pick">Your pick: P2</span></div>
+      <p>Whoever mends it, Orthodoxy rejoins Catholicism under the Pope. An Orthodox mender becomes Catholic with his rite, as the Greeks did at Florence (1439).</p></article>
+
+  </div>
+
+  <h2><span class="num">2</span>Three things the research found</h2>
+  <div class="finds">
+    <div class="find"><span class="i">i</span><div><b>A heresy can overshoot into a faith of its own.</b>At 100 divergence the game splits a rite off into a new faith by itself, skipping the Pope’s condemnation. So the mod aims each fallen rite at 75 to 90. Which tenet the heresy replaces matters, and the mod measures before and after.
+      <div class="scale" aria-label="Divergence target">
+        <span class="lb" style="left:32%">0–65: in the Church</span><span class="lb" style="left:82.5%">target 75–90</span><span class="lb" style="left:95%">100</span>
+      </div></div></div>
+    <div class="find"><span class="i">ii</span><div><b>The AI Pope rarely condemns.</b>After the Schism, he only condemns a rite whose leader he personally dislikes. Before it, he decides about once every few decades. An uncondemned heresy drains fervor, and low fervor brings more outbreaks, so heresies could pile up. See P1.</div></div>
+    <div class="find"><span class="i">iii</span><div><b>SOTC rewrites one of the two “Mend the Schism” decisions.</b>We can’t add a faith check to that one without breaking the rule of no SOTC overlap. See P2.</div></div>
+  </div>
+
+  <h2><span class="num">3</span>Your picks</h2>
+  <div class="picks">
+
+    <article class="pickc">
+      <h3><span class="id">P1</span>Making sure Rome condemns</h3>
+      <div class="opts">
+        <div class="opt rec"><span class="k">A</span><span><b>A fallback</b><span class="rec-tag">Recommended</span><br>If a fallen rite is still not condemned about 5 years after crossing the line, the Pope condemns it with the game’s own bull: same letters, same effects. This works before and after the Schism.</span></div>
+        <div class="opt"><span class="k">B</span><span><b>Make him dislike heresiarchs</b><br>An opinion penalty so the AI Pope’s own logic picks fallen rites. Side effect: it also changes his relations with those leaders, such as marriages and alliances.</span></div>
+        <div class="opt"><span class="k">C</span><span><b>Leave it to the game</b><br>Risk: heresies pile up and fervor spirals down.</span></div>
+      </div>
+    </article>
+
+    <article class="pickc">
+      <h3><span class="id">P2</span>Other faiths mending the Schism</h3>
+      <p class="small muted">The approved design blocked anyone but Catholic and Orthodox rulers from mending. The research shows a cleaner way to reach the same goal, that every reunion is with Rome.</p>
+      <div class="opts">
+        <div class="opt rec"><span class="k">A</span><span><b>Always reunite with Rome</b><span class="rec-tag">Recommended</span><br>Whoever mends, even a Miaphysite, Orthodoxy joins Catholicism, and the mender’s own faith is left alone. No one can fold the Church into another faith. The conquest route is also limited to Catholic and Orthodox rulers, since we can change that one.</span></div>
+        <div class="opt"><span class="k">B</span><span><b>Also block other faiths on the diplomatic route</b><br>Possible only indirectly: the decision would show an impossible “support needed” requirement. Confusing to read.</span></div>
+      </div>
+    </article>
+
+  </div>
+
+  <h2><span class="num">4</span>To watch in testing</h2>
+  <div class="watch">
+    <div><b>Heresy spiral</b>More outbreaks and slow condemnations could stack up. P1 A is the brake. Numbers can be tuned after play.</div>
+    <div><b>Return before the Schism</b>If a heresy returns before 1054, the game’s Schism code may leave its rites behind. The monthly sweep moves them into Catholicism.</div>
+    <div><b>A named heresy breaking out again</b>If a reconciled historical heresy (say, the Cathars) tries to break out again, the game may log an error. To check.</div>
+    <div><b>Orthodox AI mending</b>An eligible AI Orthodox ruler may now take the decision and bring Orthodoxy into Rome. That matches Florence, but it could come early.</div>
+  </div>
+  <p class="small muted" style="margin-top:12px">All hooks are base-game steps that SOTC calls but doesn’t rewrite. v0.3 loads into a running v0.2 campaign: rites that already fell get their signature heresy at the next monthly check.</p>
+
+  <footer>Non Praevalebunt · v0.3 plan · hooks checked against CK3 1.21 and Shadows of the Cross 1.2.0</footer>
+</div>
+</body>
+</html>

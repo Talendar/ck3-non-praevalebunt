@@ -352,3 +352,21 @@ np_rite_needs_pull_back_trigger = {
 	NOT = { this = faith.main_rite }
 	"divergence(faith.main_rite)" >= np_heresy_pull_back_line_value
 }
+
+##############################################
+# v0.3: living heresies
+##############################################
+
+# Faith scope. The faith is the Church: the one holding the Roman rite.
+np_faith_is_church_trigger = {
+	exists = rite:roman_rite
+	this = rite:roman_rite.faith
+}
+
+# Rite scope. A fallen rite still holds an error: a forbidden tenet or a forbidden doctrine.
+np_rite_holds_an_error_trigger = {
+	OR = {
+		np_rite_has_forbidden_tenet_trigger = yes
+		np_rite_has_forbidden_doctrine_trigger = yes
+	}
+}

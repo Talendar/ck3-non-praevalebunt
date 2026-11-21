@@ -42,12 +42,19 @@ np_on_faith_monthly = {
 		# Also covers saves where the mod was added mid-game (the game-start hook never ran).
 		np_pope_head_setup_effect = yes
 		np_schism_head_cleanup_effect = yes
+		# v0.3: rites of ours left in the old undivided faith after the Schism join Catholicism.
+		np_gather_stranded_rites_effect = yes
 		every_faith_rite = {
 			np_guard_rite_effect = yes
 			# Rule 2: a rite in good standing never crosses the heresy line. Checked for every rite, because
 			# a change to the main rite moves every other rite's divergence without updating them.
 			np_pull_back_rite_effect = yes
+			# v0.3: fallen rites keep their signature heresy and stay past the line until Rome condemns them,
+			# or come home once they hold no error.
+			np_fallen_upkeep_effect = yes
 		}
+		# v0.3: forbidden tenets held in the Church count fully toward the heresy line.
+		np_mark_forbidden_tenets_effect = yes
 		# Backup for the Pope rule: catches any path with no title gain (e.g. Shadows of the Cross
 		# crowning its interregnum steward) and a non-Roman main rite.
 		title:k_papal_state.holder ?= {

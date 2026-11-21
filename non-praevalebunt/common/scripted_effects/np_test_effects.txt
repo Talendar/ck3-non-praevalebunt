@@ -86,3 +86,180 @@ np_test_divergence_report_effect = {
 	}
 	debug_log = "NP test: divergence report done"
 }
+
+##############################################
+# v0.3 tests (docs/test-v0.3.html)
+##############################################
+
+# Found a new minor rite of the Church now: an AI count of the Roman rite founds it (the game's own
+# create_dynamic_rite, as rite growth does) and his capital county takes it, so outbreaks have a Tier 2 target.
+np_test_v03_new_rite_effect = {
+	clear_saved_scope = new_rite
+	random_ruler = {
+		limit = {
+			is_ai = yes
+			rite = rite:roman_rite
+			highest_held_title_tier = tier_county
+			exists = capital_county
+		}
+		create_dynamic_rite = {
+			save_scope_as = new_rite
+			convert = yes
+			target_divergence = 25
+			include_unknown = no
+			override_tenets_first = yes
+		}
+		capital_county = { set_county_rite = scope:new_rite }
+	}
+	if = {
+		limit = { exists = scope:new_rite }
+		scope:new_rite = {
+			force_refresh_head_of_rite = yes
+			debug_log = "NP test: a new minor rite of the Church was founded"
+			debug_log_scopes = yes
+		}
+	}
+	else = {
+		debug_log = "NP test: no new rite could be founded (test inconclusive)"
+	}
+}
+
+# Start a light outbreak (Component 1) in the Church tomorrow, ignoring fervor and the 5-year pause. Run it a week
+# or more after founding a test rite: the game counts a new rite's counties only as days pass. The heads of the minor
+# rites are refreshed first (a rite founded before it had counties has none).
+np_test_v03_outbreak_effect = {
+	rite:roman_rite.faith = {
+		every_faith_rite = {
+			limit = { np_rite_is_tier1_trigger = no }
+			force_refresh_head_of_rite = yes
+		}
+		trigger_event = {
+			id = heresy_light.0001
+			days = 1
+		}
+	}
+	debug_log = "NP test: a light outbreak will start in the Church tomorrow"
+}
+
+# One log line per rite of the Church: its standing and where it sits on the divergence scale.
+np_test_v03_report_effect = {
+	rite:roman_rite.faith = {
+		every_faith_rite = {
+			if = {
+				limit = { has_variable = np_fallen }
+				if = {
+					limit = { "divergence(faith.main_rite)" >= 100 }
+					debug_log = "NP test: FALLEN rite at 100 or more (BAD: about to split off)"
+				}
+				else_if = {
+					limit = { "divergence(faith.main_rite)" > faith.heresy_threshold }
+					debug_log = "NP test: FALLEN rite past the line (GOOD)"
+				}
+				else = {
+					debug_log = "NP test: FALLEN rite not past the line yet (fixed at the next monthly check)"
+				}
+				if = {
+					limit = { has_variable = np_signature }
+					debug_log = "NP test: ...and it holds a signature heresy"
+				}
+				debug_log_scopes = yes
+			}
+			else_if = {
+				limit = { np_rite_is_tier1_trigger = no }
+				debug_log = "NP test: a minor rite in good standing (Tier 2)"
+				debug_log_scopes = yes
+				if = {
+					limit = { rite_counties >= 1 }
+					debug_log = "NP test: ...it has counties"
+				}
+				else = {
+					debug_log = "NP test: ...it has NO counties (an outbreak can't pick it)"
+				}
+				if = {
+					limit = { head_of_rite ?= { is_ai = yes } }
+					debug_log = "NP test: ...it has an AI head of rite"
+				}
+				else = {
+					debug_log = "NP test: ...it has NO AI head of rite (an outbreak can't pick it)"
+				}
+			}
+			else = {
+				if = {
+					limit = { "divergence(faith.main_rite)" >= 60 }
+					debug_log = "NP test: rite in good standing at 60 or more (pulled back at the next monthly check)"
+					debug_log_scopes = yes
+				}
+			}
+		}
+	}
+	if = {
+		limit = { rite:roman_rite.faith = { pam_heresy_fervor_reset_component_1_value = 30 } }
+		debug_log = "NP test: the Church's fervor bounce after a light outbreak is 30 (GOOD)"
+	}
+	else = {
+		debug_log = "NP test: the Church's fervor bounce after a light outbreak is NOT 30 (BAD)"
+	}
+	debug_log = "NP test: report done"
+}
+
+# Condemn every fallen rite of the Church past the line now, as the 5-year fallback would.
+np_test_v03_condemn_effect = {
+	rite:roman_rite.faith = {
+		every_faith_rite = {
+			limit = {
+				has_variable = np_fallen
+				pam_rite_can_be_declared_heresy_trigger = yes
+			}
+			np_condemn_fallen_rite_effect = yes
+		}
+	}
+	debug_log = "NP test: condemnation test done"
+}
+
+# Seek Communion: a heresy of 867 is accepted back by the Pope. Its head (the Nestorian Patriarch of the East), or
+# else any follower of the Paulicians or the Iconoclasts, stands in as the one who sought communion.
+np_test_v03_return_effect = {
+	clear_saved_scope = actor
+	if = {
+		limit = { exists = faith:nestorian.religious_head }
+		faith:nestorian.religious_head = { save_scope_as = actor }
+	}
+	else_if = {
+		limit = { faith:paulician = { any_faith_character = { always = yes } } }
+		faith:paulician = { random_faith_character = { save_scope_as = actor } }
+	}
+	else_if = {
+		limit = { faith:iconoclast = { any_faith_character = { always = yes } } }
+		faith:iconoclast = { random_faith_character = { save_scope_as = actor } }
+	}
+	if = {
+		limit = { exists = scope:actor }
+		scope:actor = { pam_seek_communion_reconcile_faith_effect = yes }
+		if = {
+			limit = { scope:actor = { np_character_in_church_trigger = yes } }
+			debug_log = "NP test: the heresy's follower is now in the Church (GOOD)"
+		}
+		else = {
+			debug_log = "NP test: the heresy's follower is NOT in the Church (BAD)"
+		}
+	}
+	else = {
+		debug_log = "NP test: no Nestorian, Paulician or Iconoclast found (test inconclusive)"
+	}
+}
+
+# Mending the Schism (start in 1066): the Byzantine emperor, an Orthodox ruler, mends it.
+np_test_v03_mend_effect = {
+	title:e_byzantium.holder ?= { mend_great_schism_scripted_effect = yes }
+	if = {
+		limit = { faith:orthodox = { any_faith_rite = { rite_counties >= 1 } } }
+		debug_log = "NP test: Orthodoxy still has rites with counties (BAD)"
+	}
+	else = {
+		debug_log = "NP test: every Orthodox rite joined Catholicism (GOOD)"
+	}
+	if = {
+		limit = { title:k_papal_state.holder ?= { faith = faith:catholic } }
+		debug_log = "NP test: the Pope is still Catholic and the head of the reunited Church (GOOD)"
+	}
+}

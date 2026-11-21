@@ -4,7 +4,7 @@
 
 A Crusader Kings III mod for **By God Alone** that keeps the Church's rites faithful to Catholic teaching. Rites may still differ in custom and discipline (liturgy, married priests, fasting, monastic rules), but never in faith or morals.
 
-> **Status: v0.2.0.** Tested in game: an 867 start and a running v0.1.1 campaign save, with Shadows of the Cross. Expect rough edges.
+> **Status: v0.3.0.** Tested in game with Shadows of the Cross: 867 and 1066 starts (heresy outbreaks, signature heresies, condemnation, Seek Communion, mending the Schism). Expect rough edges.
 
 ## What it does
 
@@ -21,7 +21,9 @@ A Crusader Kings III mod for **By God Alone** that keeps the Church's rites fait
   - *Be Fruitful and Multiply* no longer makes chastity a sin. It now costs −5% county tax, and within the Church parents gain piety for each child born of their marriage.
   - *Alexandrian Catechism* no longer makes zeal a sin.
   - *Adaptability* no longer makes fickleness a virtue.
-- **Heresies still happen.** Heresy outbreaks and historical heresies (Cathars, Waldensians…) work as in the base game. The guard leaves heretical rites alone.
+- **Living heresies (v0.3).** Heresy outbreaks come about twice as often in the Church and hit its minor rites first. A rite that falls takes one classic heresy of its place and era (Adoptionism in Iberia before 1000, Monophysitism near the East, Gnosticism in the Balkans and Occitania, Simony elsewhere), so the game sees a real heresy. If Rome has not condemned it about five years later, the Pope does, with the game's own bull. A fallen rite that lays down every error comes home. See [`docs/v03-plan.html`](docs/v03-plan.html).
+- **Seek Communion is a true return (v0.3).** When the Pope accepts a heresy back, its rites rejoin the Church and lay down every error; their leaders are absolved.
+- **Mending the Schism always reunites with Rome (v0.3).** Whoever mends it, Orthodoxy rejoins Catholicism under the Pope.
 
 ## Compatibility
 
@@ -31,7 +33,9 @@ A Crusader Kings III mod for **By God Alone** that keeps the Church's rites fait
   - Tenets: `tenet_be_fruitful_and_multiply`, `tenet_adaptive`, `tenet_alexandrian_catechism`.
   - Doctrines: `doctrine_pluralism_righteous`, `doctrine_clerical_marriage_allowed`, `doctrine_clerical_marriage_disallowed`.
   - Triggers: `pam_tenet_can_be_permitted_trigger`, `pam_tenet_can_be_permitted_no_actor_trigger`, `pam_tenet_can_be_prohibited_trigger`, `pam_tenet_can_be_prohibited_no_actor_trigger`, `pam_tenet_ai_may_permit_trigger`, `pam_rite_can_be_declared_heresy_trigger`.
-  - Effects: `pam_bull_notify_faith_rulers_effect`, `rite_yearly_hor_divergence_drift_commit_effect`, `rite_growth_resolve_differences_effect`, `ecumenical_council_conservative_backlash_effect`, `ecumenical_council_host_rite_adopt_doctrine_effect`.
+  - Effects: `pam_bull_notify_faith_rulers_effect`, `rite_yearly_hor_divergence_drift_commit_effect`, `rite_growth_resolve_differences_effect`, `ecumenical_council_conservative_backlash_effect`, `ecumenical_council_host_rite_adopt_doctrine_effect`, `pam_heresy_c1_pick_diverging_rite_effect`, `pam_heresy_fervor_reset_effect`, `pam_seek_communion_reconcile_faith_effect`, `mend_great_schism_scripted_effect`.
+  - Script values: `pam_heresy_fervor_reset_component_1_value`, `_2_value`, `_3_value`, `pam_heresy_pulse_no_event_value`.
+  - Decisions: `mend_the_great_schism_decision`.
   - The names of the faith `christian_faith`.
 
 ## Install (manual)

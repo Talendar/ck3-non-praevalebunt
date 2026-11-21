@@ -16,3 +16,27 @@ np_pull_back_divergence_value = {
 	subtract = "divergence(faith.main_rite)"
 	max = -5
 }
+
+# v0.3. Rite scope. Before a fallen rite takes its signature heresy, bring it back to about 30, so the heresy
+# (worth +45 to +60) lands it at 75 to 90: past the heresy line, short of 100, where the game would split the rite
+# into a faith of its own without the Pope's judgement.
+np_signature_room_value = {
+	value = 30
+	subtract = "divergence(faith.main_rite)"
+	max = -5
+}
+
+# v0.3. Rite scope. A fallen rite still in error but back at or under the heresy line: push it 15 points past it.
+np_heresy_topup_value = {
+	value = faith.heresy_threshold
+	add = 15
+	subtract = "divergence(faith.main_rite)"
+	min = 5
+}
+
+# v0.3. Rite scope. A fallen rite at 95 or more: bring it back to about 85, short of the automatic split at 100.
+np_heresy_trim_value = {
+	value = 85
+	subtract = "divergence(faith.main_rite)"
+	max = -5
+}

@@ -107,3 +107,30 @@ np_events.0003 = {
 		name = np_events.0003.a
 	}
 }
+
+##############################################
+# 0004: A heresy comes home (v0.3)
+# A letter from the Pope to each player of the Church, when a heresy's head sought communion, was accepted, and its
+# rites rejoined the Church, laying down their errors. Sent by np_true_return_effect.
+# Scopes: np_returning_faith (the heresy, now an empty shell, whose name still reads as before).
+##############################################
+
+np_events.0004 = {
+	type = letter_event
+	opening = np_events.0002.opening
+	desc = np_events.0004.desc
+	sender = scope:np_pope
+
+	trigger = {
+		exists = title:k_papal_state.holder
+		exists = scope:np_returning_faith
+	}
+
+	immediate = {
+		title:k_papal_state.holder = { save_scope_as = np_pope }
+	}
+
+	option = {
+		name = np_events.0004.a
+	}
+}
