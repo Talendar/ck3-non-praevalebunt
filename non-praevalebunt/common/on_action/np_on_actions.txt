@@ -44,6 +44,8 @@ np_on_faith_monthly = {
 		np_schism_head_cleanup_effect = yes
 		# v0.3: rites of ours left in the old undivided faith after the Schism join Catholicism.
 		np_gather_stranded_rites_effect = yes
+		# v0.3.1: an approved tenet is never Prohibited in the Church.
+		np_restore_approved_tenets_effect = yes
 		every_faith_rite = {
 			np_guard_rite_effect = yes
 			# Rule 2: a rite in good standing never crosses the heresy line. Checked for every rite, because

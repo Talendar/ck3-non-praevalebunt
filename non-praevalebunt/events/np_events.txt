@@ -38,7 +38,7 @@ np_events.0001 = {
 ##############################################
 # 0002: A bull set aside
 # A letter from the Pope to each player of the Church, when he sets aside a bull that would Permit a
-# forbidden tenet or Prohibit a protected one. Sent by np_set_aside_bull_effect instead of the usual
+# forbidden tenet or Prohibit an approved one. Sent by np_set_aside_bull_effect instead of the usual
 # "bull enacted" letter. Scopes from pam_bull_events.0002: bull_issuer, tenet_scope.
 ##############################################
 

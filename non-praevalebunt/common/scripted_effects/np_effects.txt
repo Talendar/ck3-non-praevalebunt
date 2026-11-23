@@ -365,7 +365,7 @@ np_set_aside_bull_effect = {
 
 # Inside ecumenical_council_conservative_backlash_effect (zzz_np_lock_effects.txt), which every council runs
 # right before its tenet ruling takes effect (base game and Shadows of the Cross alike). Within the Church, a
-# ruling that would Permit or make core a forbidden tenet, or Prohibit a protected one, is not confirmed by the
+# ruling that would Permit or make core a forbidden tenet, or Prohibit an approved one, is not confirmed by the
 # Pope: the proposal becomes a flag the ruling ignores, so nothing changes, and the faithful get his letter.
 # In the ruling's preview only the tooltip shows; nothing runs.
 np_council_veto_tenet_ruling_effect = {
@@ -896,6 +896,78 @@ np_mark_forbidden_tenets_effect = {
 				}
 			}
 		}
+	}
+}
+
+# Faith scope, the Church, monthly. An approved tenet is never Prohibited in the Church: one that already is (from a
+# bull before this rule existed, or by any route the locks don't reach) goes back to Permitted. The Pentarchy counts
+# only before the Schism, because np_tenet_is_allowed_trigger is checked for each tenet. Runs before the rite sweep, so
+# a rite holding the restored tenet is not pulled back from the heresy line for nothing.
+np_restore_approved_tenets_effect = {
+	save_scope_as = np_restore_church
+	tenet:tenet_communion = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_transubstantiation = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_purgatory = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_confession = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_original_sin = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_apostolic_succession = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_dulia = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_hyperdulia = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_pentarchy = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_peace_of_god = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_ora_et_labora = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_celestial_hierarchy = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_miles_christi = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_philanthropia = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_scholasticism = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_love_thy_neighbour = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_divine_liturgy = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_acts_of_apostles = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_anachoresis = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_mortification_of_the_flesh = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_hesychasm = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_holy_myron = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_khachkar = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_armed_pilgrimages = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_vows_of_poverty = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_mendicant_preachers = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_asceticism = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_communal_identity = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_unrelenting_faith = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_legalism = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_religious_legal_pronouncements = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_ritual_celebrations = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_sacred_childbirth = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_sanctity_of_nature = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_adaptive = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_be_fruitful_and_multiply = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_communal_possessions = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_alexandrian_catechism = { np_restore_one_tenet_effect = yes }
+	tenet:tenet_ritual_hospitality = { np_restore_one_tenet_effect = yes }
+}
+
+# Tenet scope, with scope:np_restore_church.
+np_restore_one_tenet_effect = {
+	save_scope_as = np_restore_tenet
+	if = {
+		limit = {
+			np_tenet_is_allowed_trigger = yes
+			scope:np_restore_church.main_rite = {
+				has_tenet_status = {
+					tenet = scope:np_restore_tenet
+					status = prohibited
+				}
+			}
+		}
+		scope:np_restore_church = {
+			set_tenet_status = {
+				tenet = scope:np_restore_tenet
+				status = permitted
+			}
+			pam_faith_cleanup_forbidden_personal_tenet_secrets_effect = yes
+		}
+		debug_log = "Non Praevalebunt: an approved tenet that had been Prohibited was restored"
+		debug_log_scopes = yes
 	}
 }
 

@@ -4,7 +4,7 @@
 
 A Crusader Kings III mod for **By God Alone** that keeps the Church's rites faithful to Catholic teaching. Rites may still differ in custom and discipline (liturgy, married priests, fasting, monastic rules), but never in faith or morals.
 
-> **Status: v0.3.0.** Tested in game with Shadows of the Cross: 867 and 1066 starts (heresy outbreaks, signature heresies, condemnation, Seek Communion, mending the Schism). Expect rough edges.
+> **Status: v0.3.1.** v0.3.0 was tested in game with Shadows of the Cross: 867 and 1066 starts (heresy outbreaks, signature heresies, condemnation, Seek Communion, mending the Schism). The small tenet-protection changes in v0.3.1 were reviewed but not separately tested. Expect rough edges.
 
 ## What it does
 
@@ -13,7 +13,7 @@ A Crusader Kings III mod for **By God Alone** that keeps the Church's rites fait
 - **Keeps faithful rites from the heresy line (v0.2).** A rite that holds nothing forbidden is pulled back toward Roman practice before it reaches the game's heresy line, and no Pope can brand it a heresy.
 - **Uses an approved list.** Every doctrine and tenet is marked allowed or forbidden. See [`docs/allowed-list.html`](docs/allowed-list.html).
 - **Keeps the Pope Roman.** Every new Pope takes the Roman rite, so a drifted rite can never become "Catholicism".
-- **Guards the Pope's bulls.** Within the Church, no bull can declare a forbidden tenet "in good standing" (for example Literalism), and none can condemn true Catholic teaching (for example Purgatory). If one slips through another route, the Pope sets it aside and writes to the faithful.
+- **Guards the Pope's bulls.** Within the Church, no bull can declare a forbidden tenet "in good standing" (for example Literalism), and none can condemn an approved tenet (for example Purgatory or Asceticism). An approved tenet that was already condemned is restored at the next monthly check. If one slips through another route, the Pope sets it aside and writes to the faithful.
 - **Pope as head before the Great Schism** (game rule, on by default). In 867 starts the Papacy heads the undivided Church, and Rome keeps that primacy even if the schism is prevented.
 - **Calls the undivided Church Catholic.** Before the Great Schism the base game names it "Chalcedonianism". The mod names it "Catholicism", as the Church called herself.
 - **Fixes start-of-game errors.** For example, the Mozarabic rite no longer starts with same-sex relations accepted.

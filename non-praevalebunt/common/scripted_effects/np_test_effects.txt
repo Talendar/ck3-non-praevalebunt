@@ -263,3 +263,96 @@ np_test_v03_mend_effect = {
 		debug_log = "NP test: the Pope is still Catholic and the head of the reunited Church (GOOD)"
 	}
 }
+
+##############################################
+# v0.3.1 test. One console line: effect np_test_v031_effect = yes
+##############################################
+
+np_test_v031_effect = {
+	# The checks a bull or decision asks.
+	# Scholasticism: approved, and core in none of the starting rites, so only our rule can block it.
+	tenet:tenet_scholasticism = {
+		if = {
+			limit = { pam_tenet_can_be_prohibited_no_actor_trigger = yes }
+			debug_log = "NP test: Scholasticism can be prohibited (BAD)"
+		}
+		else = { debug_log = "NP test: Scholasticism is protected (GOOD)" }
+	}
+	tenet:tenet_literalism = {
+		if = {
+			limit = { pam_tenet_can_be_prohibited_no_actor_trigger = yes }
+			debug_log = "NP test: Literalism can still be prohibited (GOOD)"
+		}
+		else = { debug_log = "NP test: Literalism can't be prohibited (BAD)" }
+	}
+	tenet:tenet_ritual_hospitality = {
+		if = {
+			limit = { np_tenet_is_allowed_trigger = yes }
+			debug_log = "NP test: Ritual Hospitality is approved (GOOD)"
+		}
+		else = { debug_log = "NP test: Ritual Hospitality is NOT approved (BAD)" }
+	}
+	# A bull that got past the checks, as an SOTC demand can: the Pope sets it aside and writes.
+	title:k_papal_state.holder = {
+		save_scope_as = bull_issuer
+		set_variable = {
+			name = bull_option
+			value = flag:tenet_forbidden
+			years = 1
+		}
+	}
+	tenet:tenet_vows_of_poverty = { save_scope_as = tenet_scope }
+	rite:roman_rite.faith = {
+		set_tenet_status = {
+			tenet = tenet:tenet_vows_of_poverty
+			status = prohibited
+		}
+	}
+	pam_bull_notify_faith_rulers_effect = yes
+	if = {
+		limit = {
+			rite:roman_rite.faith.main_rite = {
+				has_tenet_status = {
+					tenet = tenet:tenet_vows_of_poverty
+					status = prohibited
+				}
+			}
+		}
+		debug_log = "NP test: the bull against Vows of Poverty stood (BAD)"
+	}
+	else = { debug_log = "NP test: the bull against Vows of Poverty was set aside (GOOD)" }
+	# A council ruling against an approved practice.
+	save_scope_as = activity
+	title:k_papal_state.holder = { save_scope_as = host }
+	set_variable = { name = current_topic value = tenet:tenet_peace_of_god }
+	set_variable = { name = current_debate_proposal value = flag:prohibit }
+	ecumenical_council_conservative_backlash_effect = yes
+	if = {
+		limit = { var:current_debate_proposal ?= flag:np_set_aside }
+		debug_log = "NP test: the council's ruling against Peace of God was set aside (GOOD)"
+	}
+	else = { debug_log = "NP test: the council's ruling against Peace of God stood (BAD)" }
+	remove_variable = current_topic
+	remove_variable = current_debate_proposal
+	# The monthly repair.
+	rite:roman_rite.faith = {
+		set_tenet_status = {
+			tenet = tenet:tenet_asceticism
+			status = prohibited
+		}
+		np_restore_approved_tenets_effect = yes
+		if = {
+			limit = {
+				main_rite = {
+					has_tenet_status = {
+						tenet = tenet:tenet_asceticism
+						status = prohibited
+					}
+				}
+			}
+			debug_log = "NP test: Asceticism is still Prohibited after the repair (BAD)"
+		}
+		else = { debug_log = "NP test: the repair restored Asceticism (GOOD)" }
+	}
+	debug_log = "NP test: v0.3.1 test done"
+}

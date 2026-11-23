@@ -7,7 +7,7 @@
 #
 # Within the Church (the faith of the Roman rite):
 #   a forbidden tenet can never be Permitted (docs/allowed-list.html), and
-#   a protected tenet (true Catholic teaching) can never be Prohibited.
+#   an approved tenet can never be Prohibited.
 #
 # The zzz_ prefix makes this file load after the base game's file and after other mods, so these copies
 # replace the originals. Re-copy the vanilla parts if a game update changes them.
@@ -70,7 +70,7 @@ pam_tenet_can_be_prohibited_trigger = {
 		limit = { scope:actor = { np_character_in_church_trigger = yes } }
 		custom_tooltip = {
 			text = np_tenet_cannot_be_prohibited_tt
-			np_tenet_is_protected_trigger = no
+			np_tenet_is_allowed_trigger = no
 		}
 	}
 }
@@ -91,7 +91,7 @@ pam_tenet_can_be_prohibited_no_actor_trigger = {
 		limit = { root = { np_character_in_church_trigger = yes } }
 		custom_tooltip = {
 			text = np_tenet_cannot_be_prohibited_tt
-			np_tenet_is_protected_trigger = no
+			np_tenet_is_allowed_trigger = no
 		}
 	}
 }

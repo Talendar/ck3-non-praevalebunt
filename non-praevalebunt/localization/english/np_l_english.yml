@@ -8,13 +8,13 @@
  # A bull set aside (events/np_events.txt)
  np_events.0002.opening: "To the faithful of every land,"
  np_events.0002.desc.permit: "A bull was drawn up in my name, declaring [tenet_scope.GetName( bull_issuer.GetRite )] a teaching in good standing. I have set it aside. It will not bear my seal.\n\nThe successor of Peter guards what Christ handed down; he cannot change it. As the Apostle wrote: “Though we, or an angel from heaven, preach a gospel to you besides that which we have preached to you, let him be anathema.” (Galatians 1:8)"
- np_events.0002.desc.prohibit: "A bull was drawn up in my name, condemning [tenet_scope.GetName( bull_issuer.GetRite )]. I have set it aside. It will not bear my seal, for what the Church has always believed she cannot now condemn.\n\nThe successor of Peter guards what Christ handed down; he cannot change it. As the Apostle wrote: “Hold the traditions which you have learned, whether by word, or by our epistle.” (2 Thessalonians 2:14)"
+ np_events.0002.desc.prohibit: "A bull was drawn up in my name, condemning [tenet_scope.GetName( bull_issuer.GetRite )]. I have set it aside. It will not bear my seal, for the Church cannot call error what she holds as true or approves as good.\n\nThe successor of Peter guards what Christ handed down; he cannot change it. As the Apostle wrote: “But prove all things; hold fast that which is good.” (1 Thessalonians 5:21)"
  np_events.0002.a: "Amen."
 
  # v0.2: a council ruling not confirmed (events/np_events.txt, common/scripted_effects/zzz_np_lock_effects.txt)
  np_council_ruling_set_aside_tt: "The Pope will not confirm this ruling: it goes against the faith of the Church"
  np_events.0003.desc.permit: "The council voted to receive [np_council_tenet.GetName( np_pope.GetRite )] as a teaching in good standing. I have not confirmed it, and it does not bind the Church.\n\n$np_events.0003.catechesis$"
- np_events.0003.desc.prohibit: "The council voted to condemn [np_council_tenet.GetName( np_pope.GetRite )]. I have not confirmed it, for what the Church has always believed, no council may condemn.\n\n$np_events.0003.catechesis$"
+ np_events.0003.desc.prohibit: "The council voted to condemn [np_council_tenet.GetName( np_pope.GetRite )]. I have not confirmed it, for the Church cannot call error what she holds as true or approves as good.\n\n$np_events.0003.catechesis$"
  np_events.0003.desc.doctrine: "The council voted to adopt [np_council_doctrine.GetDescriptiveName( np_pope.GetFaith.Self )]. I have not confirmed it, and the Church keeps her discipline as before.\n\n$np_events.0003.catechesis$"
  np_events.0003.catechesis: "A council speaks for the whole Church only in union with the successor of Peter. So it has always been: my predecessor Saint Leo the Great would not confirm a canon of the Council of Chalcedon, and Rome never received it."
  np_events.0003.a: "Amen."
@@ -32,7 +32,7 @@
 
  # The Pope's bulls on tenets (common/scripted_triggers/zzz_np_tenet_stance_triggers.txt)
  np_tenet_cannot_be_permitted_tt: "The Church cannot approve a teaching against the faith or morals she received from Christ"
- np_tenet_cannot_be_prohibited_tt: "The Church cannot condemn her own teaching, which she received from Christ"
+ np_tenet_cannot_be_prohibited_tt: "The Church cannot condemn a teaching or practice that she approves"
 
  # Game rule: Pope as head of faith before the Great Schism
  rule_np_pope_head_before_schism: "Pope as Head Before the Schism"

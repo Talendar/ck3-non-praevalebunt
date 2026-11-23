@@ -129,8 +129,9 @@ np_tenet_is_forbidden_trigger = {
 	np_tenet_is_allowed_trigger = no
 }
 
-# Tenet scope. Tenets on the approved list (docs/allowed-list.html): protected and allowed ones.
-# Used so that a tenet the Church has wrongly Prohibited is never stripped from a rite.
+# Tenet scope. Tenets on the approved list (docs/allowed-list.html). This list is also the rule for Prohibition:
+# within the Church, an approved tenet can never be Prohibited, by bull, decision, demand or council, and one that
+# already is gets restored by the monthly check (np_restore_approved_tenets_effect).
 # The Pentarchy is approved only before the schism, while the Church is still undivided.
 np_tenet_is_allowed_trigger = {
 	OR = {
@@ -172,11 +173,12 @@ np_tenet_is_allowed_trigger = {
 		this = tenet:tenet_be_fruitful_and_multiply
 		this = tenet:tenet_communal_possessions
 		this = tenet:tenet_alexandrian_catechism
+		# Hospitality to the stranger (Matthew 25:35). Christian rites can't pick it as core, but a bull may permit it.
+		this = tenet:tenet_ritual_hospitality
 	}
 }
 
-# Tenet scope. The 8 protected tenets (docs/allowed-list.html): true Catholic teaching.
-# Within the Church they can never be Prohibited, by bull or by decision.
+# Tenet scope. The 8 core teachings on the approved list (docs/allowed-list.html). Part of np_tenet_is_allowed_trigger.
 np_tenet_is_protected_trigger = {
 	OR = {
 		this = tenet:tenet_communion
@@ -198,7 +200,7 @@ np_character_in_church_trigger = {
 }
 
 # Any scope, inside pam_bull_events.0002 (needs scope:bull_issuer and scope:tenet_scope).
-# True if a bull of the Church's head would Permit a forbidden tenet or Prohibit a protected one.
+# True if a bull of the Church's head would Permit a forbidden tenet or Prohibit an approved one.
 np_bull_breaks_church_rules_trigger = {
 	exists = scope:bull_issuer
 	exists = scope:tenet_scope
@@ -213,7 +215,7 @@ np_bull_breaks_church_rules_trigger = {
 		}
 		AND = {
 			scope:bull_issuer.var:bull_option = flag:tenet_forbidden
-			scope:tenet_scope = { np_tenet_is_protected_trigger = yes }
+			scope:tenet_scope = { np_tenet_is_allowed_trigger = yes }
 		}
 	}
 }
@@ -322,7 +324,7 @@ np_selection_is_clean_trigger = {
 }
 
 # Any scope, inside a council's tenet ruling (needs scope:activity and scope:host). True if, within the Church,
-# the ruling would Prohibit a protected tenet, or Permit or make core a forbidden one. Only tenet rulings carry
+# the ruling would Prohibit an approved tenet, or Permit or make core a forbidden one. Only tenet rulings carry
 # these proposal flags, so var:current_topic is a tenet here.
 np_council_tenet_ruling_breaks_rules_trigger = {
 	exists = scope:activity
@@ -333,7 +335,7 @@ np_council_tenet_ruling_breaks_rules_trigger = {
 	OR = {
 		AND = {
 			scope:activity.var:current_debate_proposal ?= flag:prohibit
-			scope:activity.var:current_topic = { np_tenet_is_protected_trigger = yes }
+			scope:activity.var:current_topic = { np_tenet_is_allowed_trigger = yes }
 		}
 		AND = {
 			OR = {
