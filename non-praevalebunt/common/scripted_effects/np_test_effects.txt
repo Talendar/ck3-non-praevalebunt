@@ -356,3 +356,33 @@ np_test_v031_effect = {
 	}
 	debug_log = "NP test: v0.3.1 test done"
 }
+
+# v0.3.2. Logs whether the new 40-year pulse is the one that can start an outbreak in the Church now (fervor above 40),
+# lifts the 5-year pause if it is on, then starts an outbreak tomorrow through the base game's router, as the pulse
+# does. For the next two days the Church acts as if it had no minor rite, so the outbreak founds a local heresy.
+np_test_v032_effect = {
+	rite:roman_rite.faith = {
+		if = {
+			limit = { fervor > 40 }
+			debug_log = "NP test: Church fervor is above 40, so only the new 40-year pulse can start an outbreak here"
+		}
+		else = {
+			debug_log = "NP test: Church fervor is 40 or less, so the base game's own pulse is active too"
+		}
+		if = {
+			limit = { has_variable = current_heresy }
+			remove_variable = current_heresy
+			debug_log = "NP test: the 5-year pause was on; lifted for this test"
+		}
+		trigger_event = {
+			id = heresy_pulse.0001
+			days = 1
+		}
+	}
+	set_global_variable = {
+		name = np_test_found_local_heresy
+		value = yes
+		days = 2
+	}
+	debug_log = "NP test: an outbreak will start in the Church tomorrow, through the base game's router"
+}

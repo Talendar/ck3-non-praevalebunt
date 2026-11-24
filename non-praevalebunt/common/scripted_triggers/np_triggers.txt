@@ -372,3 +372,30 @@ np_rite_holds_an_error_trigger = {
 		np_rite_has_forbidden_doctrine_trigger = yes
 	}
 }
+
+##############################################
+# v0.3.2: heresies in every game
+##############################################
+
+# Character scope, a ruler of the Church (scope:np_heresy_faith). Could found a small local heresy
+# (np_found_local_heresy_effect): an AI lord with land of his own in the Church, who leads no rite and holds no see,
+# and is not already in a fallen rite.
+np_local_heresiarch_candidate_trigger = {
+	is_ai = yes
+	is_landed = yes
+	is_physically_able_ai_adult = yes
+	exists = capital_county
+	capital_county = { faith = scope:np_heresy_faith }
+	rite = { NOT = { has_variable = np_fallen } }
+	NOR = {
+		has_title = title:k_papal_state
+		this = faith.religious_head
+		any_held_title = { is_head_of_faith = yes }
+		rite.head_of_rite ?= this
+		any_held_title = { has_clerical_region = yes }
+		has_character_flag = recently_converted_by_heresy
+		recently_converted_faith_trigger = yes
+		government_has_flag = government_is_nomadic
+		government_has_flag = government_is_herder
+	}
+}

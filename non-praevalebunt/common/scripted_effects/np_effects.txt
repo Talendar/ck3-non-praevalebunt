@@ -604,6 +604,9 @@ np_rite_mark_fallen_effect = {
 }
 
 # Rite scope. Mark the rite fallen (if it can fall) and give it its signature heresy.
+# v0.3.2: a rite founded by this very outbreak waits (np_signature_wait, 10 days), and the monthly upkeep gives it its
+# signature afterwards. Shadows of the Cross records a new rite's two canon tenets only some days after its founding,
+# and until then undoes any change that adds a core tenet, so a signature given on the founding day was undone at once.
 np_rite_falls_effect = {
 	np_rite_mark_fallen_effect = yes
 	if = {
@@ -611,6 +614,7 @@ np_rite_falls_effect = {
 			has_variable = np_fallen
 			np_rite_in_church_trigger = yes
 			NOT = { has_variable = np_signature }
+			NOT = { has_variable = np_signature_wait }
 		}
 		np_signature_heresy_effect = yes
 	}
@@ -688,6 +692,8 @@ np_signature_heresy_effect = {
 	}
 	faith = { np_mark_forbidden_tenets_effect = yes }
 	np_heresy_keep_past_line_effect = yes
+	# v0.3.2: every player of the Church hears of it.
+	np_heresy_arises_message_effect = yes
 	debug_log = "Non Praevalebunt: a fallen rite took its signature heresy"
 	debug_log_scopes = yes
 }
@@ -779,7 +785,8 @@ np_heresy_keep_past_line_effect = {
 }
 
 # Rite scope, every rite of the Church, monthly. Upkeep for fallen rites:
-#   no signature yet (a rite that fell under v0.2, or a dangerous rite the guard caught): give it one;
+#   no signature yet (a rite that fell under v0.2, a dangerous rite the guard caught, or a rite founded by an outbreak
+#   whose wait is over): give it one; while the wait lasts (np_rite_falls_effect), nothing;
 #   no error left at all: it comes home as a rite of the Church in good standing;
 #   still in error: keep it past the line, and make sure Rome condemns it.
 np_fallen_upkeep_effect = {
@@ -790,7 +797,10 @@ np_fallen_upkeep_effect = {
 		}
 		if = {
 			limit = { NOT = { has_variable = np_signature } }
-			np_signature_heresy_effect = yes
+			if = {
+				limit = { NOT = { has_variable = np_signature_wait } }
+				np_signature_heresy_effect = yes
+			}
 		}
 		else_if = {
 			limit = { np_rite_holds_an_error_trigger = no }
@@ -1070,6 +1080,163 @@ np_gather_stranded_rites_effect = {
 			if = {
 				limit = { NOT = { has_variable = np_fallen } }
 				np_welcome_rite_effect = yes
+			}
+		}
+	}
+}
+
+##############################################
+# v0.3.2: heresies in every game
+##############################################
+
+# Faith scope, the Church, inside a light outbreak (pam_heresy_c1_pick_diverging_rite_effect) that found no minor rite
+# to hit. A small local heresy is born instead: an AI count of the Church (a duke only if no count can) breaks away
+# with his own counties and his court, founding a new rite that falls at once, as the Adoptionists of Toledo and
+# Urgell did, or the first Cathar lords of Occitania. The outbreak then runs as usual on the new rite: its push, its
+# local spread, and the signature heresy at its end. Saves scope:diverging_rite (the new rite) if it worked.
+np_found_local_heresy_effect = {
+	save_scope_as = np_heresy_faith
+	clear_saved_scope = np_heresiarch
+	clear_saved_scope = np_local_heresy
+	random_faith_ruler = {
+		limit = {
+			np_local_heresiarch_candidate_trigger = yes
+			highest_held_title_tier = tier_county
+		}
+		alternative_limit = {
+			np_local_heresiarch_candidate_trigger = yes
+			highest_held_title_tier = tier_duchy
+		}
+		weight = {
+			base = 10
+			# The old seedbeds of heresy: Occitania and the Balkans.
+			modifier = {
+				factor = 2
+				capital_province ?= {
+					OR = {
+						geographical_region = custom_occitan
+						geographical_region = world_europe_south_east
+					}
+				}
+			}
+			# Learned or restless minds, sure of their own judgment.
+			modifier = {
+				factor = 3
+				OR = {
+					has_trait = theologian
+					has_trait = lifestyle_mystic
+					has_trait = lifestyle_scholar
+					has_trait = eccentric
+					has_trait = arrogant
+				}
+			}
+		}
+		save_scope_as = np_heresiarch
+	}
+	scope:np_heresiarch ?= {
+		rite = { save_scope_as = np_heresy_source_rite }
+		create_dynamic_rite = {
+			save_scope_as = np_local_heresy
+			convert = yes
+			target_divergence = 25
+			include_unknown = no
+			override_tenets_first = yes
+		}
+	}
+	scope:np_local_heresy ?= {
+		save_scope_as = diverging_rite
+		# Its signature heresy comes later, once the new rite has settled (np_rite_falls_effect).
+		set_variable = {
+			name = np_signature_wait
+			days = 10
+		}
+		scope:np_heresiarch = {
+			every_held_title = {
+				limit = {
+					tier = tier_county
+					faith = scope:np_heresy_faith
+				}
+				set_county_rite = scope:np_local_heresy
+			}
+			every_courtier = {
+				limit = {
+					is_ai = yes
+					rite = scope:np_heresy_source_rite
+					NOT = { has_character_flag = ai_will_not_convert }
+				}
+				set_character_rite = scope:np_local_heresy
+			}
+			if = {
+				limit = { NOT = { has_trait = heresiarch } }
+				add_trait = heresiarch
+			}
+			add_character_flag = {
+				flag = recently_converted_by_heresy
+				years = 10
+			}
+		}
+		debug_log = "Non Praevalebunt: a light outbreak found no minor rite, so a small local heresy was founded"
+		debug_log_scopes = yes
+	}
+}
+
+# Rite scope, a rite of the Church that has just fallen and taken its signature heresy (np_signature_heresy_effect,
+# scope:np_sig_tenet). Every player of the Church hears of it, wherever it happened. The base game tells only the
+# players nearby, and no one at all when the rite has no head yet.
+np_heresy_arises_message_effect = {
+	save_scope_as = np_heresy_rite
+	clear_saved_scope = np_heresy_leader
+	head_of_rite ?= { save_scope_as = np_heresy_leader }
+	if = {
+		limit = { NOT = { exists = scope:np_heresy_leader } }
+		rite_founder ?= {
+			if = {
+				limit = {
+					is_alive = yes
+					rite = scope:np_heresy_rite
+				}
+				save_scope_as = np_heresy_leader
+			}
+		}
+	}
+	every_player = {
+		limit = { np_character_in_church_trigger = yes }
+		if = {
+			limit = { exists = scope:np_heresy_leader }
+			send_interface_message = {
+				type = event_religious_bad_text
+				title = np_msg_heresy_arises
+				left_icon = scope:np_heresy_leader
+				right_icon = scope:np_heresy_rite
+				desc = {
+					desc = np_msg_heresy_arises_leader
+					first_valid = {
+						triggered_desc = {
+							trigger = { exists = scope:np_sig_tenet }
+							desc = np_msg_heresy_arises_tenet
+						}
+						desc = np_msg_heresy_arises_no_tenet
+					}
+					desc = np_msg_heresy_arises_catechesis
+				}
+			}
+		}
+		else = {
+			send_interface_message = {
+				type = event_religious_bad_text
+				title = np_msg_heresy_arises
+				right_icon = scope:np_heresy_rite
+				desc = {
+					desc = np_msg_heresy_arises_rite
+					first_valid = {
+						triggered_desc = {
+							trigger = { exists = scope:np_sig_tenet }
+							desc = np_msg_heresy_arises_tenet
+						}
+						desc = np_msg_heresy_arises_no_tenet
+					}
+					desc = np_msg_heresy_arises_catechesis
+				}
 			}
 		}
 	}

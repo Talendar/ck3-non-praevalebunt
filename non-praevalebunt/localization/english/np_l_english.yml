@@ -24,6 +24,14 @@
  np_events.0004.desc: "Those who followed [np_returning_faith.GetName] have renounced their errors and come home to the unity of the Church. Their rites are received as rites of the Church, and their leaders are absolved.\n\nOur Lord said: “There shall be joy in heaven upon one sinner that doth penance, more than upon ninety-nine just who need not penance.” (Luke 15:7) The door stands open to all who return; they come in by the truth, laying their errors down at the threshold."
  np_events.0004.a: "Thanks be to God."
 
+ # v0.3.2: a heresy arises (common/scripted_effects/np_effects.txt)
+ np_msg_heresy_arises: "A Heresy Arises"
+ np_msg_heresy_arises_leader: "[np_heresy_leader.GetTitledFirstName] and [np_heresy_rite.GetName] have fallen into"
+ np_msg_heresy_arises_rite: "[np_heresy_rite.GetName] has fallen into"
+ np_msg_heresy_arises_tenet: " the heresy of [np_sig_tenet.GetBaseName] and must be called home.\n"
+ np_msg_heresy_arises_no_tenet: " heresy and must be called home.\n"
+ np_msg_heresy_arises_catechesis: "Heresy is the stubborn denial of a truth of the faith. “There must be also heresies: that they also, who are approved, may be made manifest among you.” (1 Cor 11:19)"
+
  # v0.2: the rite window lock (common/religion/doctrine_types/np_doctrine_overrides.txt)
  NP_RITE_WINDOW_LOCK: "Nothing in this [rite|E] may go against the faith or morals of the Church (Non Praevalebunt)"
 

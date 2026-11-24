@@ -30,7 +30,30 @@ np_on_rite_updated = {
 
 # Code on_action, root = the faith.
 on_faith_monthly = {
-	on_actions = { np_on_faith_monthly }
+	on_actions = {
+		np_on_faith_monthly
+		np_church_heresy_pulse
+	}
+}
+
+# v0.3.2: heresies in every game. The base game starts an outbreak only while a faith's fervor is 40 or less, and the
+# Church's fervor usually sits near 100, so it could go centuries without one. While the Church's fervor is above 40,
+# this gives it an outbreak about once every 40 years: a chance of 1 in 420 each month (35 years on average), plus the
+# base game's 5-year pause after each outbreak. It runs the base game's own outbreak router (heresy_pulse.0001), which
+# picks the kind of outbreak and starts the pause. At 40 or less, the base game's own pulse takes over.
+np_church_heresy_pulse = {
+	trigger = {
+		np_faith_is_church_trigger = yes
+		fervor > 40
+		NOR = {
+			has_doctrine_parameter = unreformed
+			has_variable = current_heresy
+		}
+	}
+	random_events = {
+		chance_of_no_event = 419
+		1 = heresy_pulse.0001
+	}
 }
 
 np_on_faith_monthly = {

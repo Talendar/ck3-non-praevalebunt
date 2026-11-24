@@ -10,7 +10,9 @@
 # originals. Re-copy the base-game parts if a game update changes them.
 
 # Feature 1: a light outbreak (Component 1) in the Church always hits a minor rite in good standing (Tier 2) if one
-# exists, and that rite falls. Otherwise the base game's pick, which may hit a historic rite: those never fall.
+# exists, and that rite falls. v0.3.2: if none exists (as under Shadows of the Cross's Rite Forming = Historical,
+# where no new rites form), a small local heresy is founded instead (np_found_local_heresy_effect), and it falls.
+# Only if no ruler could found one, the base game's pick, which may hit a historic rite: those never fall.
 # Faith scope. Saves scope:diverging_rite.
 pam_heresy_c1_pick_diverging_rite_effect = {
 	clear_saved_scope = diverging_rite
@@ -27,6 +29,8 @@ pam_heresy_c1_pick_diverging_rite_effect = {
 				# ruler of the rite. A rite led by a player is never picked: it counts as a historic rite (Tier 1).
 				np_rite_is_tier1_trigger = no
 				np_rite_is_guarded_trigger = yes
+				# Test hook (np_test_v032_effect): pretend there is no minor rite, for two days.
+				NOT = { has_global_variable = np_test_found_local_heresy }
 			}
 
 			weight = {
@@ -61,16 +65,23 @@ pam_heresy_c1_pick_diverging_rite_effect = {
 
 			save_scope_as = diverging_rite
 		}
+		if = {
+			limit = { exists = scope:diverging_rite }
+			debug_log = "Non Praevalebunt: a light outbreak hit a minor rite of the Church"
+			debug_log_scopes = yes
+		}
+		# v0.3.2: no minor rite to hit, so a small local heresy is founded, and the outbreak hits it.
+		else = {
+			np_found_local_heresy_effect = yes
+		}
 		# Only the mark here. The signature heresy comes at the end of the outbreak (pam_heresy_fervor_reset_effect),
 		# after the outbreak's own push, so the two pushes together can't overshoot into a faith of its own.
 		scope:diverging_rite ?= {
 			np_rite_mark_fallen_effect = yes
-			debug_log = "Non Praevalebunt: a light outbreak hit a minor rite of the Church"
-			debug_log_scopes = yes
 		}
 		if = {
 			limit = { NOT = { exists = scope:diverging_rite } }
-			debug_log = "Non Praevalebunt: no minor rite for this light outbreak; the base game picks a historic rite, which can't fall"
+			debug_log = "Non Praevalebunt: no minor rite and no ruler to found a heresy; the base game picks a historic rite, which can't fall"
 		}
 	}
 	if = {
@@ -128,7 +139,17 @@ pam_heresy_fervor_reset_effect = {
 		scope:diverging_rite ?= { np_rite_falls_effect = yes }
 	}
 	else = {
-		scope:new_rite ?= { np_rite_falls_effect = yes }
+		scope:new_rite ?= {
+			# v0.3.2: a rite founded by this outbreak gets its signature once it has settled (np_rite_falls_effect).
+			if = {
+				limit = { NOT = { has_variable = np_signature } }
+				set_variable = {
+					name = np_signature_wait
+					days = 10
+				}
+			}
+			np_rite_falls_effect = yes
+		}
 	}
 	if = {
 		limit = { $COMPONENT$ = 1 }

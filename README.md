@@ -4,7 +4,7 @@
 
 A Crusader Kings III mod for **By God Alone** that keeps the Church's rites faithful to Catholic teaching. Rites may still differ in custom and discipline (liturgy, married priests, fasting, monastic rules), but never in faith or morals.
 
-> **Status: v0.3.1.** v0.3.0 was tested in game with Shadows of the Cross: 867 and 1066 starts (heresy outbreaks, signature heresies, condemnation, Seek Communion, mending the Schism). The small tenet-protection changes in v0.3.1 were reviewed but not separately tested. Expect rough edges.
+> **Status: v0.3.2.** v0.3.0 was tested in game with Shadows of the Cross: 867 and 1066 starts (heresy outbreaks, signature heresies, condemnation, Seek Communion, mending the Schism). The small tenet-protection changes in v0.3.1 were reviewed but not separately tested. v0.3.2 (heresies in every game) was tested in a new 867 game with Shadows of the Cross: a local heresy founded, its heresy kept, the notice, and condemnation. Expect rough edges.
 
 ## What it does
 
@@ -22,6 +22,7 @@ A Crusader Kings III mod for **By God Alone** that keeps the Church's rites fait
   - *Alexandrian Catechism* no longer makes zeal a sin.
   - *Adaptability* no longer makes fickleness a virtue.
 - **Living heresies (v0.3).** Heresy outbreaks come about twice as often in the Church and hit its minor rites first. A rite that falls takes one classic heresy of its place and era (Adoptionism in Iberia before 1000, Monophysitism near the East, Gnosticism in the Balkans and Occitania, Simony elsewhere), so the game sees a real heresy. If Rome has not condemned it about five years later, the Pope does, with the game's own bull. A fallen rite that lays down every error comes home. See [`docs/v03-plan.html`](docs/v03-plan.html).
+- **Heresies in every game (v0.3.2).** The base game starts outbreaks only while a faith's fervor is 40 or less, and the Church's fervor usually sits near 100. Now the Church gets an outbreak about once every 40 years whatever its fervor. If it has no minor rite to strike (as under Shadows of the Cross's Rite Forming = Historical), a lord breaks away and founds a small local heresy, which falls. Every Catholic player is told when a heresy arises.
 - **Seek Communion is a true return (v0.3).** When the Pope accepts a heresy back, its rites rejoin the Church and lay down every error; their leaders are absolved.
 - **Mending the Schism always reunites with Rome (v0.3).** Whoever mends it, Orthodoxy rejoins Catholicism under the Pope.
 
